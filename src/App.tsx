@@ -1,0 +1,70 @@
+import React, { useState } from 'react';
+import Header from './components/Header';
+import Toolbox from './components/Toolbox';
+import Canvas from './components/Canvas';
+import PropertiesPanel from './components/PropertiesPanel';
+import PreviewModal from './components/PreviewModal';
+import { useFormBuilder } from './hooks/useFormBuilder';
+import { sharedFieldsLibrary } from './data/sharedLibrary';
+import { initialFields } from './data/initialFields';
+import { flattenFields } from './utils/fieldHelpers';
+
+const App: React.FC = () => {
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  
+  const {
+    fields,
+    selectedField,
+    selectedId,
+    setSelectedId,
+    handleAddField,
+    handleAddSharedField,
+    handleUpdateField,
+    handleDeleteField,
+    handleDuplicateField,
+    handleMoveField,
+    handleDropNewField
+  } = useFormBuilder(initialFields, sharedFieldsLibrary);
+
+  return (
+    <div className="flex flex-col h-screen overflow-hidden bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display">
+      <Header onPreview={() => setIsPreviewOpen(true)} />
+      
+      <main className="flex flex-1 overflow-hidden relative">
+        <Toolbox 
+          onAddField={handleAddField} 
+          sharedLibrary={sharedFieldsLibrary}
+          onAddSharedField={handleAddSharedField}
+        />
+        
+        <Canvas 
+          fields={fields} 
+          selectedId={selectedId} 
+          onSelectField={setSelectedId}
+          onDeleteField={handleDeleteField}
+          onDuplicateField={handleDuplicateField}
+          onUpdateField={handleUpdateField}
+          onMoveField={handleMoveField} 
+          onDropNewField={handleDropNewField}
+        />
+        
+        <PropertiesPanel 
+          selectedField={selectedField} 
+          allFields={flattenFields(fields)}
+          onUpdateField={handleUpdateField}
+          sharedLibrary={sharedFieldsLibrary}
+        />
+      </main>
+
+      {isPreviewOpen && (
+        <PreviewModal 
+          fields={fields} 
+          onClose={() => setIsPreviewOpen(false)}
+          sharedLibrary={sharedFieldsLibrary}
+        />
+      )}
+    </div>
+  );
+};
+
+export default App;
