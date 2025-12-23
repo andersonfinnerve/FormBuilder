@@ -28,7 +28,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ fields, onClose, sharedLibr
     setFormValues(prev => ({ ...prev, [fieldId]: newRows }));
   };
 
-  const handleGridCellChange = (fieldId: string, rowIndex: number, columnLabel: string, value: string) => {
+  const handleGridCellChange = (fieldId: string, rowIndex: number, columnLabel: string, value: any) => {
     const currentRows = formValues[fieldId] || [];
     const newRows = [...currentRows];
     newRows[rowIndex] = { ...newRows[rowIndex], [columnLabel]: value };

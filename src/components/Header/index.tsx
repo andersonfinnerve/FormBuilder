@@ -1,10 +1,13 @@
 import React from 'react';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface HeaderProps {
   onPreview: () => void;
+  onThemeConfig: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onPreview }) => {
+const Header: React.FC<HeaderProps> = ({ onPreview, onThemeConfig }) => {
+  const { mode, toggleMode } = useTheme();
   return (
     <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-border-dark px-6 py-3 bg-surface-dark z-20 shrink-0">
       {/* Brand */}
@@ -41,10 +44,32 @@ const Header: React.FC<HeaderProps> = ({ onPreview }) => {
             <span className="material-symbols-outlined mr-2 text-lg">save</span>
             <span>Guardar</span>
           </button>
-          <button className="flex cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-6 bg-primary hover:bg-blue-600 text-white text-sm font-bold shadow-lg shadow-blue-900/20 transition-colors">
+          <button className="flex cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-6 bg-primary hover:bg-primary-dark text-white text-sm font-bold shadow-lg transition-colors" style={{ backgroundColor: 'var(--color-primary)' }}>
             <span>Publicar</span>
           </button>
         </div>
+        <div className="w-px h-8 bg-border-dark mx-2 hidden sm:block"></div>
+        
+        {/* Theme Controls */}
+        <div className="flex gap-2">
+          <button
+            onClick={toggleMode}
+            className="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-text-secondary hover:text-primary transition-colors"
+            title={mode === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+          >
+            <span className="material-symbols-outlined text-xl">
+              {mode === 'dark' ? 'light_mode' : 'dark_mode'}
+            </span>
+          </button>
+          <button
+            onClick={onThemeConfig}
+            className="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-text-secondary hover:text-primary transition-colors"
+            title="Configurar tema"
+          >
+            <span className="material-symbols-outlined text-xl">palette</span>
+          </button>
+        </div>
+        
         <div className="w-px h-8 bg-border-dark mx-2 hidden sm:block"></div>
         <div 
           className="bg-center bg-no-repeat bg-cover rounded-full size-10 border-2 border-border-dark cursor-pointer hover:border-primary transition-colors" 

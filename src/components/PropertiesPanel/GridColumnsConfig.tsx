@@ -8,6 +8,8 @@ interface GridColumnsConfigProps {
 }
 
 const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibrary, onChange }) => {
+  const [draggedIndex, setDraggedIndex] = React.useState<number | null>(null);
+
   const handleColumnAdd = () => {
     const newCol: GridColumn = {
       id: Date.now().toString(),
@@ -40,6 +42,32 @@ const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibr
     handleColumnUpdate(index, 'options', optionsArray);
   };
 
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    // Evitar arrastrar si se interactúa con inputs
+    if ((e.target as HTMLElement).tagName === 'INPUT' || (e.target as HTMLElement).tagName === 'SELECT') {
+      e.preventDefault();
+      return;
+    }
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent, targetIndex: number) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === targetIndex) return;
+
+    const newColumns = [...(field.columns || [])];
+    const [draggedItem] = newColumns.splice(draggedIndex, 1);
+    newColumns.splice(targetIndex, 0, draggedItem);
+    
+    onChange('columns', newColumns);
+    setDraggedIndex(null);
+  };
+
   return (
     <>
       <div className="h-px bg-border-dark w-full"></div>
@@ -56,9 +84,18 @@ const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibr
         
         <div className="space-y-3">
           {field.columns?.map((col, index) => (
-            <div key={col.id || index} className="bg-background-dark border border-border-dark rounded-lg p-3 space-y-3">
+            <div 
+              key={col.id || index} 
+              className={`bg-background-dark border border-border-dark rounded-lg p-3 space-y-3 transition-all ${draggedIndex === index ? 'opacity-50 border-dashed border-primary' : ''}`}
+              draggable
+              onDragStart={(e) => handleDragStart(e, index)}
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(e, index)}
+              onDragEnd={() => setDraggedIndex(null)}
+            >
               {/* First Row: Name and Delete */}
               <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-text-secondary cursor-move text-lg hover:text-white" title="Arrastrar para ordenar">drag_indicator</span>
                 <div className="flex-1">
                   <input 
                     className="w-full bg-transparent border-b border-border-dark text-white text-sm focus:border-primary outline-none px-0 py-1"
@@ -85,6 +122,7 @@ const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibr
                 >
                   <option value="text">Texto</option>
                   <option value="select">Combo (Select)</option>
+                  <option value="file">Subir Archivo</option>
                 </select>
                 
                 <label className="flex items-center gap-2 cursor-pointer" title="Marcar como requerido">

@@ -9,7 +9,7 @@ interface PreviewFieldProps {
   onChange: (id: string, value: any) => void;
   onGridAddRow: (fieldId: string, columns: GridColumn[]) => void;
   onGridRemoveRow: (fieldId: string, rowIndex: number) => void;
-  onGridCellChange: (fieldId: string, rowIndex: number, columnLabel: string, value: string) => void;
+  onGridCellChange: (fieldId: string, rowIndex: number, columnLabel: string, value: any) => void;
   isFieldVisible: (field: FormField) => boolean;
 }
 
@@ -102,6 +102,50 @@ const PreviewField: React.FC<PreviewFieldProps> = ({
                             <option value="">Seleccionar...</option>
                             {options?.map((opt, i) => <option key={i} value={opt}>{opt}</option>)}
                           </select>
+                        ) : col.type === 'file' ? (
+                          <div className="flex items-center gap-2 min-w-[200px]">
+                            {row[col.label] instanceof File ? (
+                              <>
+                                <div className="flex-1 flex items-center gap-2 overflow-hidden bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded border border-slate-200 dark:border-slate-700">
+                                  <span className="material-symbols-outlined text-gray-400 text-lg">description</span>
+                                  <span className="text-xs truncate max-w-[120px] text-slate-700 dark:text-white" title={row[col.label].name}>{row[col.label].name}</span>
+                                </div>
+                                
+                                <a 
+                                  href={URL.createObjectURL(row[col.label])} 
+                                  download={row[col.label].name}
+                                  className="p-1.5 text-primary hover:bg-primary/10 rounded transition-colors flex items-center justify-center"
+                                  title="Descargar archivo"
+                                >
+                                  <span className="material-symbols-outlined text-lg">download</span>
+                                </a>
+
+                                <button 
+                                  onClick={() => onGridCellChange(field.id, rowIndex, col.label, null)}
+                                  className="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors flex items-center justify-center"
+                                  title="Eliminar archivo"
+                                >
+                                  <span className="material-symbols-outlined text-lg">close</span>
+                                </button>
+                              </>
+                            ) : (
+                              <input 
+                                type="file" 
+                                className="block w-full text-xs text-slate-500
+                                  file:mr-2 file:py-1.5 file:px-3
+                                  file:rounded-full file:border-0
+                                  file:text-xs file:font-semibold
+                                  file:bg-primary/10 file:text-primary
+                                  hover:file:bg-primary/20
+                                  cursor-pointer"
+                                onChange={(e) => {
+                                  if (e.target.files && e.target.files[0]) {
+                                    onGridCellChange(field.id, rowIndex, col.label, e.target.files[0]);
+                                  }
+                                }}
+                              />
+                            )}
+                          </div>
                         ) : (
                           <input type="text" value={row[col.label] || ''} onChange={(e) => onGridCellChange(field.id, rowIndex, col.label, e.target.value)} className="w-full bg-transparent border-b border-transparent focus:border-primary outline-none px-2 py-1 text-slate-900 dark:text-white" />
                         )}
@@ -127,6 +171,33 @@ const PreviewField: React.FC<PreviewFieldProps> = ({
   }
 
   if (field.type === 'file' && field.fileStyle === 'button') {
+    const files = formValues[field.id] || [];
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files && e.target.files[0]) {
+        const newFile = e.target.files[0];
+        const newFileEntry = {
+          name: newFile.name,
+          description: '',
+          file: newFile,
+          url: URL.createObjectURL(newFile)
+        };
+        onChange(field.id, [...files, newFileEntry]);
+      }
+    };
+
+    const handleDescriptionChange = (index: number, desc: string) => {
+      const newFiles = [...files];
+      newFiles[index].description = desc;
+      onChange(field.id, newFiles);
+    };
+
+    const handleRemoveFile = (index: number) => {
+      const newFiles = [...files];
+      newFiles.splice(index, 1);
+      onChange(field.id, newFiles);
+    };
+
     return (
       <div key={field.id} className={`${field.width === 'full' ? 'md:col-span-2' : 'md:col-span-1'} space-y-4 pt-2 animate-fadeIn`}>
         <label className="block text-sm font-bold text-slate-500 dark:text-text-secondary uppercase tracking-wider">
@@ -145,10 +216,65 @@ const PreviewField: React.FC<PreviewFieldProps> = ({
             )}
           </div>
         )}
-        <button type="button" className="bg-green-500 text-white px-5 py-2.5 rounded-lg font-bold flex items-center gap-2 shadow">
-          <span className="material-symbols-outlined">add</span>
-          Agregar archivo
-        </button>
+
+        {/* Files Table */}
+        {files.length > 0 && (
+          <div className="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-lg mb-4">
+            <table className="w-full text-sm text-left">
+              <thead className="bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 uppercase text-xs">
+                <tr>
+                  <th className="px-4 py-3">Nombre del Archivo</th>
+                  <th className="px-4 py-3">Descripción de documento</th>
+                  <th className="px-4 py-3">Descargar</th>
+                  <th className="px-4 py-3 w-10"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                {files.map((file: any, index: number) => (
+                  <tr key={index} className="bg-white dark:bg-gray-900">
+                    <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{file.name}</td>
+                    <td className="px-4 py-3">
+                      <input 
+                        type="text" 
+                        value={file.description}
+                        onChange={(e) => handleDescriptionChange(index, e.target.value)}
+                        className="w-full bg-transparent border-b border-gray-300 focus:border-primary outline-none py-1 text-gray-700 dark:text-gray-300"
+                        placeholder="Descripción..."
+                      />
+                    </td>
+                    <td className="px-4 py-3">
+                      <a href={file.url} download={file.name} className="text-primary hover:underline flex items-center gap-1 font-medium">
+                        <span className="material-symbols-outlined text-lg">download</span>
+                        Descargar
+                      </a>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <button onClick={() => handleRemoveFile(index)} className="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                        <span className="material-symbols-outlined text-lg">delete</span>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        <div>
+          <input
+            type="file"
+            id={`file-upload-${field.id}`}
+            className="hidden"
+            onChange={handleFileChange}
+          />
+          <label 
+            htmlFor={`file-upload-${field.id}`}
+            className="bg-green-500 text-white px-5 py-2.5 rounded-lg font-bold flex items-center gap-2 shadow cursor-pointer w-fit hover:bg-green-600 transition-colors"
+          >
+            <span className="material-symbols-outlined">add</span>
+            Agregar archivo
+          </label>
+        </div>
       </div>
     );
   }

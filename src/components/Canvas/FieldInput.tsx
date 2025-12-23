@@ -9,6 +9,7 @@ interface FieldInputProps {
 const FieldInput: React.FC<FieldInputProps> = ({ field }) => {
   const commonClasses = "w-full bg-background-dark border-border-dark rounded-lg px-4 py-2.5 text-white placeholder-gray-600 border focus:border-primary focus:ring-0 pointer-events-none";
   const isButtonStyleFile = field.type === 'file' && field.fileStyle === 'button';
+  const isTableStyleFile = field.type === 'file' && field.fileStyle === 'table';
 
   switch (field.type) {
     case 'textarea':

@@ -4,6 +4,7 @@ import Toolbox from './components/Toolbox';
 import Canvas from './components/Canvas';
 import PropertiesPanel from './components/PropertiesPanel';
 import PreviewModal from './components/PreviewModal';
+import { ThemeConfigModal } from './components/ThemeConfig';
 import { useFormBuilder } from './hooks/useFormBuilder';
 import { sharedFieldsLibrary } from './data/sharedLibrary';
 import { initialFields } from './data/initialFields';
@@ -11,6 +12,7 @@ import { flattenFields } from './utils/fieldHelpers';
 
 const App: React.FC = () => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isThemeConfigOpen, setIsThemeConfigOpen] = useState(false);
   
   const {
     fields,
@@ -27,8 +29,11 @@ const App: React.FC = () => {
   } = useFormBuilder(initialFields, sharedFieldsLibrary);
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display">
-      <Header onPreview={() => setIsPreviewOpen(true)} />
+    <div className="flex flex-col h-screen overflow-hidden font-display">
+      <Header 
+        onPreview={() => setIsPreviewOpen(true)} 
+        onThemeConfig={() => setIsThemeConfigOpen(true)}
+      />
       
       <main className="flex flex-1 overflow-hidden relative">
         <Toolbox 
@@ -61,6 +66,13 @@ const App: React.FC = () => {
           fields={fields} 
           onClose={() => setIsPreviewOpen(false)}
           sharedLibrary={sharedFieldsLibrary}
+        />
+      )}
+
+      {isThemeConfigOpen && (
+        <ThemeConfigModal
+          isOpen={isThemeConfigOpen}
+          onClose={() => setIsThemeConfigOpen(false)}
         />
       )}
     </div>

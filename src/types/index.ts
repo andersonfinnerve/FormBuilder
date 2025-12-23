@@ -5,7 +5,7 @@ export type FieldType = 'text' | 'textarea' | 'number' | 'email' | 'select' | 'd
 export interface GridColumn {
   id: string;
   label: string;
-  type: 'text' | 'select';
+  type: 'text' | 'select' | 'file';
   required: boolean;
   options?: string[]; // Solo si type es 'select' (Manual)
   sharedSource?: string; // ID de la librería compartida (Centralizado)
