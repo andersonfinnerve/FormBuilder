@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormField } from '../../types';
+import { Input, TextArea } from '../common/Input';
 
 interface GeneralSettingsProps {
   field: FormField;
@@ -20,42 +21,31 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ field, isShared, onCh
         )}
       </div>
       
-      <div className="space-y-1.5">
-        <label className="text-sm text-white font-medium block">Etiqueta del Campo</label>
-        <input 
-          className="w-full bg-background-dark border border-border-dark rounded-lg px-3 py-2 text-white text-sm focus:ring-1 focus:ring-primary focus:border-primary outline-none" 
-          type="text" 
-          value={field.label}
-          onChange={(e) => onChange('label', e.target.value)}
-        />
-        {isShared && <p className="text-[10px] text-text-secondary">Puede renombrar la etiqueta localmente sin afectar la fuente.</p>}
-      </div>
+      <Input 
+        label="Etiqueta del Campo"
+        type="text"
+        value={field.label}
+        onChange={(e) => onChange('label', e.target.value)}
+        description={isShared ? "Puede renombrar la etiqueta localmente sin afectar la fuente." : undefined}
+      />
       
       {(field.type === 'text' || field.type === 'email' || field.type === 'number' || field.type === 'textarea') && (
-        <div className="space-y-1.5">
-          <label className="text-sm text-white font-medium block">Placeholder</label>
-          <input 
-            className="w-full bg-background-dark border border-border-dark rounded-lg px-3 py-2 text-white text-sm focus:ring-1 focus:ring-primary focus:border-primary outline-none" 
-            type="text" 
-            value={field.placeholder || ''}
-            onChange={(e) => onChange('placeholder', e.target.value)}
-          />
-        </div>
+        <Input 
+          label="Placeholder"
+          type="text"
+          value={field.placeholder || ''}
+          onChange={(e) => onChange('placeholder', e.target.value)}
+        />
       )}
       
-      <div className="space-y-1.5">
-        <div className="flex justify-between items-end">
-          <label className="text-sm text-white font-medium block">Descripción / Ayuda</label>
-          <span className="text-[10px] text-primary cursor-help" title="Use **negrita** para resaltar y [texto](url) para enlaces.">Soporta Markdown</span>
-        </div>
-        <textarea 
-          className="w-full bg-background-dark border border-border-dark rounded-lg px-3 py-2 text-white text-sm focus:ring-1 focus:ring-primary focus:border-primary outline-none resize-none" 
-          rows={4}
-          value={field.description || ''}
-          onChange={(e) => onChange('description', e.target.value)}
-          placeholder="Ej. Ingrese aquí su **información** detallada."
-        ></textarea>
-      </div>
+      <TextArea 
+        label="Descripción / Ayuda"
+        helperText={<span className="text-[10px] text-primary cursor-help" title="Use **negrita** para resaltar y [texto](url) para enlaces.">Soporta Markdown</span>}
+        rows={4}
+        value={field.description || ''}
+        onChange={(e) => onChange('description', e.target.value)}
+        placeholder="Ej. Ingrese aquí su **información** detallada."
+      />
     </div>
   );
 };

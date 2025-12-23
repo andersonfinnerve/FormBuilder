@@ -6,6 +6,7 @@ import PropertiesPanel from './components/PropertiesPanel';
 import PreviewModal from './components/PreviewModal';
 import { ThemeConfigModal } from './components/ThemeConfig';
 import { useFormBuilder } from './hooks/useFormBuilder';
+import { useTheme } from './contexts/ThemeContext';
 import { sharedFieldsLibrary } from './data/sharedLibrary';
 import { initialFields } from './data/initialFields';
 import { flattenFields } from './utils/fieldHelpers';
@@ -13,6 +14,7 @@ import { flattenFields } from './utils/fieldHelpers';
 const App: React.FC = () => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isThemeConfigOpen, setIsThemeConfigOpen] = useState(false);
+  const { theme, mode } = useTheme();
   
   const {
     fields,
@@ -28,11 +30,38 @@ const App: React.FC = () => {
     handleDropNewField
   } = useFormBuilder(initialFields, sharedFieldsLibrary);
 
+  const handleSave = () => {
+    const payload = {
+      formConfig: fields,
+      themeConfig: {
+        theme,
+        mode
+      },
+      metadata: {
+        version: "2.4.0",
+        lastModified: new Date().toISOString(),
+        name: "Onboarding Clientes 2024" // Esto podría venir de un estado también
+      }
+    };
+
+    console.log("=== PAYLOAD PARA GUARDAR EN BD ===");
+    console.log(JSON.stringify(payload, null, 2));
+    alert("Configuración guardada en consola (Simulación de API)");
+    
+    // Aquí harías la llamada a tu API:
+    // await fetch('/api/forms/save', { 
+    //   method: 'POST', 
+    //   body: JSON.stringify(payload),
+    //   headers: { 'Content-Type': 'application/json' }
+    // });
+  };
+
   return (
     <div className="flex flex-col h-screen overflow-hidden font-display">
       <Header 
         onPreview={() => setIsPreviewOpen(true)} 
         onThemeConfig={() => setIsThemeConfigOpen(true)}
+        onSave={handleSave}
       />
       
       <main className="flex flex-1 overflow-hidden relative">

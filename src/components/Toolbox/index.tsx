@@ -1,5 +1,6 @@
 import React from 'react';
 import { FieldType, SharedFieldDefinition } from '../../types';
+import { Input } from '../common/Input';
 import ToolboxItem from './ToolboxItem';
 
 interface ToolboxProps {
@@ -9,15 +10,16 @@ interface ToolboxProps {
 }
 
 const Toolbox: React.FC<ToolboxProps> = ({ onAddField, sharedLibrary, onAddSharedField }) => {
+  console.log('prueba 1')
   return (
     <aside className="w-72 bg-surface-dark border-r border-border-dark flex flex-col z-10 shrink-0 hidden lg:flex">
       {/* Search */}
       <div className="p-4 border-b border-border-dark">
         <h3 className="text-text-secondary text-xs font-bold uppercase tracking-wider mb-1">Caja de Herramientas</h3>
         <div className="relative">
-          <span className="material-symbols-outlined absolute left-2.5 top-2.5 text-text-secondary text-lg">search</span>
-          <input 
-            className="w-full bg-background-dark border border-border-dark text-white text-sm rounded-lg pl-9 pr-3 py-2 focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-600" 
+          <span className="material-symbols-outlined absolute left-2.5 top-2.5 text-text-secondary text-lg z-10">search</span>
+          <Input 
+            className="bg-background-dark border-border-dark pl-9 placeholder-text-secondary" 
             placeholder="Buscar campos..." 
             type="text" 
           />
@@ -61,7 +63,7 @@ const Toolbox: React.FC<ToolboxProps> = ({ onAddField, sharedLibrary, onAddShare
 
         {/* Category: Basic */}
         <div>
-          <h4 className="text-white font-bold text-sm mb-3 flex items-center gap-2">
+          <h4 className="text-text-primary font-bold text-sm mb-3 flex items-center gap-2">
             <span className="material-symbols-outlined text-text-secondary text-base">check_box_outline_blank</span>
             Básicos
           </h4>
@@ -75,7 +77,7 @@ const Toolbox: React.FC<ToolboxProps> = ({ onAddField, sharedLibrary, onAddShare
 
         {/* Category: Selection */}
         <div>
-          <h4 className="text-white font-bold text-sm mb-3 flex items-center gap-2">
+          <h4 className="text-text-primary font-bold text-sm mb-3 flex items-center gap-2">
             <span className="material-symbols-outlined text-text-secondary text-base">list_alt</span>
             Selección
           </h4>
@@ -88,7 +90,7 @@ const Toolbox: React.FC<ToolboxProps> = ({ onAddField, sharedLibrary, onAddShare
 
         {/* Category: Advanced */}
         <div>
-          <h4 className="text-white font-bold text-sm mb-3 flex items-center gap-2">
+          <h4 className="text-text-primary font-bold text-sm mb-3 flex items-center gap-2">
             <span className="material-symbols-outlined text-text-secondary text-base">star</span>
             Avanzado
           </h4>
@@ -101,7 +103,7 @@ const Toolbox: React.FC<ToolboxProps> = ({ onAddField, sharedLibrary, onAddShare
 
         {/* Category: Layout */}
         <div>
-          <h4 className="text-white font-bold text-sm mb-3 flex items-center gap-2">
+          <h4 className="text-text-primary font-bold text-sm mb-3 flex items-center gap-2">
             <span className="material-symbols-outlined text-text-secondary text-base">dashboard</span>
             Diseño
           </h4>

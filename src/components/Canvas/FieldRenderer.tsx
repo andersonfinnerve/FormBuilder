@@ -181,8 +181,12 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
         {!isSpacer && !isDivider && (
           <div className="flex flex-col gap-1 mb-2">
             <label 
-              className={`block text-sm font-bold transition-colors ${isSection ? 'text-lg uppercase tracking-wide border-b border-border-dark pb-2 mb-2' : ''} ${isButtonStyleFile ? 'uppercase tracking-wide text-text-secondary' : ''}`} 
-              style={{ color: isSelected && !isButtonStyleFile && !isSection ? '#258cf4' : (isSection ? 'white' : (isButtonStyleFile ? undefined : 'white')) }}
+              className={`
+                block text-sm font-bold transition-colors 
+                ${isSection ? 'text-lg uppercase tracking-wide border-b border-border-dark pb-2 mb-2' : ''} 
+                ${isButtonStyleFile ? 'uppercase tracking-wide text-text-secondary' : ''}
+                ${isSelected && !isButtonStyleFile && !isSection ? 'text-primary' : (isButtonStyleFile ? '' : 'text-text-primary')}
+              `} 
             >
               {field.label} {field.required && <span className="text-red-500">*</span>}
             </label>

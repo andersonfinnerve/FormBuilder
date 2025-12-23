@@ -6,7 +6,7 @@ const EmptyState: React.FC = () => {
       <div className="bg-background-dark p-4 rounded-full mb-4">
         <span className="material-symbols-outlined text-3xl">tune</span>
       </div>
-      <h3 className="text-white font-bold mb-2">Sin selección</h3>
+      <h3 className="text-text-primary font-bold mb-2">Sin selección</h3>
       <p className="text-sm">Selecciona un campo en el canvas para editar sus propiedades.</p>
     </aside>
   );

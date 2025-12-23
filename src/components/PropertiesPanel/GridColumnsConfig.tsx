@@ -1,4 +1,6 @@
 import React from 'react';
+import { Input } from '../common/Input';
+import { Select } from '../common/Select';
 import { FormField, GridColumn, SharedFieldDefinition } from '../../types';
 
 interface GridColumnsConfigProps {
@@ -95,10 +97,9 @@ const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibr
             >
               {/* First Row: Name and Delete */}
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-text-secondary cursor-move text-lg hover:text-white" title="Arrastrar para ordenar">drag_indicator</span>
+                <span className="material-symbols-outlined text-text-secondary cursor-move text-lg hover:text-text-primary" title="Arrastrar para ordenar">drag_indicator</span>
                 <div className="flex-1">
-                  <input 
-                    className="w-full bg-transparent border-b border-border-dark text-white text-sm focus:border-primary outline-none px-0 py-1"
+                  <Input 
                     value={col.label}
                     placeholder="Nombre Columna"
                     onChange={(e) => handleColumnUpdate(index, 'label', e.target.value)}
@@ -114,25 +115,25 @@ const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibr
               </div>
 
               {/* Second Row: Type and Required */}
-              <div className="flex items-center gap-3">
-                <select 
-                  className="flex-1 bg-surface-dark border border-border-dark rounded text-xs text-white px-2 py-1 outline-none focus:border-primary"
+              <div className="grid grid-cols-[1fr_auto] gap-3 items-center">
+                <Select 
+                  className="w-full bg-surface-dark border-border-dark pl-2 pr-8 py-1 text-xs"
                   value={col.type}
                   onChange={(e) => handleColumnUpdate(index, 'type', e.target.value)}
                 >
                   <option value="text">Texto</option>
                   <option value="select">Combo (Select)</option>
                   <option value="file">Subir Archivo</option>
-                </select>
+                </Select>
                 
-                <label className="flex items-center gap-2 cursor-pointer" title="Marcar como requerido">
+                <label className="flex items-center gap-2 cursor-pointer bg-surface-dark border border-border-dark rounded px-2 py-1 h-full hover:border-primary transition-colors" title="Marcar como requerido">
                   <input 
                     type="checkbox" 
-                    className="rounded border-gray-600 bg-transparent text-primary focus:ring-primary w-4 h-4"
+                    className="rounded border-gray-600 bg-transparent text-primary focus:ring-primary w-3.5 h-3.5"
                     checked={col.required}
                     onChange={(e) => handleColumnUpdate(index, 'required', e.target.checked)}
                   />
-                  <span className="text-xs text-text-secondary">Req.</span>
+                  <span className="text-[10px] font-bold text-text-secondary uppercase">Req.</span>
                 </label>
               </div>
 
@@ -141,8 +142,8 @@ const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibr
                 <div className="space-y-2 mt-2 border-t border-border-dark pt-2">
                   <div className="space-y-1">
                     <label className="text-[10px] text-text-secondary uppercase font-bold">Origen de Opciones</label>
-                    <select
-                      className="w-full bg-surface-dark border border-border-dark rounded px-2 py-1 text-xs text-white outline-none focus:border-primary"
+                    <Select
+                      className="bg-surface-dark border-border-dark pl-2 pr-8 py-1 text-xs"
                       value={col.sharedSource || 'manual'}
                       onChange={(e) => handleColumnUpdate(index, 'sharedSource', e.target.value === 'manual' ? undefined : e.target.value)}
                     >
@@ -152,14 +153,13 @@ const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibr
                           <option key={lib.id} value={lib.id}>{lib.label}</option>
                         ))}
                       </optgroup>
-                    </select>
+                    </Select>
                   </div>
 
                   {!col.sharedSource && (
                     <div className="space-y-1">
                       <label className="text-[10px] text-text-secondary uppercase font-bold">Opciones (separar por comas)</label>
-                      <input 
-                        className="w-full bg-surface-dark border border-border-dark rounded px-2 py-1 text-xs text-white outline-none focus:border-primary"
+                      <Input 
                         value={col.options?.join(', ') || ''}
                         placeholder="Opción 1, Opción 2"
                         onChange={(e) => handleColumnOptionsChange(index, e.target.value)}

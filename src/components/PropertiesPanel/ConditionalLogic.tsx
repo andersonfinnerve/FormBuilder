@@ -1,5 +1,8 @@
 import React from 'react';
 import { FormField, LogicRule } from '../../types';
+import ToggleSwitch from '../common/ToggleSwitch';
+import { Input } from '../common/Input';
+import { Select } from '../common/Select';
 
 interface ConditionalLogicProps {
   field: FormField;
@@ -28,28 +31,21 @@ const ConditionalLogic: React.FC<ConditionalLogicProps> = ({ field, availableTri
     <>
       <div className="h-px bg-border-dark w-full"></div>
       <div className="space-y-4">
-        <div className="flex items-center justify-between group">
-          <div className="flex flex-col">
-            <h4 className="text-text-secondary text-xs font-bold uppercase tracking-wider">Lógica Condicional</h4>
-            <span className="text-xs text-text-secondary">Mostrar/ocultar dinámicamente</span>
-          </div>
-          <label className="relative inline-flex items-center cursor-pointer">
-            <input 
-              type="checkbox" 
-              className="sr-only peer" 
-              checked={!!field.logic?.enabled}
-              onChange={(e) => toggleLogic(e.target.checked)}
-            />
-            <div className="w-9 h-5 bg-border-dark peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
-          </label>
-        </div>
+        <h4 className="text-text-secondary text-xs font-bold uppercase tracking-wider">Lógica Condicional</h4>
+        
+        <ToggleSwitch 
+          label="Visibilidad"
+          description="Mostrar/ocultar dinámicamente"
+          checked={!!field.logic?.enabled}
+          onChange={toggleLogic}
+        />
 
         {field.logic?.enabled && (
           <div className="bg-background-dark/50 border border-border-dark rounded-lg p-3 space-y-3 animate-fadeIn">
             <div className="space-y-1">
-              <label className="text-xs text-white font-medium">Mostrar este campo cuando:</label>
-              <select 
-                className="w-full bg-surface-dark border border-border-dark rounded px-2 py-1.5 text-xs text-white outline-none focus:border-primary"
+              <label className="text-xs text-text-primary font-medium">Mostrar este campo cuando:</label>
+              <Select 
+                className="bg-surface-dark border-border-dark px-2 py-1.5 text-xs"
                 value={field.logic.triggerId || ''}
                 onChange={(e) => handleLogicUpdate('triggerId', e.target.value)}
               >
@@ -57,14 +53,14 @@ const ConditionalLogic: React.FC<ConditionalLogicProps> = ({ field, availableTri
                 {availableTriggers.map(f => (
                   <option key={f.id} value={f.id}>{f.label}</option>
                 ))}
-              </select>
+              </Select>
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs text-white font-medium">Es igual a:</label>
+              <label className="text-xs text-text-primary font-medium">Es igual a:</label>
               {selectedTriggerField && (selectedTriggerField.type === 'select' || selectedTriggerField.type === 'radio') && selectedTriggerField.options ? (
-                <select 
-                  className="w-full bg-surface-dark border border-border-dark rounded px-2 py-1.5 text-xs text-white outline-none focus:border-primary"
+                <Select 
+                  className="bg-surface-dark border-border-dark px-2 py-1.5 text-xs"
                   value={field.logic.value || ''}
                   onChange={(e) => handleLogicUpdate('value', e.target.value)}
                 >
@@ -72,11 +68,11 @@ const ConditionalLogic: React.FC<ConditionalLogicProps> = ({ field, availableTri
                   {selectedTriggerField.options.map(opt => (
                     <option key={opt} value={opt}>{opt}</option>
                   ))}
-                </select>
+                </Select>
               ) : (
-                <input 
+                <Input 
                   type="text"
-                  className="w-full bg-surface-dark border border-border-dark rounded px-2 py-1.5 text-xs text-white outline-none focus:border-primary"
+                  className="bg-surface-dark border-border-dark px-2 py-1.5 text-xs"
                   placeholder="Valor esperado"
                   value={field.logic.value || ''}
                   onChange={(e) => handleLogicUpdate('value', e.target.value)}

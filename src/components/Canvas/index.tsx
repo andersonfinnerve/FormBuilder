@@ -69,7 +69,7 @@ const Canvas: React.FC<CanvasProps> = ({
           
           <div className="p-6 md:p-10 space-y-8">
             <div className="group relative border-b border-border-dark pb-6 hover:bg-background-dark/30 -mx-4 px-4 rounded-lg transition-colors cursor-pointer">
-              <h1 className="text-3xl font-bold text-white mb-2">Formulario de Registro #1024</h1>
+              <h1 className="text-3xl font-bold text-text-primary mb-2">Formulario de Registro #1024</h1>
               <p className="text-text-secondary">Complete la información solicitada.</p>
             </div>
 

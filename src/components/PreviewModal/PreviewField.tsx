@@ -1,6 +1,8 @@
 import React from 'react';
 import { FormField, GridColumn, SharedFieldDefinition } from '../../types';
 import { parseRichText } from '../../utils/richText';
+import { Input, TextArea } from '../common/Input';
+import { Select } from '../common/Select';
 
 interface PreviewFieldProps {
   field: FormField;
@@ -28,9 +30,9 @@ const PreviewField: React.FC<PreviewFieldProps> = ({
   // Handle SECTION
   if (field.type === 'section') {
     return (
-      <div key={field.id} className={`${field.width === 'full' ? 'md:col-span-2' : 'md:col-span-1'} border border-slate-200 dark:border-border-dark rounded-xl p-6 bg-slate-50 dark:bg-black/20 space-y-4 animate-fadeIn`}>
-        <div className="border-b border-slate-200 dark:border-border-dark pb-2">
-          <h3 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-wide">
+      <div key={field.id} className={`${field.width === 'full' ? 'md:col-span-2' : 'md:col-span-1'} border border-border rounded-xl p-6 bg-surface space-y-4 animate-fadeIn`}>
+        <div className="border-b border-border pb-2">
+          <h3 className="text-lg font-bold text-text-primary uppercase tracking-wide">
             {field.label}
           </h3>
           {field.description && (
@@ -62,7 +64,7 @@ const PreviewField: React.FC<PreviewFieldProps> = ({
   }
   
   if (field.type === 'divider') {
-    return <div key={field.id} className="md:col-span-2 py-4"><hr className="border-slate-200 dark:border-border-dark" /></div>;
+    return <div key={field.id} className="md:col-span-2 py-4"><hr className="border-border border-border-dark" /></div>;
   }
   
   if (field.type === 'grid') {
@@ -70,12 +72,12 @@ const PreviewField: React.FC<PreviewFieldProps> = ({
     const columns = field.columns || [];
     return (
       <div key={field.id} className="md:col-span-2 space-y-2 animate-fadeIn">
-        <label className="block text-sm font-bold text-slate-700 dark:text-white">
+        <label className="block text-sm font-bold text-text-primary">
           {field.label} {field.required && <span className="text-red-500">*</span>}
         </label>
-        <div className="overflow-x-auto border border-slate-200 dark:border-border-dark rounded-lg">
+        <div className="overflow-x-auto border border-border rounded-lg">
           <table className="w-full text-sm text-left">
-            <thead className="text-xs text-slate-700 dark:text-white uppercase bg-slate-100 dark:bg-surface-dark border-b border-slate-200 dark:border-border-dark">
+            <thead className="text-xs text-text-primary uppercase bg-surface border-b border-border">
               <tr>
                 {columns.map((col, i) => (
                   <th key={col.id || i} className="px-4 py-3 whitespace-nowrap">{col.label}</th>
@@ -85,7 +87,7 @@ const PreviewField: React.FC<PreviewFieldProps> = ({
             </thead>
             <tbody>
               {rows.map((row: any, rowIndex: number) => (
-                <tr key={rowIndex} className="bg-white dark:bg-background-dark border-b border-slate-200 dark:border-border-dark">
+                <tr key={rowIndex} className="bg-background border-b border-border">
                   {columns.map((col, colIndex) => {
                     let options = col.options;
                     if (col.sharedSource) {
@@ -98,17 +100,21 @@ const PreviewField: React.FC<PreviewFieldProps> = ({
                     return (
                       <td key={col.id || colIndex} className="p-2">
                         {col.type === 'select' ? (
-                          <select value={row[col.label] || ''} onChange={(e) => onGridCellChange(field.id, rowIndex, col.label, e.target.value)} className="w-full bg-transparent border-b border-transparent focus:border-primary outline-none px-2 py-1 text-slate-900 dark:text-white">
+                          <Select 
+                            value={row[col.label] || ''} 
+                            onChange={(e) => onGridCellChange(field.id, rowIndex, col.label, e.target.value)} 
+                            className="bg-transparent border-0 border-b border-transparent rounded-none focus:ring-0 focus:border-primary px-2 py-1"
+                          >
                             <option value="">Seleccionar...</option>
                             {options?.map((opt, i) => <option key={i} value={opt}>{opt}</option>)}
-                          </select>
+                          </Select>
                         ) : col.type === 'file' ? (
                           <div className="flex items-center gap-2 min-w-[200px]">
                             {row[col.label] instanceof File ? (
                               <>
-                                <div className="flex-1 flex items-center gap-2 overflow-hidden bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded border border-slate-200 dark:border-slate-700">
-                                  <span className="material-symbols-outlined text-gray-400 text-lg">description</span>
-                                  <span className="text-xs truncate max-w-[120px] text-slate-700 dark:text-white" title={row[col.label].name}>{row[col.label].name}</span>
+                                <div className="flex-1 flex items-center gap-2 overflow-hidden bg-surface bg-surface-dark px-2 py-1 rounded border border-border border-border-dark">
+                                  <span className="material-symbols-outlined text-text-secondary text-lg">description</span>
+                                  <span className="text-xs truncate max-w-[120px] text-text-primary " title={row[col.label].name}>{row[col.label].name}</span>
                                 </div>
                                 
                                 <a 
@@ -122,7 +128,7 @@ const PreviewField: React.FC<PreviewFieldProps> = ({
 
                                 <button 
                                   onClick={() => onGridCellChange(field.id, rowIndex, col.label, null)}
-                                  className="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors flex items-center justify-center"
+                                  className="p-1.5 text-red-500 hover:bg-red-50 hover:bg-red-900/20 rounded transition-colors flex items-center justify-center"
                                   title="Eliminar archivo"
                                 >
                                   <span className="material-symbols-outlined text-lg">close</span>
@@ -131,7 +137,7 @@ const PreviewField: React.FC<PreviewFieldProps> = ({
                             ) : (
                               <input 
                                 type="file" 
-                                className="block w-full text-xs text-slate-500
+                                className="block w-full text-xs text-text-secondary
                                   file:mr-2 file:py-1.5 file:px-3
                                   file:rounded-full file:border-0
                                   file:text-xs file:font-semibold
@@ -147,13 +153,17 @@ const PreviewField: React.FC<PreviewFieldProps> = ({
                             )}
                           </div>
                         ) : (
-                          <input type="text" value={row[col.label] || ''} onChange={(e) => onGridCellChange(field.id, rowIndex, col.label, e.target.value)} className="w-full bg-transparent border-b border-transparent focus:border-primary outline-none px-2 py-1 text-slate-900 dark:text-white" />
+                          <Input 
+                            value={row[col.label] || ''} 
+                            onChange={(e) => onGridCellChange(field.id, rowIndex, col.label, e.target.value)} 
+                            className="bg-transparent border-0 border-b border-transparent rounded-none focus:ring-0 focus:border-primary px-2 py-1"
+                          />
                         )}
                       </td>
                     );
                   })}
                   <td className="p-2 text-center">
-                    <button type="button" onClick={() => onGridRemoveRow(field.id, rowIndex)} className="text-slate-400 hover:text-red-500">
+                    <button type="button" onClick={() => onGridRemoveRow(field.id, rowIndex)} className="text-text-secondary hover:text-red-500">
                       <span className="material-symbols-outlined text-lg">delete</span>
                     </button>
                   </td>
@@ -200,11 +210,11 @@ const PreviewField: React.FC<PreviewFieldProps> = ({
 
     return (
       <div key={field.id} className={`${field.width === 'full' ? 'md:col-span-2' : 'md:col-span-1'} space-y-4 pt-2 animate-fadeIn`}>
-        <label className="block text-sm font-bold text-slate-500 dark:text-text-secondary uppercase tracking-wider">
+        <label className="block text-sm font-bold text-text-secondary uppercase tracking-wider">
           {field.label} {field.required && <span className="text-red-500">*</span>}
         </label>
         {(field.description || field.downloadUrl) && (
-          <div className="text-sm text-slate-700 dark:text-white leading-relaxed">
+          <div className="text-sm text-text-primary  leading-relaxed">
             {field.description && <div dangerouslySetInnerHTML={parseRichText(field.description)} />}
             {field.downloadUrl && (
               <div className="mt-2">
@@ -219,9 +229,9 @@ const PreviewField: React.FC<PreviewFieldProps> = ({
 
         {/* Files Table */}
         {files.length > 0 && (
-          <div className="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-lg mb-4">
+          <div className="overflow-x-auto border border-border rounded-lg mb-4">
             <table className="w-full text-sm text-left">
-              <thead className="bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 uppercase text-xs">
+              <thead className="bg-surface text-text-primary uppercase text-xs">
                 <tr>
                   <th className="px-4 py-3">Nombre del Archivo</th>
                   <th className="px-4 py-3">Descripción de documento</th>
@@ -229,16 +239,15 @@ const PreviewField: React.FC<PreviewFieldProps> = ({
                   <th className="px-4 py-3 w-10"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="divide-y divide-border">
                 {files.map((file: any, index: number) => (
-                  <tr key={index} className="bg-white dark:bg-gray-900">
-                    <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{file.name}</td>
+                  <tr key={index} className="bg-background">
+                    <td className="px-4 py-3 font-medium text-text-primary ">{file.name}</td>
                     <td className="px-4 py-3">
-                      <input 
-                        type="text" 
+                      <Input 
                         value={file.description}
                         onChange={(e) => handleDescriptionChange(index, e.target.value)}
-                        className="w-full bg-transparent border-b border-gray-300 focus:border-primary outline-none py-1 text-gray-700 dark:text-gray-300"
+                        className="bg-transparent border-0 border-b border-border rounded-none focus:ring-0 focus:border-primary py-1"
                         placeholder="Descripción..."
                       />
                     </td>
@@ -249,7 +258,7 @@ const PreviewField: React.FC<PreviewFieldProps> = ({
                       </a>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <button onClick={() => handleRemoveFile(index)} className="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                      <button onClick={() => handleRemoveFile(index)} className="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-50 hover:bg-red-900/20 transition-colors">
                         <span className="material-symbols-outlined text-lg">delete</span>
                       </button>
                     </td>
@@ -269,7 +278,7 @@ const PreviewField: React.FC<PreviewFieldProps> = ({
           />
           <label 
             htmlFor={`file-upload-${field.id}`}
-            className="bg-green-500 text-white px-5 py-2.5 rounded-lg font-bold flex items-center gap-2 shadow cursor-pointer w-fit hover:bg-green-600 transition-colors"
+            className="bg-green-500  px-5 py-2.5 rounded-lg font-bold flex items-center gap-2 shadow cursor-pointer w-fit hover:bg-green-600 transition-colors"
           >
             <span className="material-symbols-outlined">add</span>
             Agregar archivo
@@ -282,41 +291,38 @@ const PreviewField: React.FC<PreviewFieldProps> = ({
   // Generic Field Render
   return (
     <div key={field.id} className={`${field.width === 'full' ? 'md:col-span-2' : 'md:col-span-1'} space-y-2 animate-fadeIn`}>
-      <label className="block text-sm font-bold text-slate-700 dark:text-white">
+      <label className="block text-sm font-bold text-text-primary">
         {field.label} {field.required && <span className="text-red-500">*</span>}
       </label>
       
       {field.type === 'textarea' ? (
-        <textarea className="w-full bg-slate-50 dark:bg-background-dark border-slate-200 dark:border-border-dark rounded-lg px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none" rows={3} onChange={(e) => onChange(field.id, e.target.value)} />
+        <TextArea rows={3} onChange={(e) => onChange(field.id, e.target.value)} />
       ) : field.type === 'select' ? (
-        <div className="relative">
-          <select className="w-full bg-slate-50 dark:bg-background-dark border-slate-200 dark:border-border-dark rounded-lg px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none appearance-none" onChange={(e) => onChange(field.id, e.target.value)}>
-            <option value="">Seleccionar...</option>
-            {field.options?.map((opt, i) => <option key={i} value={opt}>{opt}</option>)}
-          </select>
-          <span className="material-symbols-outlined absolute right-3 top-3 text-text-secondary pointer-events-none">expand_more</span>
-        </div>
+        <Select onChange={(e) => onChange(field.id, e.target.value)}>
+          <option value="">Seleccionar...</option>
+          {field.options?.map((opt, i) => <option key={i} value={opt}>{opt}</option>)}
+        </Select>
       ) : field.type === 'checkbox' ? (
         <div className="flex items-center gap-3">
-          <input type="checkbox" className="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-primary" onChange={(e) => onChange(field.id, e.target.checked)} />
-          <label className="text-sm text-slate-700 dark:text-white">{field.placeholder || 'Aceptar'}</label>
+          <input type="checkbox" className="w-5 h-5 rounded border-border text-primary" onChange={(e) => onChange(field.id, e.target.checked)} />
+          <label className="text-sm text-text-primary ">{field.placeholder || 'Aceptar'}</label>
         </div>
       ) : field.type === 'radio' ? (
         <div className="space-y-2">
           {field.options?.map((opt, i) => (
             <div key={i} className="flex items-center gap-3">
-              <input type="radio" name={field.id} className="w-4 h-4 border-gray-300 dark:border-gray-600 text-primary" onChange={(e) => onChange(field.id, e.target.value)} value={opt} />
-              <span className="text-sm text-slate-700 dark:text-white">{opt}</span>
+              <input type="radio" name={field.id} className="w-4 h-4 border-border text-primary" onChange={(e) => onChange(field.id, e.target.value)} value={opt} />
+              <span className="text-sm text-text-primary ">{opt}</span>
             </div>
           ))}
         </div>
       ) : field.type === 'file' ? (
-        <div className="border-2 border-dashed border-slate-300 dark:border-border-dark rounded-lg p-6 flex flex-col items-center justify-center text-text-secondary bg-slate-50 dark:bg-background-dark/50">
+        <div className="border-2 border-dashed border-border rounded-lg p-6 flex flex-col items-center justify-center text-text-secondary bg-background">
           <span className="material-symbols-outlined text-3xl mb-2">cloud_upload</span>
           <span className="text-xs">Subir archivo</span>
         </div>
       ) : (
-        <input type={field.type} className="w-full bg-slate-50 dark:bg-background-dark border-slate-200 dark:border-border-dark rounded-lg px-4 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none" onChange={(e) => onChange(field.id, e.target.value)} />
+        <Input type={field.type} onChange={(e) => onChange(field.id, e.target.value)} />
       )}
 
       {field.description && <div className="text-xs text-text-secondary" dangerouslySetInnerHTML={parseRichText(field.description)} />}

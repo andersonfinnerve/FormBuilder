@@ -33,9 +33,9 @@ const ToolboxItem: React.FC<ToolboxItemProps> = ({ icon, label, onClick, isShare
       <div className={`transition-colors ${isShared ? 'text-primary' : 'text-text-secondary group-hover:text-primary'}`}>
         <span className="material-symbols-outlined text-[20px]">{icon}</span>
       </div>
-      <span className="text-sm font-medium text-white truncate select-none">{label}</span>
+      <span className="text-sm font-medium text-text-primary truncate select-none">{label}</span>
       {isShared && <span className="material-symbols-outlined ml-auto text-primary text-xs opacity-70" title="Campo Centralizado">link</span>}
-      {!isShared && <span className="material-symbols-outlined ml-auto text-gray-600 opacity-0 group-hover:opacity-100 text-lg">add</span>}
+      {!isShared && <span className="material-symbols-outlined ml-auto text-text-secondary opacity-0 group-hover:opacity-100 text-lg">add</span>}
     </div>
   );
 };

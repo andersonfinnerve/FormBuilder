@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormField } from '../../types';
+import { Input } from '../common/Input';
 
 interface OptionsManagementProps {
   field: FormField;
@@ -16,11 +17,11 @@ const OptionsManagement: React.FC<OptionsManagementProps> = ({ field, isShared, 
         <div className="bg-background-dark p-3 rounded-lg border border-border-dark flex gap-3">
           <span className="material-symbols-outlined text-primary">cloud_done</span>
           <div>
-            <h4 className="text-white text-xs font-bold mb-1">Opciones Centralizadas</h4>
+            <h4 className="text-text-primary text-xs font-bold mb-1">Opciones Centralizadas</h4>
             <p className="text-[10px] text-text-secondary leading-tight">
               Las opciones de este campo provienen de una biblioteca compartida. No se pueden editar aquí para mantener la consistencia entre formularios.
             </p>
-            <div className="mt-2 text-xs text-white opacity-60">
+            <div className="mt-2 text-xs text-text-primary opacity-60">
               {field.options?.length} opciones cargadas.
             </div>
           </div>
@@ -39,8 +40,7 @@ const OptionsManagement: React.FC<OptionsManagementProps> = ({ field, isShared, 
           <div className="space-y-2">
             {field.options?.map((option, index) => (
               <div key={index} className="flex gap-2">
-                <input 
-                  className="w-full bg-background-dark border border-border-dark rounded-lg px-3 py-1.5 text-white text-sm focus:ring-1 focus:ring-primary outline-none"
+                <Input 
                   value={option}
                   onChange={(e) => {
                     const newOptions = [...(field.options || [])];

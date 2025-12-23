@@ -1,13 +1,14 @@
 import React from 'react';
 import { FormField } from '../../types';
 import { parseRichText } from '../../utils/richText';
+import { Select } from '../common/Select';
 
 interface FieldInputProps {
   field: FormField;
 }
 
 const FieldInput: React.FC<FieldInputProps> = ({ field }) => {
-  const commonClasses = "w-full bg-background-dark border-border-dark rounded-lg px-4 py-2.5 text-white placeholder-gray-600 border focus:border-primary focus:ring-0 pointer-events-none";
+  const commonClasses = "w-full bg-background-dark border-border-dark rounded-lg px-4 py-2.5 text-text-primary placeholder-text-secondary border focus:border-primary focus:ring-0 pointer-events-none";
   const isButtonStyleFile = field.type === 'file' && field.fileStyle === 'button';
   const isTableStyleFile = field.type === 'file' && field.fileStyle === 'table';
 
@@ -17,19 +18,16 @@ const FieldInput: React.FC<FieldInputProps> = ({ field }) => {
     
     case 'select':
       return (
-        <div className="relative">
-          <select className={`${commonClasses} appearance-none`} disabled>
-            <option>Seleccionar opción...</option>
-          </select>
-          <span className="material-symbols-outlined absolute right-3 top-3 text-text-secondary pointer-events-none">expand_more</span>
-        </div>
+        <Select className="bg-background-dark border-border-dark pointer-events-none" disabled>
+          <option>Seleccionar opción...</option>
+        </Select>
       );
     
     case 'checkbox':
       return (
         <div className="flex items-center gap-3 p-2 border border-border-dark rounded-lg bg-background-dark">
-          <input type="checkbox" className="w-5 h-5 rounded border-gray-600 text-primary" disabled />
-          <span className="text-white text-sm">{field.placeholder || 'Opción'}</span>
+          <input type="checkbox" className="w-5 h-5 rounded border-border-dark text-primary" disabled />
+          <span className="text-text-primary text-sm">{field.placeholder || 'Opción'}</span>
         </div>
       );
     
@@ -38,8 +36,8 @@ const FieldInput: React.FC<FieldInputProps> = ({ field }) => {
         <div className="space-y-2">
           {field.options?.map((opt, i) => (
             <div key={i} className="flex items-center gap-3">
-              <input type="radio" className="w-4 h-4 border-gray-600 text-primary" disabled />
-              <span className="text-white text-sm">{opt}</span>
+              <input type="radio" className="w-4 h-4 border-border-dark text-primary" disabled />
+              <span className="text-text-primary text-sm">{opt}</span>
             </div>
           ))}
         </div>
