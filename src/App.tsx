@@ -10,10 +10,12 @@ import { useTheme } from './contexts/ThemeContext';
 import { sharedFieldsLibrary } from './data/sharedLibrary';
 import { initialFields } from './data/initialFields';
 import { flattenFields } from './utils/fieldHelpers';
+import QuestionnaireBuilder from './components/QuestionnaireBuilder';
 
 const App: React.FC = () => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isThemeConfigOpen, setIsThemeConfigOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<'form' | 'questionnaire'>('form');
   const { theme, mode } = useTheme();
   
   const {
@@ -62,32 +64,40 @@ const App: React.FC = () => {
         onPreview={() => setIsPreviewOpen(true)} 
         onThemeConfig={() => setIsThemeConfigOpen(true)}
         onSave={handleSave}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
       />
       
       <main className="flex flex-1 overflow-hidden relative">
-        <Toolbox 
-          onAddField={handleAddField} 
-          sharedLibrary={sharedFieldsLibrary}
-          onAddSharedField={handleAddSharedField}
-        />
-        
-        <Canvas 
-          fields={fields} 
-          selectedId={selectedId} 
-          onSelectField={setSelectedId}
-          onDeleteField={handleDeleteField}
-          onDuplicateField={handleDuplicateField}
-          onUpdateField={handleUpdateField}
-          onMoveField={handleMoveField} 
-          onDropNewField={handleDropNewField}
-        />
-        
-        <PropertiesPanel 
-          selectedField={selectedField} 
-          allFields={flattenFields(fields)}
-          onUpdateField={handleUpdateField}
-          sharedLibrary={sharedFieldsLibrary}
-        />
+        {viewMode === 'form' ? (
+          <>
+            <Toolbox 
+              onAddField={handleAddField} 
+              sharedLibrary={sharedFieldsLibrary}
+              onAddSharedField={handleAddSharedField}
+            />
+            
+            <Canvas 
+              fields={fields} 
+              selectedId={selectedId} 
+              onSelectField={setSelectedId}
+              onDeleteField={handleDeleteField}
+              onDuplicateField={handleDuplicateField}
+              onUpdateField={handleUpdateField}
+              onMoveField={handleMoveField} 
+              onDropNewField={handleDropNewField}
+            />
+            
+            <PropertiesPanel 
+              selectedField={selectedField} 
+              allFields={flattenFields(fields)}
+              onUpdateField={handleUpdateField}
+              sharedLibrary={sharedFieldsLibrary}
+            />
+          </>
+        ) : (
+          <QuestionnaireBuilder />
+        )}
       </main>
 
       {isPreviewOpen && (

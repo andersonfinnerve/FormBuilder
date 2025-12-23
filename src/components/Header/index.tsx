@@ -5,9 +5,11 @@ interface HeaderProps {
   onPreview: () => void;
   onThemeConfig: () => void;
   onSave: () => void;
+  viewMode: 'form' | 'questionnaire';
+  onViewModeChange: (mode: 'form' | 'questionnaire') => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onPreview, onThemeConfig, onSave }) => {
+const Header: React.FC<HeaderProps> = ({ onPreview, onThemeConfig, onSave, viewMode, onViewModeChange }) => {
   const { mode, toggleMode } = useTheme();
   console.log("pruebax")
   return (
@@ -25,10 +27,19 @@ const Header: React.FC<HeaderProps> = ({ onPreview, onThemeConfig, onSave }) => 
 
       {/* Center Breadcrumb */}
       <div className="flex flex-1 justify-center max-w-xl mx-auto px-4 hidden md:flex">
-        <div className="flex items-center gap-2 bg-background px-3 py-1.5 rounded-full border border-border">
-          <span className="material-symbols-outlined text-text-secondary text-sm">folder</span>
-          <span className="text-text-secondary text-sm">Proyectos /</span>
-          <span className="text-text-primary text-sm font-medium">Onboarding Clientes 2024</span>
+        <div className="flex items-center gap-1 bg-background px-1 py-1 rounded-lg border border-border">
+          <button
+            onClick={() => onViewModeChange('form')}
+            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${viewMode === 'form' ? 'bg-surface shadow text-primary' : 'text-text-secondary hover:text-text-primary'}`}
+          >
+            Formulario
+          </button>
+          <button
+            onClick={() => onViewModeChange('questionnaire')}
+            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${viewMode === 'questionnaire' ? 'bg-surface shadow text-primary' : 'text-text-secondary hover:text-text-primary'}`}
+          >
+            Cuestionario
+          </button>
         </div>
       </div>
 
