@@ -5,8 +5,8 @@ interface HeaderProps {
   onPreview: () => void;
   onThemeConfig: () => void;
   onSave: () => void;
-  viewMode: 'form' | 'questionnaire';
-  onViewModeChange: (mode: 'form' | 'questionnaire') => void;
+  viewMode: 'form' | 'questionnaire' | 'onboarding';
+  onViewModeChange: (mode: 'form' | 'questionnaire' | 'onboarding') => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ onPreview, onThemeConfig, onSave, viewMode, onViewModeChange }) => {
@@ -39,6 +39,12 @@ const Header: React.FC<HeaderProps> = ({ onPreview, onThemeConfig, onSave, viewM
             className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${viewMode === 'questionnaire' ? 'bg-surface shadow text-primary' : 'text-text-secondary hover:text-text-primary'}`}
           >
             Cuestionario
+          </button>
+          <button
+            onClick={() => onViewModeChange('onboarding')}
+            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${viewMode === 'onboarding' ? 'bg-surface shadow text-primary' : 'text-text-secondary hover:text-text-primary'}`}
+          >
+            Onboarding
           </button>
         </div>
       </div>

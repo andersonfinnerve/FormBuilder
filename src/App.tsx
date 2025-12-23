@@ -11,11 +11,12 @@ import { sharedFieldsLibrary } from './data/sharedLibrary';
 import { initialFields } from './data/initialFields';
 import { flattenFields } from './utils/fieldHelpers';
 import QuestionnaireBuilder from './components/QuestionnaireBuilder';
+import OnboardingBuilder from './components/OnboardingBuilder';
 
 const App: React.FC = () => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isThemeConfigOpen, setIsThemeConfigOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<'form' | 'questionnaire'>('form');
+  const [viewMode, setViewMode] = useState<'form' | 'questionnaire' | 'onboarding'>('form');
   const { theme, mode } = useTheme();
   
   const {
@@ -95,8 +96,12 @@ const App: React.FC = () => {
               sharedLibrary={sharedFieldsLibrary}
             />
           </>
-        ) : (
+        ) : viewMode === 'questionnaire' ? (
           <QuestionnaireBuilder />
+        ) : (
+          <div className="w-full h-full overflow-auto bg-background">
+            <OnboardingBuilder />
+          </div>
         )}
       </main>
 
