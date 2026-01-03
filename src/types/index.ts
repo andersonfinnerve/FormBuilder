@@ -27,11 +27,14 @@ export interface FormField {
   description?: string;
   required: boolean;
   readOnly: boolean;
+  order: number;
   width: 'full' | 'half'; // Para redimensionar
   options?: string[]; // Para selects o radios (nivel campo)
   columns?: GridColumn[]; // Para grillas (nivel columna)
   sharedSource?: string; // ID del recurso compartido si proviene de la biblioteca central
   logic?: LogicRule; // Lógica condicional
+  physicalColumn?: string; // Mapeo a columna física de la entidad (ej. Contact.FirstName)
+  formDataId?: string; // ID del Dato Maestro del BackOffice si proviene de Maestro de Datos
   
   // Propiedades recursivas para secciones
   children?: FormField[];

@@ -62,7 +62,7 @@ const Canvas: React.FC<CanvasProps> = ({
 
       <div className="flex-1 overflow-y-auto p-4 md:p-12 flex justify-center custom-scrollbar">
         <div 
-          className="w-full max-w-[900px] h-fit bg-surface-dark border border-border-dark rounded-xl shadow-2xl relative transition-all"
+          className="w-full max-w-[1200px] h-fit bg-surface-dark border border-border-dark rounded-xl shadow-2xl relative transition-all"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="h-3 w-full bg-gradient-to-r from-blue-600 via-primary to-cyan-400 rounded-t-xl"></div>

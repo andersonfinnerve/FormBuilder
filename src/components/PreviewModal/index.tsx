@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FormField, GridColumn, SharedFieldDefinition } from '../../types';
 import PreviewField from './PreviewField';
+import Title from './fields/Title';
 
 interface PreviewModalProps {
   fields: FormField[];
@@ -67,10 +68,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ fields, onClose, sharedLibr
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
       <div className="bg-surface bg-surface-dark w-full max-w-3xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-border-dark">
         <div className="flex items-center justify-between p-4 border-b border-border-dark bg-background bg-background-dark">
-          <h2 className="text-xl font-bold text-text-primary flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary">play_circle</span>
-            Vista Previa del Formulario
-          </h2>
+          <Title title="Vista Previa del Formulario" icon="play_circle" />
           <button onClick={onClose} className="p-2 hover:bg-black/5 hover:bg-white/10 rounded-lg text-text-secondary transition-colors">
             <span className="material-symbols-outlined">close</span>
           </button>

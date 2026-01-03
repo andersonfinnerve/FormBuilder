@@ -1,6 +1,7 @@
 import React from 'react';
 import { ScoreRange } from '../../types/questionnaire';
 import { Input } from '../common/Input';
+import Button from '../Header/Button';
 
 interface ResultConfigProps {
   results: ScoreRange[];
@@ -71,13 +72,13 @@ const ResultConfig: React.FC<ResultConfigProps> = ({ results, onUpdate }) => {
           </div>
         ))}
 
-        <button 
+        <Button 
           onClick={handleAdd}
-          className="text-primary text-sm font-bold hover:underline flex items-center gap-1 mt-2"
-        >
-          <span className="material-symbols-outlined text-lg">add_circle</span>
-          Agregar Rango
-        </button>
+          label="Agregar Rango"
+          icon="add_circle"
+          variant="icon"
+          className="p-0 text-sm font-bold hover:underline mt-2"
+        />
       </div>
     </div>
   );

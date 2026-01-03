@@ -3,6 +3,7 @@ import { QuestionnaireConfig, Question } from '../../types/questionnaire';
 import QuestionItem from './QuestionItem';
 import ResultConfig from './ResultConfig';
 import { Input } from '../common/Input';
+import Button from '../Header/Button';
 
 const initialConfig: QuestionnaireConfig = {
   title: 'Perfil de Inversionista',
@@ -105,13 +106,20 @@ const QuestionnaireBuilder: React.FC = () => {
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-bold text-text-primary">Preguntas</h2>
-              <button 
+              {/* <button 
                 onClick={handleAddQuestion}
                 className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2 transition-colors shadow-lg"
               >
                 <span className="material-symbols-outlined">add</span>
                 Nueva Pregunta
-              </button>
+              </button> */}
+               <Button 
+                onClick={handleAddQuestion}
+                disabled={false}
+                variant="primary"
+                icon="add"
+                label="Nueva Pregunta"
+              />
             </div>
 
             {config.questions.map((q, index) => (

@@ -9,6 +9,7 @@ export const initialFields: FormField[] = [
     description: 'Ingrese su nombre legal como aparece en su ID.',
     required: true,
     readOnly: false,
+    order: 1,
     width: 'half',
   },
   {
@@ -18,6 +19,7 @@ export const initialFields: FormField[] = [
     description: '¿Existe alguna persona natural que pueda ser considerado como beneficiario final?',
     required: false,
     readOnly: false,
+    order: 2,
     width: 'full',
     children: [
       {
@@ -27,6 +29,7 @@ export const initialFields: FormField[] = [
         options: ['Sí', 'No'],
         required: true,
         readOnly: false,
+        order: 1,
         width: 'full'
       },
       {
@@ -36,6 +39,7 @@ export const initialFields: FormField[] = [
         description: 'Personas naturales que tienen una participación en la persona o estructura jurídica declarante igual o mayor al 10%.',
         required: false,
         readOnly: false,
+        order: 2,
         width: 'full',
         // Lógica: Mostrar solo si 'sub_1' es 'Sí'
         logic: {
@@ -50,6 +54,7 @@ export const initialFields: FormField[] = [
             label: 'Lista de Beneficiarios',
             required: false,
             readOnly: false,
+            order: 1,
             width: 'full',
             columns: [
               { id: 'c1', label: 'País', type: 'select', required: true, sharedSource: 'lib_nationality' },

@@ -3,6 +3,7 @@ import { OnboardingFlow, OnboardingStep, PersonType } from '../../types/onboardi
 import { Input } from '../common/Input';
 import { Select } from '../common/Select';
 import StepCard from './StepCard';
+import SubTitle from '../Toolbox/SubTitle';
 
 interface OnboardingConfigProps {
   initialFlow?: OnboardingFlow | null;
@@ -124,7 +125,7 @@ const OnboardingConfig: React.FC<OnboardingConfigProps> = ({ initialFlow, onSave
         {/* Left Column: General Settings & Stepper Preview */}
         <div className="lg:col-span-1 space-y-6">
           <div className="bg-surface border border-border rounded-xl p-5 shadow-sm">
-            <h3 className="text-sm font-semibold text-text-primary mb-4 uppercase tracking-wider">Configuración General</h3>
+            <SubTitle title="General Settings" />
             <div className="space-y-4">
               <Input
                 label="Nombre del Flujo"

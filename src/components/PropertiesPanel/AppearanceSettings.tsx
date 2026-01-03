@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormField } from '../../types';
+import SubTitle from '../Toolbox/SubTitle';
 
 interface AppearanceSettingsProps {
   field: FormField;
@@ -11,7 +12,8 @@ const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({ field, onChange
     <>
       <div className="h-px bg-border-dark w-full"></div>
       <div className="space-y-4">
-        <h4 className="text-text-secondary text-xs font-bold uppercase tracking-wider">Apariencia y Diseño</h4>
+        {/* <h4 className="text-text-secondary text-xs font-bold uppercase tracking-wider">Apariencia y Diseño</h4> */}
+        <SubTitle title="Apariencia y Diseño" />
         <div className="space-y-2">
           <label className="text-sm text-text-primary font-medium block">Ancho del Campo</label>
           <div className="grid grid-cols-2 gap-2">

@@ -41,6 +41,25 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     f.type !== 'grid'
   );
 
+  // Obtener columnas ya mapeadas (para validación)
+  const getMappedColumns = (): string[] => {
+    const mapped: string[] = [];
+    const collectMapped = (fields: FormField[]) => {
+      fields.forEach(f => {
+        if (f.physicalColumn && f.id !== selectedField.id) {
+          mapped.push(f.physicalColumn);
+        }
+        if (f.children) {
+          collectMapped(f.children);
+        }
+      });
+    };
+    collectMapped(allFields);
+    return mapped;
+  };
+
+  const mappedColumns = getMappedColumns();
+
   return (
     <aside className="w-80 bg-surface-dark border-l border-border-dark flex flex-col z-10 shadow-xl shrink-0 hidden md:flex">
       <PanelHeader selectedField={selectedField} />
@@ -53,6 +72,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             field={selectedField}
             isShared={isShared}
             onChange={handleChange}
+            mappedColumns={mappedColumns}
           />
         )}
 

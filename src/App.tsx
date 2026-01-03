@@ -7,17 +7,24 @@ import PreviewModal from './components/PreviewModal';
 import { ThemeConfigModal } from './components/ThemeConfig';
 import { useFormBuilder } from './hooks/useFormBuilder';
 import { useTheme } from './contexts/ThemeContext';
+import { FormRepositoryProvider, useFormRepository } from './contexts/FormRepositoryContext';
 import { sharedFieldsLibrary } from './data/sharedLibrary';
 import { initialFields } from './data/initialFields';
 import { flattenFields } from './utils/fieldHelpers';
 import QuestionnaireBuilder from './components/QuestionnaireBuilder';
 import OnboardingBuilder from './components/OnboardingBuilder';
+import HistoryPanel from './components/HistoryPanel';
+import FormExplorer from './components/FormExplorer';
 
-const App: React.FC = () => {
+const AppContent: React.FC = () => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isThemeConfigOpen, setIsThemeConfigOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isExplorerOpen, setIsExplorerOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'form' | 'questionnaire' | 'onboarding'>('form');
+  const [currentFormId, setCurrentFormId] = useState<string | null>(null);
   const { theme, mode } = useTheme();
+  const { saveForm, loadForm } = useFormRepository();
   
   const {
     fields,
@@ -26,37 +33,70 @@ const App: React.FC = () => {
     setSelectedId,
     handleAddField,
     handleAddSharedField,
+    handleAddMasterData,
     handleUpdateField,
+    handleCommitUpdate,
     handleDeleteField,
     handleDuplicateField,
     handleMoveField,
-    handleDropNewField
+    handleDropNewField,
+    history,
+    currentIndex,
+    handleUndo,
+    handleRedo,
+    handleJumpToVersion,
+    canUndo,
+    canRedo,
+    handleLoadForm
   } = useFormBuilder(initialFields, sharedFieldsLibrary);
 
   const handleSave = () => {
-    const payload = {
-      formConfig: fields,
-      themeConfig: {
-        theme,
-        mode
-      },
-      metadata: {
-        version: "2.4.0",
-        lastModified: new Date().toISOString(),
-        name: "Onboarding Clientes 2024" // Esto podría venir de un estado también
-      }
-    };
+    let id = currentFormId;
+    let name = "Formulario Sin Título";
+    let createdAt = new Date().toISOString();
+    let version = 1;
 
-    console.log("=== PAYLOAD PARA GUARDAR EN BD ===");
-    console.log(JSON.stringify(payload, null, 2));
-    alert("Configuración guardada en consola (Simulación de API)");
-    
-    // Aquí harías la llamada a tu API:
-    // await fetch('/api/forms/save', { 
-    //   method: 'POST', 
-    //   body: JSON.stringify(payload),
-    //   headers: { 'Content-Type': 'application/json' }
-    // });
+    if (id) {
+      const existing = loadForm(id);
+      if (existing) {
+        name = existing.name;
+        createdAt = existing.createdAt;
+        version = existing.version + 1;
+      }
+    } else {
+      id = Date.now().toString();
+      const inputName = prompt("Nombre del formulario:", `Formulario ${new Date().toLocaleString()}`);
+      if (!inputName) return; // Cancelar si no hay nombre
+      name = inputName;
+      setCurrentFormId(id);
+    }
+
+    saveForm({
+      id: id!,
+      name: name,
+      description: "Formulario guardado",
+      fields: fields,
+      createdAt: createdAt,
+      updatedAt: new Date().toISOString(),
+      version: version
+    });
+    alert("Formulario guardado exitosamente.");
+  };
+
+  const handleLoadFromExplorer = (id: string) => {
+    const form = loadForm(id);
+    if (form) {
+      handleLoadForm(form.fields);
+      setCurrentFormId(id);
+      setIsExplorerOpen(false);
+    }
+  };
+
+  const handleNewForm = () => {
+    if (window.confirm('¿Estás seguro de crear un nuevo formulario? Se perderán los cambios no guardados en el canvas actual.')) {
+      handleLoadForm(initialFields);
+      setCurrentFormId(null);
+    }
   };
 
   return (
@@ -65,8 +105,15 @@ const App: React.FC = () => {
         onPreview={() => setIsPreviewOpen(true)} 
         onThemeConfig={() => setIsThemeConfigOpen(true)}
         onSave={handleSave}
+        onHistory={() => setIsHistoryOpen(!isHistoryOpen)}
+        onOpenExplorer={() => setIsExplorerOpen(true)}
+        onNewForm={handleNewForm}
         viewMode={viewMode}
         onViewModeChange={setViewMode}
+        canUndo={canUndo}
+        canRedo={canRedo}
+        onUndo={handleUndo}
+        onRedo={handleRedo}
       />
       
       <main className="flex flex-1 overflow-hidden relative">
@@ -76,6 +123,7 @@ const App: React.FC = () => {
               onAddField={handleAddField} 
               sharedLibrary={sharedFieldsLibrary}
               onAddSharedField={handleAddSharedField}
+              onAddMasterData={handleAddMasterData}
             />
             
             <Canvas 
@@ -92,9 +140,18 @@ const App: React.FC = () => {
             <PropertiesPanel 
               selectedField={selectedField} 
               allFields={flattenFields(fields)}
-              onUpdateField={handleUpdateField}
+              onUpdateField={handleCommitUpdate} // Use commit update for properties to trigger history
               sharedLibrary={sharedFieldsLibrary}
             />
+
+            {isHistoryOpen && (
+              <HistoryPanel 
+                history={history}
+                currentIndex={currentIndex}
+                onJumpToVersion={handleJumpToVersion}
+                onClose={() => setIsHistoryOpen(false)}
+              />
+            )}
           </>
         ) : viewMode === 'questionnaire' ? (
           <QuestionnaireBuilder />
@@ -107,19 +164,35 @@ const App: React.FC = () => {
 
       {isPreviewOpen && (
         <PreviewModal 
+          isOpen={isPreviewOpen} 
+          onClose={() => setIsPreviewOpen(false)} 
           fields={fields} 
-          onClose={() => setIsPreviewOpen(false)}
-          sharedLibrary={sharedFieldsLibrary}
+          theme={theme}
         />
       )}
 
       {isThemeConfigOpen && (
-        <ThemeConfigModal
-          isOpen={isThemeConfigOpen}
-          onClose={() => setIsThemeConfigOpen(false)}
+        <ThemeConfigModal 
+          isOpen={isThemeConfigOpen} 
+          onClose={() => setIsThemeConfigOpen(false)} 
+        />
+      )}
+
+      {isExplorerOpen && (
+        <FormExplorer 
+          onLoad={handleLoadFromExplorer}
+          onClose={() => setIsExplorerOpen(false)}
         />
       )}
     </div>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <FormRepositoryProvider>
+      <AppContent />
+    </FormRepositoryProvider>
   );
 };
 

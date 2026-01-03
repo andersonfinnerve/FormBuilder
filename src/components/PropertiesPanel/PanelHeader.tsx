@@ -1,5 +1,8 @@
 import React from 'react';
 import { FormField } from '../../types';
+import SubTitle from '../Toolbox/SubTitle';
+import { DividerField } from '../Fields/DividerField';
+
 
 interface PanelHeaderProps {
   selectedField: FormField;
@@ -8,10 +11,11 @@ interface PanelHeaderProps {
 const PanelHeader: React.FC<PanelHeaderProps> = ({ selectedField }) => {
   return (
     <div className="p-5 border-b border-border-dark flex justify-between items-center">
-      <h3 className="text-text-primary font-bold text-sm">Propiedades</h3>
-      <span className="text-xs bg-primary/20 text-primary px-2 py-1 rounded font-medium uppercase">
+      <SubTitle title="Propiedades" />
+      <DividerField />
+      {/* <span className="text-xs bg-primary/20 text-primary px-2 py-1 rounded font-medium uppercase">
         {selectedField.type}
-      </span>
+      </span> */}
     </div>
   );
 };

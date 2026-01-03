@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormField } from '../../types';
 import ToggleSwitch from '../common/ToggleSwitch';
+import SubTitle from '../Toolbox/SubTitle';
 
 interface ValidationRulesProps {
   field: FormField;
@@ -12,7 +13,8 @@ const ValidationRules: React.FC<ValidationRulesProps> = ({ field, onChange }) =>
     <>
       <div className="h-px bg-border-dark w-full"></div>
       <div className="space-y-4">
-        <h4 className="text-text-secondary text-xs font-bold uppercase tracking-wider">Reglas</h4>
+        {/* <h4 className="text-text-secondary text-xs font-bold uppercase tracking-wider">Reglas</h4> */}
+        <SubTitle title="Reglas" />
         
         <ToggleSwitch 
           label="Campo Obligatorio"

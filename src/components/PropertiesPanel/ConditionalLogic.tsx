@@ -3,6 +3,7 @@ import { FormField, LogicRule } from '../../types';
 import ToggleSwitch from '../common/ToggleSwitch';
 import { Input } from '../common/Input';
 import { Select } from '../common/Select';
+import SubTitle from '../Toolbox/SubTitle';
 
 interface ConditionalLogicProps {
   field: FormField;
@@ -31,7 +32,8 @@ const ConditionalLogic: React.FC<ConditionalLogicProps> = ({ field, availableTri
     <>
       <div className="h-px bg-border-dark w-full"></div>
       <div className="space-y-4">
-        <h4 className="text-text-secondary text-xs font-bold uppercase tracking-wider">Lógica Condicional</h4>
+        {/* <h4 className="text-text-secondary text-xs font-bold uppercase tracking-wider">Lógica Condicional</h4> */}
+        <SubTitle title="Lógica Condicional" />
         
         <ToggleSwitch 
           label="Visibilidad"

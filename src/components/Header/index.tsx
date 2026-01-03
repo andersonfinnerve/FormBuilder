@@ -1,17 +1,38 @@
 import React from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
+import Button from './Button';
 
 interface HeaderProps {
   onPreview: () => void;
   onThemeConfig: () => void;
   onSave: () => void;
+  onHistory: () => void;
+  onOpenExplorer: () => void;
+  onNewForm: () => void;
   viewMode: 'form' | 'questionnaire' | 'onboarding';
   onViewModeChange: (mode: 'form' | 'questionnaire' | 'onboarding') => void;
+  canUndo?: boolean;
+  canRedo?: boolean;
+  onUndo?: () => void;
+  onRedo?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onPreview, onThemeConfig, onSave, viewMode, onViewModeChange }) => {
+const Header: React.FC<HeaderProps> = ({ 
+  onPreview, 
+  onThemeConfig, 
+  onSave, 
+  onHistory,
+  onOpenExplorer,
+  onNewForm,
+  viewMode, 
+  onViewModeChange,
+  canUndo,
+  canRedo,
+  onUndo,
+  onRedo
+}) => {
   const { mode, toggleMode } = useTheme();
-  console.log("pruebax")
+
   return (
     <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-border px-6 py-3 bg-surface z-20 shrink-0">
       {/* Brand */}
@@ -51,45 +72,81 @@ const Header: React.FC<HeaderProps> = ({ onPreview, onThemeConfig, onSave, viewM
 
       {/* Right Actions */}
       <div className="flex items-center gap-4">
+        {/* History & Undo/Redo */}
+        {viewMode === 'form' && (
+          <div className="flex items-center gap-1 mr-2 border-r border-border pr-4">
+            <Button 
+              onClick={onUndo!}
+              disabled={!canUndo}
+              variant="icon"
+              icon="undo"
+              title="Deshacer"
+            />
+            <Button 
+              onClick={onRedo!}
+              disabled={!canRedo}
+              variant="icon"
+              icon="redo"
+              title="Rehacer"
+            />
+            <Button 
+              onClick={onHistory}
+              variant="icon"
+              icon="history"
+              title="Historial de cambios"
+              className="ml-1"
+            />
+          </div>
+        )}
+
         <div className="flex gap-2">
-          <button 
+          <Button 
+            onClick={onNewForm}
+            icon="add_box"
+            title="Nuevo Formulario"
+            className="px-3"
+          >
+            <span className="hidden md:inline ml-2">Nuevo</span>
+          </Button>
+          <Button 
+            onClick={onOpenExplorer}
+            icon="folder_open"
+            title="Mis Formularios"
+          />
+          <Button 
             onClick={onPreview}
-            className="flex cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-surface hover:bg-background border border-border text-text-primary text-sm font-bold transition-colors"
-          >
-            <span className="material-symbols-outlined mr-2 text-lg">visibility</span>
-            <span>Vista Previa</span>
-          </button>
-          <button 
+            icon="visibility"
+            label="Vista Previa"
+            className="px-4"
+          />
+          <Button 
             onClick={onSave}
-            className="flex cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-surface hover:bg-background border border-border text-text-primary text-sm font-bold transition-colors"
-          >
-            <span className="material-symbols-outlined mr-2 text-lg">save</span>
-            <span>Guardar</span>
-          </button>
-          <button className="flex cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-6 bg-primary hover:bg-primary-dark text-white text-sm font-bold shadow-lg transition-colors">
-            <span>Publicar</span>
-          </button>
+            icon="save"
+            label="Guardar"
+            className="px-4"
+          />
+          <Button 
+            onClick={() => {}}
+            label="Publicar"
+            variant="primary"
+          />
         </div>
         <div className="w-px h-8 bg-border mx-2 hidden sm:block"></div>
         
         {/* Theme Controls */}
         <div className="flex gap-2">
-          <button
+          <Button
             onClick={toggleMode}
-            className="p-2 rounded-lg hover:bg-primary/10 text-text-secondary hover:text-primary transition-colors"
+            variant="icon"
+            icon={mode === 'dark' ? 'light_mode' : 'dark_mode'}
             title={mode === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-          >
-            <span className="material-symbols-outlined text-xl">
-              {mode === 'dark' ? 'light_mode' : 'dark_mode'}
-            </span>
-          </button>
-          <button
+          />
+          <Button
             onClick={onThemeConfig}
-            className="p-2 rounded-lg hover:bg-primary/10 text-text-secondary hover:text-primary transition-colors"
+            variant="icon"
+            icon="palette"
             title="Configurar tema"
-          >
-            <span className="material-symbols-outlined text-xl">palette</span>
-          </button>
+          />
         </div>
         
         <div className="w-px h-8 bg-border mx-2 hidden sm:block"></div>

@@ -2,6 +2,7 @@ import React from 'react';
 import { Input } from '../common/Input';
 import { Select } from '../common/Select';
 import { FormField, GridColumn, SharedFieldDefinition } from '../../types';
+import SubTitle from '../Toolbox/SubTitle';
 
 interface GridColumnsConfigProps {
   field: FormField;
@@ -75,7 +76,7 @@ const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibr
       <div className="h-px bg-border-dark w-full"></div>
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h4 className="text-text-secondary text-xs font-bold uppercase tracking-wider">Configurar Columnas</h4>
+          <SubTitle title="Configurar Columnas" />
           <button 
             onClick={handleColumnAdd}
             className="text-primary text-xs font-bold hover:underline"
