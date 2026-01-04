@@ -12,13 +12,16 @@ interface GridColumnsConfigProps {
 
 const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibrary, onChange }) => {
   const [draggedIndex, setDraggedIndex] = React.useState<number | null>(null);
+  const isMasterDataGrid = typeof field.formDataGridId === 'string';
 
   const handleColumnAdd = () => {
     const newCol: GridColumn = {
       id: Date.now().toString(),
       label: `Columna ${(field.columns?.length || 0) + 1}`,
       type: 'text',
-      required: false
+      required: false,
+      formDataGridColumnId: null, // null = columna nueva
+      formDataOptions: null // null = opciones nuevas
     };
     const newColumns = [...(field.columns || []), newCol];
     onChange('columns', newColumns);
@@ -75,15 +78,55 @@ const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibr
     <>
       <div className="h-px bg-border-dark w-full"></div>
       <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <SubTitle title="Configurar Columnas" />
-          <button 
-            onClick={handleColumnAdd}
-            className="text-primary text-xs font-bold hover:underline"
-          >
-            + Columna
-          </button>
-        </div>
+        {isMasterDataGrid ? (
+          <>
+            <div className="flex justify-between items-center">
+              <SubTitle title="Configurar Columnas" />
+              <div className="flex items-center gap-1 bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded border border-purple-500/20">
+                <span className="material-symbols-outlined text-xs">database</span>
+                <span className="text-[10px] font-bold uppercase">Maestro</span>
+              </div>
+            </div>
+            <div className="bg-background-dark p-3 rounded-lg border border-border-dark flex gap-3">
+              <span className="material-symbols-outlined text-purple-400">database</span>
+              <div>
+                <h4 className="text-text-primary text-xs font-bold mb-1">Columnas del Dato Maestro</h4>
+                <p className="text-[10px] text-text-secondary leading-tight mb-3">
+                  Las columnas de esta grilla provienen del dato maestro del BackOffice. No se pueden editar aquí para mantener la integridad de los datos.
+                </p>
+                <div className="space-y-2">
+                  {field.columns?.map((col, index) => (
+                    <div key={col.id || index} className="flex items-center gap-2 bg-surface-dark p-2 rounded border border-border-dark">
+                      <span className="material-symbols-outlined text-sm text-text-secondary">
+                        {col.type === 'select' ? 'dns' : col.type === 'file' ? 'cloud_upload' : 'short_text'}
+                      </span>
+                      <div className="flex-1">
+                        <div className="text-xs font-medium text-text-primary">{col.label}</div>
+                        <div className="text-[10px] text-text-secondary">
+                          {col.type === 'select' && col.formDataOptions ? `${col.formDataOptions.length} opciones` : col.type}
+                          {col.required && ' • Requerido'}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-2 text-xs text-text-primary opacity-60">
+                  {field.columns?.length} columna{field.columns?.length !== 1 ? 's' : ''} cargada{field.columns?.length !== 1 ? 's' : ''} desde el maestro.
+                </div>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex justify-between items-center">
+              <SubTitle title="Configurar Columnas" />
+              <button 
+                onClick={handleColumnAdd}
+                className="text-primary text-xs font-bold hover:underline"
+              >
+                + Columna
+              </button>
+            </div>
         
         <div className="space-y-3">
           {field.columns?.map((col, index) => (
@@ -172,6 +215,8 @@ const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibr
             </div>
           ))}
         </div>
+          </>
+        )}
       </div>
     </>
   );

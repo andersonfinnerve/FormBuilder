@@ -17,7 +17,7 @@ export const Input: React.FC<InputProps> = ({ label, error, helperText, descript
         </div>
       )}
       <input 
-        className={`w-full bg-background border border-border rounded-lg px-3 py-2 text-text-primary text-sm focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors ${className}`}
+        className={`w-full bg-background border border-border rounded-lg px-3 py-2 text-text-primary text-sm focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-background-dark ${className}`}
         {...props}
       />
       {description && <div className="text-[10px] text-text-secondary">{description}</div>}

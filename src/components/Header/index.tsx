@@ -75,7 +75,7 @@ const Header: React.FC<HeaderProps> = ({
         {/* History & Undo/Redo */}
         {viewMode === 'form' && (
           <div className="flex items-center gap-1 mr-2 border-r border-border pr-4">
-            <Button 
+            {/* <Button 
               onClick={onUndo!}
               disabled={!canUndo}
               variant="icon"
@@ -95,7 +95,7 @@ const Header: React.FC<HeaderProps> = ({
               icon="history"
               title="Historial de cambios"
               className="ml-1"
-            />
+            /> */}
           </div>
         )}
 

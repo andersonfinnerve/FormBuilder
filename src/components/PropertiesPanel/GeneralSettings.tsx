@@ -17,7 +17,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ field, isShared, onCh
     !mappedColumns.includes(col.id) || col.id === field.physicalColumn
   );
 
-  const isMasterData = !!field.formDataId;
+  const isMasterData = (typeof field.formDataId === 'string') || (typeof field.formDataGridId === 'string');
 
   return (
     <div className="space-y-4">
@@ -31,7 +31,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ field, isShared, onCh
             </div>
           )}
           {isMasterData && (
-            <div className="flex items-center gap-1 bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded border border-purple-500/20" title={`Proviene del Dato Maestro: ${field.formDataId}`}>
+            <div className="flex items-center gap-1 bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded border border-purple-500/20" title={`Proviene del Dato Maestro: ${field.formDataId || field.formDataGridId}`}>
               <span className="material-symbols-outlined text-xs">database</span>
               <span className="text-[10px] font-bold uppercase">Maestro</span>
             </div>
@@ -44,7 +44,8 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ field, isShared, onCh
         type="text"
         value={field.label}
         onChange={(e) => onChange('label', e.target.value)}
-        description={isShared ? "Puede renombrar la etiqueta localmente sin afectar la fuente." : isMasterData ? "Renombrado local. El dato maestro no se verá afectado." : undefined}
+        disabled={isMasterData}
+        description={isMasterData ? "El dato maestro no se verá afectado." : isShared ? "Puede renombrar la etiqueta localmente sin afectar la fuente." : undefined}
       />
       
       {(field.type === 'text' || field.type === 'email' || field.type === 'number' || field.type === 'textarea') && (

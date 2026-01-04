@@ -11,6 +11,41 @@ export const initialFields: FormField[] = [
     readOnly: false,
     order: 1,
     width: 'half',
+    formDataId: null, // Campo manual - null indica que debe crearse en el maestro
+  },
+  {
+    id: '2',
+    type: 'text',
+    label: 'Código Postal',
+    placeholder: '',
+    description: 'Código postal de residencia',
+    required: false,
+    readOnly: false,
+    order: 2,
+    width: 'half',
+    formDataId: 'md_002', // Campo de texto del maestro - SÍ tiene formDataId
+  },
+  {
+    id: '3',
+    type: 'select',
+    label: 'Actividad profesional actual',
+    placeholder: 'Seleccione una opción...',
+    description: 'Situación laboral del contacto',
+    required: false,
+    readOnly: false,
+    order: 3,
+    width: 'half',
+    options: ['Empleado', 'Autónomo', 'Empresario', 'Jubilado', 'Estudiante', 'Desempleado', 'Otro'],
+    formDataId: 'md_001', // Campo select del maestro - SÍ tiene formDataId
+    formDataOptions: [
+      { value: 'Empleado', formDataOptionId: 'opt_001_1' },
+      { value: 'Autónomo', formDataOptionId: 'opt_001_2' },
+      { value: 'Empresario', formDataOptionId: 'opt_001_3' },
+      { value: 'Jubilado', formDataOptionId: 'opt_001_4' },
+      { value: 'Estudiante', formDataOptionId: 'opt_001_5' },
+      { value: 'Desempleado', formDataOptionId: 'opt_001_6' },
+      { value: 'Otro', formDataOptionId: 'opt_001_7' }
+    ]
   },
   {
     id: 'section_1',
@@ -52,14 +87,47 @@ export const initialFields: FormField[] = [
             id: 'grid_1',
             type: 'grid',
             label: 'Lista de Beneficiarios',
+            description: 'Listado de beneficiarios finales con participación',
             required: false,
             readOnly: false,
             order: 1,
             width: 'full',
+            formDataGridId: 'md_grid_001', // Grid del maestro
             columns: [
-              { id: 'c1', label: 'País', type: 'select', required: true, sharedSource: 'lib_nationality' },
-              { id: 'c2', label: 'RUT / N Doc', type: 'text', required: true },
-              { id: 'c3', label: 'Nombre(s)', type: 'text', required: true }
+              {
+                id: 'col_001',
+                label: 'País',
+                type: 'select',
+                required: true,
+                formDataGridColumnId: 'col_001',
+                formDataOptions: [
+                  { value: 'Argentina', formDataOptionId: 'opt_col_001_1' },
+                  { value: 'Chile', formDataOptionId: 'opt_col_001_2' },
+                  { value: 'Colombia', formDataOptionId: 'opt_col_001_3' },
+                  { value: 'España', formDataOptionId: 'opt_col_001_4' }
+                ]
+              },
+              {
+                id: 'col_002',
+                label: 'RUT / N° Doc',
+                type: 'text',
+                required: true,
+                formDataGridColumnId: 'col_002'
+              },
+              {
+                id: 'col_003',
+                label: 'Nombre(s)',
+                type: 'text',
+                required: true,
+                formDataGridColumnId: 'col_003'
+              },
+              {
+                id: 'col_004',
+                label: 'Porcentaje',
+                type: 'text',
+                required: true,
+                formDataGridColumnId: 'col_004'
+              }
             ]
           }
         ]

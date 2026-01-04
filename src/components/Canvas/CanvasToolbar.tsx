@@ -10,9 +10,9 @@ const CanvasToolbar: React.FC = () => {
         <span className="material-symbols-outlined text-lg">redo</span>
       </button>
       <div className="w-px bg-border-dark my-1"></div>
-      <button className="p-2 text-text-secondary hover:text-red-400 hover:bg-red-400/10 rounded transition-colors" title="Limpiar Canvas">
+      {/* <button className="p-2 text-text-secondary hover:text-red-400 hover:bg-red-400/10 rounded transition-colors" title="Limpiar Canvas">
         <span className="material-symbols-outlined text-lg">delete_sweep</span>
-      </button>
+      </button> */}
     </div>
   );
 };

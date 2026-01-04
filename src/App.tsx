@@ -13,7 +13,6 @@ import { initialFields } from './data/initialFields';
 import { flattenFields } from './utils/fieldHelpers';
 import QuestionnaireBuilder from './components/QuestionnaireBuilder';
 import OnboardingBuilder from './components/OnboardingBuilder';
-import HistoryPanel from './components/HistoryPanel';
 import FormExplorer from './components/FormExplorer';
 
 const AppContent: React.FC = () => {
@@ -143,15 +142,6 @@ const AppContent: React.FC = () => {
               onUpdateField={handleCommitUpdate} // Use commit update for properties to trigger history
               sharedLibrary={sharedFieldsLibrary}
             />
-
-            {isHistoryOpen && (
-              <HistoryPanel 
-                history={history}
-                currentIndex={currentIndex}
-                onJumpToVersion={handleJumpToVersion}
-                onClose={() => setIsHistoryOpen(false)}
-              />
-            )}
           </>
         ) : viewMode === 'questionnaire' ? (
           <QuestionnaireBuilder />

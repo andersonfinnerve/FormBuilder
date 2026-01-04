@@ -9,6 +9,8 @@ interface OptionsManagementProps {
 }
 
 const OptionsManagement: React.FC<OptionsManagementProps> = ({ field, isShared, onChange }) => {
+  const isMasterData = (typeof field.formDataId === 'string') || (typeof field.formDataGridId === 'string');
+
   return (
     <>
       <div className="h-px bg-border-dark w-full"></div>
@@ -23,6 +25,19 @@ const OptionsManagement: React.FC<OptionsManagementProps> = ({ field, isShared, 
             </p>
             <div className="mt-2 text-xs text-text-primary opacity-60">
               {field.options?.length} opciones cargadas.
+            </div>
+          </div>
+        </div>
+      ) : isMasterData ? (
+        <div className="bg-background-dark p-3 rounded-lg border border-border-dark flex gap-3">
+          <span className="material-symbols-outlined text-purple-400">database</span>
+          <div>
+            <h4 className="text-text-primary text-xs font-bold mb-1">Opciones del Dato Maestro</h4>
+            <p className="text-[10px] text-text-secondary leading-tight">
+              Las opciones de este campo provienen del dato maestro del BackOffice. No se pueden editar aquí para mantener la integridad de los datos.
+            </p>
+            <div className="mt-2 text-xs text-text-primary opacity-60">
+              {field.options?.length} opciones cargadas desde el maestro.
             </div>
           </div>
         </div>

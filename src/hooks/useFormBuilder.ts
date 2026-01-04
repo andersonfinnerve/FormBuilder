@@ -86,11 +86,14 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
       order: 0,
       width: 'full',
       options: type === 'select' || type === 'radio' ? ['Opción 1', 'Opción 2'] : undefined,
+      formDataOptions: type === 'select' || type === 'radio' ? null : undefined, // null = opciones nuevas
+      formDataId: type === 'grid' || type === 'section' || type === 'spacer' || type === 'divider' ? undefined : null, // null = campo nuevo
+      formDataGridId: type === 'grid' ? null : undefined, // null = grid nuevo
       fileStyle: type === 'file' ? 'dropzone' : undefined,
       children: type === 'section' ? [] : undefined,
       columns: type === 'grid' ? [
-        { id: 'c1', label: 'Item', type: 'text', required: true },
-        { id: 'c2', label: 'Cantidad', type: 'text', required: true },
+        { id: 'c1', label: 'Item', type: 'text', required: true, formDataGridColumnId: null },
+        { id: 'c2', label: 'Cantidad', type: 'text', required: true, formDataGridColumnId: null },
       ] : undefined
     };
     
@@ -131,20 +134,74 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
   };
 
   const handleAddMasterData = (data: any) => {
-    const fieldType = data.type === 'registry' ? 'select' : 'text';
-    const newField: FormField = {
-      id: Date.now().toString(),
-      type: fieldType,
-      label: data.name,
-      placeholder: data.type === 'registry' ? 'Seleccione una opción...' : '',
-      required: false,
-      readOnly: false,
-      order: 0,
-      width: 'full',
-      options: data.type === 'registry' ? [...data.options] : undefined,
-      formDataId: data.id,
-      description: data.description
-    };
+    let newField: FormField;
+    
+    if (data.type === 'grid') {
+      // Para grids del maestro
+      newField = {
+        id: Date.now().toString(),
+        type: 'grid',
+        label: data.name,
+        required: false,
+        readOnly: false,
+        order: 0,
+        width: 'full',
+        formDataGridId: data.id, // Usar formDataGridId en vez de formDataId para grids
+        description: data.description,
+        columns: data.columns?.map((col: any) => ({
+          id: col.id,
+          label: col.label,
+          type: col.type,
+          required: col.required,
+          formDataGridColumnId: col.id, // Asignar el ID de la columna
+          formDataOptions: col.options?.map((opt: any) => ({
+            value: opt.value,
+            formDataOptionId: opt.id // Asignar el ID de cada opción
+          }))
+        })) || []
+      };
+    } else if (data.type === 'registry') {
+      // Para desplegables del maestro
+      const optionsArray = Array.isArray(data.options) && typeof data.options[0] === 'object'
+        ? data.options.map((opt: any) => opt.value)
+        : data.options;
+      
+      const formDataOptions = Array.isArray(data.options) && typeof data.options[0] === 'object'
+        ? data.options.map((opt: any) => ({
+            value: opt.value,
+            formDataOptionId: opt.id
+          }))
+        : undefined;
+      
+      newField = {
+        id: Date.now().toString(),
+        type: 'select',
+        label: data.name,
+        placeholder: 'Seleccione una opción...',
+        required: false,
+        readOnly: false,
+        order: 0,
+        width: 'full',
+        options: optionsArray,
+        formDataOptions: formDataOptions, // Guardar opciones con IDs
+        formDataId: data.id, // Usar formDataId para elementos normales
+        description: data.description
+      };
+    } else {
+      // Para campos de texto del maestro
+      newField = {
+        id: Date.now().toString(),
+        type: 'text',
+        label: data.name,
+        placeholder: '',
+        required: false,
+        readOnly: false,
+        order: 0,
+        width: 'full',
+        formDataId: data.id, // Usar formDataId para elementos normales
+        description: data.description
+      };
+    }
 
     let newFields;
     if (selectedField && selectedField.type === 'section') {

@@ -8,14 +8,23 @@ interface MasterDataItemProps {
 
 const MasterDataItem: React.FC<MasterDataItemProps> = ({ data, onClick }) => {
   const isRegistry = data.type === 'registry';
-  const icon = isRegistry ? 'dns' : 'short_text';
-  const badgeColor = isRegistry ? 'bg-purple-500/20 text-purple-400 border-purple-500/30' : 'bg-green-500/20 text-green-400 border-green-500/30';
-  const typeLabel = isRegistry ? 'Registro' : 'Texto';
-  const subtitle = isRegistry 
-    ? `${data.options?.length || 0} opciones` 
-    : data.maxLength 
-      ? `Máx ${data.maxLength} chars` 
-      : 'Texto libre';
+  const isGrid = data.type === 'grid';
+  
+  const icon = isGrid ? 'table_chart' : isRegistry ? 'dns' : 'short_text';
+  const badgeColor = isGrid 
+    ? 'bg-blue-500/20 text-blue-400 border-blue-500/30'
+    : isRegistry 
+      ? 'bg-purple-500/20 text-purple-400 border-purple-500/30' 
+      : 'bg-green-500/20 text-green-400 border-green-500/30';
+  const typeLabel = isGrid ? 'Grilla' : isRegistry ? 'Registro' : 'Texto';
+  
+  const subtitle = isGrid
+    ? `${data.columns?.length || 0} columnas`
+    : isRegistry 
+      ? `${Array.isArray(data.options) ? data.options.length : 0} opciones` 
+      : data.maxLength 
+        ? `Máx ${data.maxLength} chars` 
+        : 'Texto libre';
 
   return (
     <div
