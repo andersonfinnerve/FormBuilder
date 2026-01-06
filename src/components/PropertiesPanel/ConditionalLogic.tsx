@@ -13,16 +13,19 @@ interface ConditionalLogicProps {
 
 const ConditionalLogic: React.FC<ConditionalLogicProps> = ({ field, availableTriggers, onChange }) => {
   const handleLogicUpdate = (key: keyof LogicRule, value: any) => {
-    const currentLogic = field.logic || { triggerId: '', value: '', enabled: false };
+    const currentLogic = field.logic || { triggerId: '', triggerFormDataId: null, value: '', enabled: false };
     if (key === 'triggerId' && value !== currentLogic.triggerId) {
-      onChange('logic', { ...currentLogic, triggerId: value, value: '' });
+      // Cuando cambia el trigger, buscar su formDataId
+      const triggerField = availableTriggers.find(f => f.id === value);
+      const triggerFormDataId = triggerField?.formDataId ?? null;
+      onChange('logic', { ...currentLogic, triggerId: value, triggerFormDataId, value: '' });
     } else {
       onChange('logic', { ...currentLogic, [key]: value });
     }
   };
 
   const toggleLogic = (enabled: boolean) => {
-    const currentLogic = field.logic || { triggerId: '', value: '', enabled: false };
+    const currentLogic = field.logic || { triggerId: '', triggerFormDataId: null, value: '', enabled: false };
     onChange('logic', { ...currentLogic, enabled });
   };
 

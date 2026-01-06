@@ -21,14 +21,15 @@ export interface GridColumn {
 
 // Regla de lógica condicional
 export interface LogicRule {
-  triggerId: string;    // ID del campo que controla la visibilidad
+  triggerId: string;    // ID local del campo que controla la visibilidad (para renderizado en web pública)
+  triggerFormDataId?: string | null; // ID del maestro del campo trigger (null=nuevo, string=existente, undefined=no aplica)
   value: string;        // Valor que debe tener el trigger para mostrar este campo
   enabled: boolean;     // Si la regla está activa
 }
 
 // Campo de formulario
 export interface FormField {
-  id: string;
+  componentId: string;
   type: FieldType;
   label: string;
   placeholder?: string;

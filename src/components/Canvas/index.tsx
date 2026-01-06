@@ -58,7 +58,7 @@ const Canvas: React.FC<CanvasProps> = ({
       onDragOver={(e) => e.preventDefault()}
       onDrop={handleRootDrop}
     >
-      <CanvasToolbar />
+      {/* <CanvasToolbar /> */}
 
       <div className="flex-1 overflow-y-auto p-4 md:p-12 flex justify-center custom-scrollbar">
         <div 

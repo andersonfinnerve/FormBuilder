@@ -63,7 +63,7 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
   const createFieldObject = (type: FieldType, label: string, sharedDef?: SharedFieldDefinition): FormField => {
     if (sharedDef) {
       return {
-        id: Date.now().toString(),
+        componentId: Date.now().toString(),
         type: sharedDef.type,
         label: sharedDef.label,
         placeholder: 'Seleccione una opción...',
@@ -77,7 +77,7 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
     }
 
     const newField: FormField = {
-      id: Date.now().toString(),
+      componentId: Date.now().toString(),
       type,
       label,
       placeholder: '',
@@ -110,13 +110,13 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
     let newFields;
 
     if (selectedField && selectedField.type === 'section') {
-      newFields = addFieldToParentRecursive(fields, selectedField.id, newField);
+      newFields = addFieldToParentRecursive(fields, selectedField.componentId, newField);
     } else {
       newFields = [...fields, newField];
     }
     
     updateFieldsWithHistory(newFields, `Agregar campo: ${label}`);
-    setSelectedId(newField.id);
+    setSelectedId(newField.componentId);
   };
 
   const handleAddSharedField = (sharedDef: SharedFieldDefinition) => {
@@ -124,13 +124,13 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
     let newFields;
     
     if (selectedField && selectedField.type === 'section') {
-      newFields = addFieldToParentRecursive(fields, selectedField.id, newField);
+      newFields = addFieldToParentRecursive(fields, selectedField.componentId, newField);
     } else {
       newFields = [...fields, newField];
     }
     
     updateFieldsWithHistory(newFields, `Agregar campo compartido: ${sharedDef.label}`);
-    setSelectedId(newField.id);
+    setSelectedId(newField.componentId);
   };
 
   const handleAddMasterData = (data: any) => {
@@ -139,7 +139,7 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
     if (data.type === 'grid') {
       // Para grids del maestro
       newField = {
-        id: Date.now().toString(),
+        componentId: Date.now().toString(),
         type: 'grid',
         label: data.name,
         required: false,
@@ -174,7 +174,7 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
         : undefined;
       
       newField = {
-        id: Date.now().toString(),
+        componentId: Date.now().toString(),
         type: 'select',
         label: data.name,
         placeholder: 'Seleccione una opción...',
@@ -190,7 +190,7 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
     } else {
       // Para campos de texto del maestro
       newField = {
-        id: Date.now().toString(),
+        componentId: Date.now().toString(),
         type: 'text',
         label: data.name,
         placeholder: '',
@@ -205,13 +205,13 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
 
     let newFields;
     if (selectedField && selectedField.type === 'section') {
-      newFields = addFieldToParentRecursive(fields, selectedField.id, newField);
+      newFields = addFieldToParentRecursive(fields, selectedField.componentId, newField);
     } else {
       newFields = [...fields, newField];
     }
     
     updateFieldsWithHistory(newFields, `Agregar dato maestro: ${data.name}`);
-    setSelectedId(newField.id);
+    setSelectedId(newField.componentId);
   };
 
   const handleUpdateField = (id: string, key: keyof FormField, value: any) => {
@@ -304,7 +304,7 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
     const updatedTree = insertNode(fields, targetId, newField, position);
     
     updateFieldsWithHistory(updatedTree, `Agregar campo: ${label}`);
-    setSelectedId(newField.id);
+    setSelectedId(newField.componentId);
   };
 
   return {

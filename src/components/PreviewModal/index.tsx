@@ -46,7 +46,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ fields, onClose, sharedLibr
     nodes.forEach(field => {
       if (isFieldVisible(field)) {
         if (field.type !== 'section' && field.type !== 'spacer' && field.type !== 'divider') {
-          target[field.id] = formValues[field.id];
+          target[field.componentId] = formValues[field.componentId];
         }
         if (field.children) {
           collectData(field.children, target);

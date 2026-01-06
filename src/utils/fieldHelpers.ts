@@ -3,7 +3,7 @@ import { FormField, DropPosition } from '../types';
 // Buscar un campo recursivamente en el árbol
 export const findFieldRecursive = (fields: FormField[], id: string): FormField | null => {
   for (const field of fields) {
-    if (field.id === id) return field;
+    if (field.componentId === id) return field;
     if (field.children) {
       const found = findFieldRecursive(field.children, id);
       if (found) return found;
@@ -20,7 +20,7 @@ export const updateFieldRecursive = (
   value: any
 ): FormField[] => {
   return fields.map(field => {
-    if (field.id === id) {
+    if (field.componentId === id) {
       return { ...field, [key]: value };
     }
     if (field.children) {
@@ -32,7 +32,7 @@ export const updateFieldRecursive = (
 
 // Eliminar un campo recursivamente
 export const deleteFieldRecursive = (fields: FormField[], id: string): FormField[] => {
-  return fields.filter(field => field.id !== id).map(field => {
+  return fields.filter(field => field.componentId !== id).map(field => {
     if (field.children) {
       return { ...field, children: deleteFieldRecursive(field.children, id) };
     }
@@ -47,7 +47,7 @@ export const addFieldToParentRecursive = (
   newField: FormField
 ): FormField[] => {
   return fields.map(field => {
-    if (field.id === parentId) {
+    if (field.componentId === parentId) {
       // Si este es el padre (sección), agregamos al final de sus hijos
       return { ...field, children: [...(field.children || []), newField] };
     }
@@ -79,7 +79,7 @@ export const removeNode = (
   const traverse = (items: FormField[]): FormField[] => {
     const result: FormField[] = [];
     for (const item of items) {
-      if (item.id === id) {
+      if (item.componentId === id) {
         removedNode = item;
         continue; // Skip adding this item to result (remove it)
       }
@@ -105,7 +105,7 @@ export const insertNode = (
   if (position === 'inside') {
     // Traverse to find the target section and push to its children
     return tree.map(item => {
-      if (item.id === targetId) {
+      if (item.componentId === targetId) {
         return { ...item, children: [...(item.children || []), nodeToInsert] };
       }
       if (item.children) {
@@ -119,7 +119,7 @@ export const insertNode = (
   const traverse = (items: FormField[]): FormField[] => {
     const result: FormField[] = [];
     for (const item of items) {
-      if (item.id === targetId) {
+      if (item.componentId === targetId) {
         if (position === 'before') {
           result.push(nodeToInsert);
           result.push(item);

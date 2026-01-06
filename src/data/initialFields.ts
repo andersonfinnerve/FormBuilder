@@ -1,8 +1,9 @@
 import { FormField } from '../types';
 
+
 export const initialFields: FormField[] = [
   {
-    id: '1',
+    componentId: '1',
     type: 'text',
     label: 'Nombre Completo',
     placeholder: 'Ej. Juan Pérez',
@@ -14,7 +15,7 @@ export const initialFields: FormField[] = [
     formDataId: null, // Campo manual - null indica que debe crearse en el maestro
   },
   {
-    id: '2',
+    componentId: '2',
     type: 'text',
     label: 'Código Postal',
     placeholder: '',
@@ -26,7 +27,7 @@ export const initialFields: FormField[] = [
     formDataId: 'md_002', // Campo de texto del maestro - SÍ tiene formDataId
   },
   {
-    id: '3',
+    componentId: '3',
     type: 'select',
     label: 'Actividad profesional actual',
     placeholder: 'Seleccione una opción...',
@@ -48,7 +49,7 @@ export const initialFields: FormField[] = [
     ]
   },
   {
-    id: 'section_1',
+    componentId: 'section_1',
     type: 'section',
     label: 'BENEFICIARIOS FINALES',
     description: '¿Existe alguna persona natural que pueda ser considerado como beneficiario final?',
@@ -58,7 +59,7 @@ export const initialFields: FormField[] = [
     width: 'full',
     children: [
       {
-        id: 'sub_1',
+        componentId: 'sub_1',
         type: 'radio',
         label: '¿Con control efectivo según circular N 57/2017?',
         options: ['Sí', 'No'],
@@ -68,7 +69,7 @@ export const initialFields: FormField[] = [
         width: 'full'
       },
       {
-        id: 'inner_section_1',
+        componentId: 'inner_section_1',
         type: 'section',
         label: 'PARTICIPACIÓN IGUAL O MAYOR AL 10%',
         description: 'Personas naturales que tienen una participación en la persona o estructura jurídica declarante igual o mayor al 10%.',
@@ -79,12 +80,13 @@ export const initialFields: FormField[] = [
         // Lógica: Mostrar solo si 'sub_1' es 'Sí'
         logic: {
           triggerId: 'sub_1',
+          triggerFormDataId: null, // El campo trigger es nuevo (no viene del maestro)
           value: 'Sí',
           enabled: true
         },
         children: [
           {
-            id: 'grid_1',
+            componentId: 'grid_1',
             type: 'grid',
             label: 'Lista de Beneficiarios',
             description: 'Listado de beneficiarios finales con participación',

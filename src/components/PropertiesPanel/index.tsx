@@ -46,7 +46,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     const mapped: string[] = [];
     const collectMapped = (fields: FormField[]) => {
       fields.forEach(f => {
-        if (f.physicalColumn && f.id !== selectedField.id) {
+        if (f.physicalColumn && f.componentId !== selectedField.id) {
           mapped.push(f.physicalColumn);
         }
         if (f.children) {
