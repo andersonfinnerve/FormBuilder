@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { FormField, GridColumn, SharedFieldDefinition } from '../../types';
+import { FormField, GridColumn, SharedFieldDefinition, FormConfig } from '../../types';
 import PreviewField from './PreviewField';
 import Title from './fields/Title';
 
 interface PreviewModalProps {
   fields: FormField[];
+  formConfig: FormConfig;
   onClose: () => void;
   sharedLibrary: SharedFieldDefinition[];
 }
 
-const PreviewModal: React.FC<PreviewModalProps> = ({ fields, onClose, sharedLibrary }) => {
+const PreviewModal: React.FC<PreviewModalProps> = ({ fields, formConfig, onClose, sharedLibrary }) => {
   const [formValues, setFormValues] = useState<Record<string, any>>({});
   const [submittedData, setSubmittedData] = useState<string | null>(null);
 
@@ -66,7 +67,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ fields, onClose, sharedLibr
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-      <div className="bg-surface bg-surface-dark w-full max-w-3xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-border-dark">
+      <div className="bg-surface bg-surface-dark w-full max-w-7xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-border-dark">
         <div className="flex items-center justify-between p-4 border-b border-border-dark bg-background bg-background-dark">
           <Title title="Vista Previa del Formulario" icon="play_circle" />
           <button onClick={onClose} className="p-2 hover:bg-black/5 hover:bg-white/10 rounded-lg text-text-secondary transition-colors">
@@ -91,6 +92,14 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ fields, onClose, sharedLibr
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Título y descripción del formulario */}
+              <div className="border-b border-border-dark pb-6 mb-6">
+                <h2 className="text-2xl font-bold text-text-primary mb-2">{formConfig.title}</h2>
+                {formConfig.description && (
+                  <p className="text-text-secondary">{formConfig.description}</p>
+                )}
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {fields.length === 0 ? (
                   <div className="col-span-2 text-center py-10 text-text-secondary">
@@ -100,7 +109,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ fields, onClose, sharedLibr
                 ) : (
                   fields.map((field) => (
                     <PreviewField
-                      key={field.id}
+                      key={field.componentId}
                       field={field}
                       formValues={formValues}
                       sharedLibrary={sharedLibrary}

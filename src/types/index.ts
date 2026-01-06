@@ -3,8 +3,8 @@ export type FieldType = 'text' | 'textarea' | 'number' | 'email' | 'select' | 'd
 
 // Opción de desplegable con ID del maestro
 export interface FormDataOption {
-  value: string;
-  formDataOptionId?: string; // ID de la opción en el dato maestro
+  DataOptionId?: string; // ID de la opción en el dato maestro (null para opciones nuevas)
+  TextValue: string; // Texto visible de la opción
 }
 
 // Columna de grilla
@@ -13,10 +13,9 @@ export interface GridColumn {
   label: string;
   type: 'text' | 'select' | 'file';
   required: boolean;
-  options?: string[]; // Solo si type es 'select' (Manual)
+  options?: FormDataOption[]; // Solo si type es 'select' - usa objetos con DataOptionId y TextValue
   sharedSource?: string; // ID de la librería compartida (Centralizado)
   formDataGridColumnId?: string | null; // null = columna nueva, string = columna del maestro
-  formDataOptions?: FormDataOption[] | null; // null = opciones nuevas, array = opciones del maestro
 }
 
 // Regla de lógica condicional
@@ -38,8 +37,7 @@ export interface FormField {
   readOnly: boolean;
   order: number;
   width: 'full' | 'half'; // Para redimensionar
-  options?: string[]; // Para selects o radios (Manual)
-  formDataOptions?: FormDataOption[] | null; // null = opciones nuevas, array = opciones del maestro
+  options?: FormDataOption[]; // Para selects o radios - siempre usa objetos con DataOptionId y TextValue
   columns?: GridColumn[]; // Para grillas (nivel columna)
   sharedSource?: string; // ID del recurso compartido si proviene de la biblioteca central
   logic?: LogicRule; // Lógica condicional
@@ -64,7 +62,13 @@ export interface SharedFieldDefinition {
   id: string;
   label: string;
   type: FieldType;
-  options: string[];
+  options?: FormDataOption[]; // Usa objetos con DataOptionId y TextValue
+}
+
+// Configuración general del formulario
+export interface FormConfig {
+  title: string;
+  description?: string;
 }
 
 // Posición para drag & drop

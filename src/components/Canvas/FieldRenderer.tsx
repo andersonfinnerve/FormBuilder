@@ -28,7 +28,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
   onMoveField,
   onDropNewField
 }) => {
-  const isSelected = selectedId === field.id;
+  const isSelected = selectedId === field.componentId;
   const [dragOverPosition, setDragOverPosition] = useState<DragOverPosition>(null);
 
   // Características del campo
@@ -41,7 +41,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
 
   // DnD Handlers
   const handleDragStart = (e: React.DragEvent) => {
-    e.dataTransfer.setData("application/fieldId", field.id);
+    e.dataTransfer.setData("application/fieldId", field.componentId);
     e.dataTransfer.effectAllowed = "move"; 
     e.stopPropagation();
   };
@@ -91,13 +91,13 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
     const newFieldType = e.dataTransfer.getData("application/newFieldType") as FieldType;
     if (newFieldType) {
       const sharedId = e.dataTransfer.getData("application/sharedId");
-      onDropNewField(newFieldType, field.id, position, sharedId || undefined);
+      onDropNewField(newFieldType, field.componentId, position, sharedId || undefined);
       return;
     }
 
     const dragId = e.dataTransfer.getData("application/fieldId");
-    if (dragId && dragId !== field.id) {
-      onMoveField(dragId, field.id, position);
+    if (dragId && dragId !== field.componentId) {
+      onMoveField(dragId, field.componentId, position);
     }
   };
 
@@ -113,7 +113,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {field.children.map((child) => (
               <FieldRenderer 
-                key={child.id} 
+                key={child.componentId} 
                 field={child}
                 selectedId={selectedId}
                 onSelectField={onSelectField}
@@ -141,7 +141,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      onClick={(e) => { e.stopPropagation(); onSelectField(field.id); }}
+      onClick={(e) => { e.stopPropagation(); onSelectField(field.componentId); }}
       className={`
         relative group rounded-lg transition-all cursor-grab active:cursor-grabbing
         ${field.width === 'full' ? 'md:col-span-2' : 'md:col-span-1'}

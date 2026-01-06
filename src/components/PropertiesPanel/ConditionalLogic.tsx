@@ -16,7 +16,7 @@ const ConditionalLogic: React.FC<ConditionalLogicProps> = ({ field, availableTri
     const currentLogic = field.logic || { triggerId: '', triggerFormDataId: null, value: '', enabled: false };
     if (key === 'triggerId' && value !== currentLogic.triggerId) {
       // Cuando cambia el trigger, buscar su formDataId
-      const triggerField = availableTriggers.find(f => f.id === value);
+      const triggerField = availableTriggers.find(f => f.componentId === value);
       const triggerFormDataId = triggerField?.formDataId ?? null;
       onChange('logic', { ...currentLogic, triggerId: value, triggerFormDataId, value: '' });
     } else {
@@ -29,7 +29,7 @@ const ConditionalLogic: React.FC<ConditionalLogicProps> = ({ field, availableTri
     onChange('logic', { ...currentLogic, enabled });
   };
 
-  const selectedTriggerField = availableTriggers.find(f => f.id === field.logic?.triggerId);
+  const selectedTriggerField = availableTriggers.find(f => f.componentId === field.logic?.triggerId);
 
   return (
     <>
@@ -56,7 +56,7 @@ const ConditionalLogic: React.FC<ConditionalLogicProps> = ({ field, availableTri
               >
                 <option value="">-- Seleccionar Campo --</option>
                 {availableTriggers.map(f => (
-                  <option key={f.id} value={f.id}>{f.label}</option>
+                  <option key={f.componentId} value={f.componentId}>{f.label}</option>
                 ))}
               </Select>
             </div>
@@ -70,8 +70,8 @@ const ConditionalLogic: React.FC<ConditionalLogicProps> = ({ field, availableTri
                   onChange={(e) => handleLogicUpdate('value', e.target.value)}
                 >
                   <option value="">-- Seleccionar Valor --</option>
-                  {selectedTriggerField.options.map(opt => (
-                    <option key={opt} value={opt}>{opt}</option>
+                  {selectedTriggerField.options.map((opt, idx) => (
+                    <option key={idx} value={opt.TextValue}>{opt.TextValue}</option>
                   ))}
                 </Select>
               ) : (

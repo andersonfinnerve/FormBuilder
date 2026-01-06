@@ -1,6 +1,8 @@
 import React from 'react';
 import { Question, AnswerOption } from '../../types/questionnaire';
 import { Input, TextArea } from '../common/Input';
+import AutocompleteInput from '../common/AutocompleteInput';
+import { MASTER_DATA } from '../../data/mockMasterData';
 
 interface QuestionItemProps {
   question: Question;
@@ -9,6 +11,14 @@ interface QuestionItemProps {
 }
 
 const QuestionItem: React.FC<QuestionItemProps> = ({ question, onUpdate, onDelete }) => {
+  // Generar sugerencias desde datos maestros
+  const questionSuggestions = MASTER_DATA
+    .filter(md => md.type === 'registry') // Solo registros con opciones
+    .map(md => ({
+      id: md.id,
+      text: md.name,
+      description: md.description
+    }));
   const handleOptionChange = (index: number, field: keyof AnswerOption, value: any) => {
     const newOptions = [...question.options];
     newOptions[index] = { ...newOptions[index], [field]: value };
@@ -38,11 +48,12 @@ const QuestionItem: React.FC<QuestionItemProps> = ({ question, onUpdate, onDelet
       <div className="flex-1 space-y-4">
         <div className="flex justify-between items-start gap-4">
           <div className="flex-1">
-            <Input
-              label="Pregunta"
+            <label className="text-sm text-text-primary font-medium block mb-1.5">Pregunta</label>
+            <AutocompleteInput
               value={question.text}
-              onChange={(e) => onUpdate({ ...question, text: e.target.value })}
-              placeholder="Escriba la pregunta aquí..."
+              onChange={(value) => onUpdate({ ...question, text: value })}
+              suggestions={questionSuggestions}
+              placeholder="¿Qué significa para usted una inversión de largo plazo?"
               className="font-bold text-lg"
             />
           </div>

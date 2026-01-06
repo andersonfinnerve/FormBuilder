@@ -1,11 +1,12 @@
 import React from 'react';
-import { FormField, FieldType, DropPosition } from '../../types';
+import { FormField, FieldType, DropPosition, FormConfig } from '../../types';
 import CanvasToolbar from './CanvasToolbar';
 import FieldRenderer from './FieldRenderer';
 
 interface CanvasProps {
   fields: FormField[];
   selectedId: string | null;
+  formConfig: FormConfig;
   onSelectField: (id: string) => void;
   onDeleteField: (id: string, e: React.MouseEvent) => void;
   onDuplicateField: (field: FormField, e: React.MouseEvent) => void;
@@ -17,6 +18,7 @@ interface CanvasProps {
 const Canvas: React.FC<CanvasProps> = ({
   fields,
   selectedId,
+  formConfig,
   onSelectField,
   onDeleteField,
   onDuplicateField,
@@ -32,7 +34,7 @@ const Canvas: React.FC<CanvasProps> = ({
     if (newFieldType) {
       if (e.target === e.currentTarget) {
         const lastField = fields[fields.length - 1];
-        const targetId = lastField ? lastField.id : 'ROOT_START'; 
+        const targetId = lastField ? lastField.componentId : 'ROOT_START'; 
         const sharedId = e.dataTransfer.getData("application/sharedId");
         
         onDropNewField(newFieldType, targetId, 'after', sharedId || undefined);
@@ -46,7 +48,7 @@ const Canvas: React.FC<CanvasProps> = ({
     if (e.target === e.currentTarget) {
       const lastField = fields[fields.length - 1];
       if (lastField) {
-        onMoveField(dragId, lastField.id, 'after');
+        onMoveField(dragId, lastField.componentId, 'after');
       }
     }
   };
@@ -62,21 +64,23 @@ const Canvas: React.FC<CanvasProps> = ({
 
       <div className="flex-1 overflow-y-auto p-4 md:p-12 flex justify-center custom-scrollbar">
         <div 
-          className="w-full max-w-[1200px] h-fit bg-surface-dark border border-border-dark rounded-xl shadow-2xl relative transition-all"
+          className="w-full h-fit bg-surface-dark border border-border-dark rounded-xl shadow-2xl relative transition-all"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="h-3 w-full bg-gradient-to-r from-blue-600 via-primary to-cyan-400 rounded-t-xl"></div>
           
           <div className="p-6 md:p-10 space-y-8">
             <div className="group relative border-b border-border-dark pb-6 hover:bg-background-dark/30 -mx-4 px-4 rounded-lg transition-colors cursor-pointer">
-              <h1 className="text-3xl font-bold text-text-primary mb-2">Formulario de Registro #1024</h1>
-              <p className="text-text-secondary">Complete la información solicitada.</p>
+              <h1 className="text-3xl font-bold text-text-primary mb-2">{formConfig.title}</h1>
+              {formConfig.description && (
+                <p className="text-text-secondary">{formConfig.description}</p>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 min-h-[400px] content-start">
               {fields.map((field) => (
                 <FieldRenderer 
-                  key={field.id} 
+                  key={field.componentId} 
                   field={field}
                   selectedId={selectedId}
                   onSelectField={onSelectField}

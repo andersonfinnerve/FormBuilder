@@ -169,5 +169,58 @@ export const MASTER_DATA: MasterData[] = [
     ],
     description: 'Listado de beneficiarios finales con participación',
     lastModified: '2026-01-04'
+  },
+  {
+    id: 'md_questionnaire_001',
+    name: '¿Qué significa para usted una inversión de largo plazo?',
+    type: 'registry',
+    options: [
+      { id: 'opt_q001_1', value: 'Menor a 1 año' },
+      { id: 'opt_q001_2', value: 'Entre 1 y 3 años' },
+      { id: 'opt_q001_3', value: 'Entre 3 y 5 años' },
+      { id: 'opt_q001_4', value: 'Mayor a 5 años' }
+    ],
+    description: 'Pregunta sobre horizonte temporal de inversión',
+    lastModified: '2026-01-05'
+  },
+  {
+    id: 'md_questionnaire_002',
+    name: '¿Cuál es su tolerancia al riesgo?',
+    type: 'registry',
+    options: [
+      { id: 'opt_q002_1', value: 'Muy conservador' },
+      { id: 'opt_q002_2', value: 'Conservador' },
+      { id: 'opt_q002_3', value: 'Moderado' },
+      { id: 'opt_q002_4', value: 'Agresivo' }
+    ],
+    description: 'Pregunta sobre perfil de riesgo del inversionista',
+    lastModified: '2026-01-05'
+  },
+  {
+    id: 'md_questionnaire_003',
+    name: '¿Cuál es su experiencia invirtiendo?',
+    type: 'registry',
+    options: [
+      { id: 'opt_q003_1', value: 'Sin experiencia' },
+      { id: 'opt_q003_2', value: 'Principiante (menos de 2 años)' },
+      { id: 'opt_q003_3', value: 'Intermedio (2-5 años)' },
+      { id: 'opt_q003_4', value: 'Avanzado (más de 5 años)' }
+    ],
+    description: 'Pregunta sobre experiencia en inversiones',
+    lastModified: '2026-01-05'
+  },
+  {
+    id: 'md_questionnaire_004',
+    name: '¿Qué porcentaje de sus ingresos destina a inversión?',
+    type: 'registry',
+    options: [
+      { id: 'opt_q004_1', value: 'Menos del 10%' },
+      { id: 'opt_q004_2', value: 'Entre 10% y 25%' },
+      { id: 'opt_q004_3', value: 'Entre 25% y 50%' },
+      { id: 'opt_q004_4', value: 'Más del 50%' }
+    ],
+    description: 'Pregunta sobre capacidad de ahorro e inversión',
+    lastModified: '2026-01-05'
   }
 ];
+

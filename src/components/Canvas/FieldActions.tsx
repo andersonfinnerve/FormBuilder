@@ -17,7 +17,7 @@ const FieldActions: React.FC<FieldActionsProps> = ({ field, isSelected, onDuplic
       <button onClick={(e) => onDuplicate(field, e)} className="text-text-secondary hover:text-white hover:bg-primary rounded p-1 transition-colors">
         <span className="material-symbols-outlined text-lg">content_copy</span>
       </button>
-      <button onClick={(e) => onDelete(field.id, e)} className="text-text-secondary hover:text-red-400 hover:bg-red-400/10 rounded p-1 transition-colors">
+      <button onClick={(e) => onDelete(field.componentId, e)} className="text-text-secondary hover:text-red-400 hover:bg-red-400/10 rounded p-1 transition-colors">
         <span className="material-symbols-outlined text-lg">delete</span>
       </button>
     </div>

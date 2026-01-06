@@ -16,6 +16,8 @@ interface SectionFieldProps {
   isFieldVisible: (field: FormField) => boolean;
 }
 
+console.error("PEPE LUCHO");
+
 export const SectionField: React.FC<SectionFieldProps> = ({
   field,
   formValues,

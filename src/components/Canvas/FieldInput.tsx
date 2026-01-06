@@ -37,7 +37,7 @@ const FieldInput: React.FC<FieldInputProps> = ({ field }) => {
           {field.options?.map((opt, i) => (
             <div key={i} className="flex items-center gap-3">
               <input type="radio" className="w-4 h-4 border-border-dark text-primary" disabled />
-              <span className="text-text-primary text-sm">{opt}</span>
+              <span className="text-text-primary text-sm">{opt.TextValue}</span>
             </div>
           ))}
         </div>

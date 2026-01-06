@@ -30,6 +30,8 @@ const AppContent: React.FC = () => {
     selectedField,
     selectedId,
     setSelectedId,
+    formConfig,
+    handleUpdateFormConfig,
     handleAddField,
     handleAddSharedField,
     handleAddMasterData,
@@ -47,7 +49,11 @@ const AppContent: React.FC = () => {
     canUndo,
     canRedo,
     handleLoadForm
-  } = useFormBuilder(initialFields, sharedFieldsLibrary);
+  } = useFormBuilder(
+    initialFields.structureForm, 
+    sharedFieldsLibrary,
+    { title: initialFields.name, description: initialFields.description }
+  );
 
   const handleSave = () => {
     let id = currentFormId;
@@ -75,6 +81,7 @@ const AppContent: React.FC = () => {
       name: name,
       description: "Formulario guardado",
       fields: fields,
+      config: formConfig,
       createdAt: createdAt,
       updatedAt: new Date().toISOString(),
       version: version
@@ -85,7 +92,7 @@ const AppContent: React.FC = () => {
   const handleLoadFromExplorer = (id: string) => {
     const form = loadForm(id);
     if (form) {
-      handleLoadForm(form.fields);
+      handleLoadForm(form.fields, form.config);
       setCurrentFormId(id);
       setIsExplorerOpen(false);
     }
@@ -93,7 +100,10 @@ const AppContent: React.FC = () => {
 
   const handleNewForm = () => {
     if (window.confirm('¿Estás seguro de crear un nuevo formulario? Se perderán los cambios no guardados en el canvas actual.')) {
-      handleLoadForm(initialFields);
+      handleLoadForm(
+        initialFields.structureForm,
+        { title: initialFields.name, description: initialFields.description }
+      );
       setCurrentFormId(null);
     }
   };
@@ -128,6 +138,7 @@ const AppContent: React.FC = () => {
             <Canvas 
               fields={fields} 
               selectedId={selectedId} 
+              formConfig={formConfig}
               onSelectField={setSelectedId}
               onDeleteField={handleDeleteField}
               onDuplicateField={handleDuplicateField}
@@ -139,7 +150,9 @@ const AppContent: React.FC = () => {
             <PropertiesPanel 
               selectedField={selectedField} 
               allFields={flattenFields(fields)}
+              formConfig={formConfig}
               onUpdateField={handleCommitUpdate} // Use commit update for properties to trigger history
+              onUpdateFormConfig={handleUpdateFormConfig}
               sharedLibrary={sharedFieldsLibrary}
             />
           </>
@@ -154,10 +167,10 @@ const AppContent: React.FC = () => {
 
       {isPreviewOpen && (
         <PreviewModal 
-          isOpen={isPreviewOpen} 
           onClose={() => setIsPreviewOpen(false)} 
-          fields={fields} 
-          theme={theme}
+          fields={fields}
+          formConfig={formConfig}
+          sharedLibrary={sharedFieldsLibrary}
         />
       )}
 

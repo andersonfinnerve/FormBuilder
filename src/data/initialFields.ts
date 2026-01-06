@@ -1,139 +1,176 @@
 import { FormField } from '../types';
 
+export interface InitialFormStructure {
+  formId: string;
+  name: string;
+  description: string;
+  structureForm: FormField[];
+}
 
-export const initialFields: FormField[] = [
-  {
-    componentId: '1',
-    type: 'text',
-    label: 'Nombre Completo',
-    placeholder: 'Ej. Juan Pérez',
-    description: 'Ingrese su nombre legal como aparece en su ID.',
-    required: true,
-    readOnly: false,
-    order: 1,
-    width: 'half',
-    formDataId: null, // Campo manual - null indica que debe crearse en el maestro
-  },
-  {
-    componentId: '2',
-    type: 'text',
-    label: 'Código Postal',
-    placeholder: '',
-    description: 'Código postal de residencia',
-    required: false,
-    readOnly: false,
-    order: 2,
-    width: 'half',
-    formDataId: 'md_002', // Campo de texto del maestro - SÍ tiene formDataId
-  },
-  {
-    componentId: '3',
-    type: 'select',
-    label: 'Actividad profesional actual',
-    placeholder: 'Seleccione una opción...',
-    description: 'Situación laboral del contacto',
-    required: false,
-    readOnly: false,
-    order: 3,
-    width: 'half',
-    options: ['Empleado', 'Autónomo', 'Empresario', 'Jubilado', 'Estudiante', 'Desempleado', 'Otro'],
-    formDataId: 'md_001', // Campo select del maestro - SÍ tiene formDataId
-    formDataOptions: [
-      { value: 'Empleado', formDataOptionId: 'opt_001_1' },
-      { value: 'Autónomo', formDataOptionId: 'opt_001_2' },
-      { value: 'Empresario', formDataOptionId: 'opt_001_3' },
-      { value: 'Jubilado', formDataOptionId: 'opt_001_4' },
-      { value: 'Estudiante', formDataOptionId: 'opt_001_5' },
-      { value: 'Desempleado', formDataOptionId: 'opt_001_6' },
-      { value: 'Otro', formDataOptionId: 'opt_001_7' }
-    ]
-  },
-  {
-    componentId: 'section_1',
-    type: 'section',
-    label: 'BENEFICIARIOS FINALES',
-    description: '¿Existe alguna persona natural que pueda ser considerado como beneficiario final?',
-    required: false,
-    readOnly: false,
-    order: 2,
-    width: 'full',
-    children: [
-      {
-        componentId: 'sub_1',
-        type: 'radio',
-        label: '¿Con control efectivo según circular N 57/2017?',
-        options: ['Sí', 'No'],
-        required: true,
-        readOnly: false,
-        order: 1,
-        width: 'full'
-      },
-      {
-        componentId: 'inner_section_1',
-        type: 'section',
-        label: 'PARTICIPACIÓN IGUAL O MAYOR AL 10%',
-        description: 'Personas naturales que tienen una participación en la persona o estructura jurídica declarante igual o mayor al 10%.',
-        required: false,
-        readOnly: false,
-        order: 2,
-        width: 'full',
-        // Lógica: Mostrar solo si 'sub_1' es 'Sí'
-        logic: {
-          triggerId: 'sub_1',
-          triggerFormDataId: null, // El campo trigger es nuevo (no viene del maestro)
-          value: 'Sí',
-          enabled: true
+export const initialFields: InitialFormStructure = {
+  formId: 'form_beneficiarios_001',
+  name: 'DECLARACIÓN DE BENEFICIARIOS FINALES',
+  description: 'Formulario para declaración de beneficiarios finales',
+  structureForm: [
+    {
+      "componentId": "1767710093975",
+      "type": "text",
+      "label": "Nombre",
+      "placeholder": "Ej. NorGesk Blank",
+      "required": false,
+      "readOnly": false,
+      "order": 0,
+      "width": "full",
+      "formDataId": null,
+      "description": "nombre de inversionista.."
+    },
+    {
+      componentId: 'section_1',
+      type: 'section',
+      label: 'BENEFICIARIOS FINALES',
+      description: '',
+      required: false,
+      readOnly: false,
+      order: 1,
+      width: 'full',
+      children: [
+        {
+          componentId: 'question_1',
+          type: 'select',
+          label: '¿EXISTE ALGUNA PERSONA NATURAL QUE PUEDA SER CONSIDERADO COMO BENEFICIARIO FINAL O CON CONTROL EFECTIVO, DE ACUERDO A LOS TÉRMINOS ESTABLECIDOS EN LA CIRCULAR N° 57/2017 DE LA UAF?',
+          placeholder: 'Seleccione una opción',
+          description: '*PUEDE REVISAR HACIENDO CLICK EN ESTE ANEXO LA DEFINICIÓN DE BENEFICIARIO FINAL',
+          options: [
+            { DataOptionId: 'opt_q1_1', TextValue: 'Si' },
+            { DataOptionId: 'opt_q1_2', TextValue: 'No' }
+          ],
+          required: true,
+          readOnly: false,
+          order: 1,
+          width: 'full',
+          formDataId: null
         },
-        children: [
-          {
-            componentId: 'grid_1',
-            type: 'grid',
-            label: 'Lista de Beneficiarios',
-            description: 'Listado de beneficiarios finales con participación',
-            required: false,
-            readOnly: false,
-            order: 1,
-            width: 'full',
-            formDataGridId: 'md_grid_001', // Grid del maestro
-            columns: [
-              {
-                id: 'col_001',
-                label: 'País',
-                type: 'select',
-                required: true,
-                formDataGridColumnId: 'col_001',
-                formDataOptions: [
-                  { value: 'Argentina', formDataOptionId: 'opt_col_001_1' },
-                  { value: 'Chile', formDataOptionId: 'opt_col_001_2' },
-                  { value: 'Colombia', formDataOptionId: 'opt_col_001_3' },
-                  { value: 'España', formDataOptionId: 'opt_col_001_4' }
-                ]
-              },
-              {
-                id: 'col_002',
-                label: 'RUT / N° Doc',
-                type: 'text',
-                required: true,
-                formDataGridColumnId: 'col_002'
-              },
-              {
-                id: 'col_003',
-                label: 'Nombre(s)',
-                type: 'text',
-                required: true,
-                formDataGridColumnId: 'col_003'
-              },
-              {
-                id: 'col_004',
-                label: 'Porcentaje',
-                type: 'text',
-                required: true,
-                formDataGridColumnId: 'col_004'
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-];
+        {
+          componentId: 'question_2',
+          type: 'select',
+          label: '¿EXISTEN PERSONAS NATURALES QUE TENGAN UNA PARTICIPACIÓN EN LA PERSONA O ESTRUCTURA JURÍDICA DECLARANTE IGUAL O MAYOR AL 10%?',
+          placeholder: 'Seleccione una opción',
+          description: '',
+          options: [
+            { DataOptionId: 'opt_q2_1', TextValue: 'Si' },
+            { DataOptionId: 'opt_q2_2', TextValue: 'No' }
+          ],
+          required: true,
+          readOnly: false,
+          order: 2,
+          width: 'full',
+          formDataId: null
+        }
+      ]
+    },
+    {
+      componentId: 'section_2',
+      type: 'section',
+      label: 'PARTICIPACIÓN IGUAL O MAYOR AL 10%',
+      description: 'Personas naturales que tienen una participación en la persona o estructura jurídica declarante igual o mayor al 10%.',
+      required: false,
+      readOnly: false,
+      order: 2,
+      width: 'full',
+      children: [
+        {
+          componentId: 'grid_beneficiarios',
+          type: 'grid',
+          label: '',
+          description: '',
+          required: false,
+          readOnly: false,
+          order: 1,
+          width: 'full',
+          formDataGridId: 'md_grid_beneficiarios',
+          columns: [
+            {
+              id: 'col_pais',
+              label: 'País',
+              type: 'select',
+              required: true,
+              formDataGridColumnId: 'col_pais',
+              options: [
+                { DataOptionId: 'opt_pais_1', TextValue: 'Argentina' },
+                { DataOptionId: 'opt_pais_2', TextValue: 'Chile' },
+                { DataOptionId: 'opt_pais_3', TextValue: 'Colombia' },
+                { DataOptionId: 'opt_pais_4', TextValue: 'España' },
+                { DataOptionId: 'opt_pais_5', TextValue: 'México' },
+                { DataOptionId: 'opt_pais_6', TextValue: 'Perú' }
+              ]
+            },
+            {
+              id: 'col_nacionalidad',
+              label: 'Nacionalidad',
+              type: 'select',
+              required: true,
+              formDataGridColumnId: 'col_nacionalidad',
+              options: [
+                { DataOptionId: 'opt_nac_1', TextValue: 'Argentina' },
+                { DataOptionId: 'opt_nac_2', TextValue: 'Chilena' },
+                { DataOptionId: 'opt_nac_3', TextValue: 'Colombiana' },
+                { DataOptionId: 'opt_nac_4', TextValue: 'Española' },
+                { DataOptionId: 'opt_nac_5', TextValue: 'Mexicana' },
+                { DataOptionId: 'opt_nac_6', TextValue: 'Peruana' }
+              ]
+            },
+            {
+              id: 'col_rut',
+              label: 'RUT / N° DOC',
+              type: 'text',
+              required: true,
+              formDataGridColumnId: 'col_rut'
+            },
+            {
+              id: 'col_nombre',
+              label: 'Nombre(s)',
+              type: 'text',
+              required: true,
+              formDataGridColumnId: 'col_nombre'
+            },
+            {
+              id: 'col_apellido_paterno',
+              label: 'Apellido paterno',
+              type: 'text',
+              required: true,
+              formDataGridColumnId: 'col_apellido_paterno'
+            },
+            {
+              id: 'col_apellido_materno',
+              label: 'Apellido materno',
+              type: 'text',
+              required: true,
+              formDataGridColumnId: 'col_apellido_materno'
+            },
+            {
+              id: 'col_domicilio',
+              label: 'Domicilio',
+              type: 'text',
+              required: true,
+              formDataGridColumnId: 'col_domicilio'
+            },
+            {
+              id: 'col_ciudad',
+              label: 'Ciudad',
+              type: 'text',
+              required: true,
+              formDataGridColumnId: 'col_ciudad'
+            },
+            {
+              id: 'col_porcentaje',
+              label: 'Porcentaje',
+              type: 'text',
+              required: true,
+              formDataGridColumnId: 'col_porcentaje'
+            }
+          ]
+        }
+      ]
+    }
+  ]
+};

@@ -26,6 +26,19 @@ body, html, #root {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Fix select options visibility in dark mode */
+select option {
+  background-color: var(--color-background) !important;
+  color: var(--color-text-primary) !important;
+  padding: 8px !important;
+}
+
+select option:checked,
+select option:hover {
+  background-color: var(--color-primary) !important;
+  color: var(--color-primary-contrast) !important;
+}
+
 /* Custom Scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
   width: 8px;

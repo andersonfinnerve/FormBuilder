@@ -1,4 +1,4 @@
-import { FormField } from './index';
+import { FormField, FormConfig } from './index';
 
 export interface FormMetadata {
   id: string;
@@ -11,6 +11,7 @@ export interface FormMetadata {
 
 export interface SavedForm extends FormMetadata {
   fields: FormField[];
+  config?: FormConfig;
 }
 
 export interface HistoryEntry {

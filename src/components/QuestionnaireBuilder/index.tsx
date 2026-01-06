@@ -4,32 +4,10 @@ import QuestionItem from './QuestionItem';
 import ResultConfig from './ResultConfig';
 import { Input } from '../common/Input';
 import Button from '../Header/Button';
-
-const initialConfig: QuestionnaireConfig = {
-  title: 'Perfil de Inversionista',
-  description: 'Cuestionario para determinar el perfil de riesgo del cliente.',
-  questions: [
-    {
-      id: '1',
-      text: '¿Qué significa para usted una inversión de largo plazo?',
-      options: [
-        { id: '1a', text: 'Menor a 1 año', score: 0 },
-        { id: '1b', text: 'Entre 1 y 3 años', score: 1 },
-        { id: '1c', text: 'Entre 3 y 5 años', score: 4 },
-        { id: '1d', text: 'Mayor a 5 años', score: 8 },
-      ]
-    }
-  ],
-  results: [
-    { id: 'r1', min: 0, max: 10, label: 'Muy Conservador' },
-    { id: 'r2', min: 11, max: 20, label: 'Conservador' },
-    { id: 'r3', min: 21, max: 30, label: 'Moderado' },
-    { id: 'r4', min: 31, max: 100, label: 'Agresivo' },
-  ]
-};
+import { initialQuestionnaire } from '../../data/initialQuestionnaire';
 
 const QuestionnaireBuilder: React.FC = () => {
-  const [config, setConfig] = useState<QuestionnaireConfig>(initialConfig);
+  const [config, setConfig] = useState<QuestionnaireConfig>(initialQuestionnaire.structureQuestionnaire);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
   const handleUpdateQuestion = (updatedQuestion: Question) => {

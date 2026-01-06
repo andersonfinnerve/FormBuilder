@@ -32,7 +32,7 @@ const GridCellInput: React.FC<GridCellInputProps> = ({
         className="bg-transparent border-0 border-b border-transparent rounded-none focus:ring-0 focus:border-primary px-2 py-1"
       >
         <option value="">Seleccionar...</option>
-        {options?.map((opt, i) => <option key={i} value={opt}>{opt}</option>)}
+        {options?.map((opt, i) => <option key={i} value={opt.TextValue}>{opt.TextValue}</option>)}
       </Select>
     );
   }

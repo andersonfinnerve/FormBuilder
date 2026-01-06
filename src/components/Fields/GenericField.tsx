@@ -13,13 +13,13 @@ export const GenericField: React.FC<GenericFieldProps> = ({ field, onChange }) =
   const renderInput = () => {
     switch (field.type) {
       case 'textarea':
-        return <TextArea rows={3} onChange={(e) => onChange(field.id, e.target.value)} />;
+        return <TextArea rows={3} onChange={(e) => onChange(field.componentId, e.target.value)} />;
       
       case 'select':
         return (
-          <Select onChange={(e) => onChange(field.id, e.target.value)}>
+          <Select onChange={(e) => onChange(field.componentId, e.target.value)}>
             <option value="">Seleccionar...</option>
-            {field.options?.map((opt, i) => <option key={i} value={opt}>{opt}</option>)}
+            {field.options?.map((opt, i) => <option key={i} value={opt.TextValue}>{opt.TextValue}</option>)}
           </Select>
         );
       
@@ -29,7 +29,7 @@ export const GenericField: React.FC<GenericFieldProps> = ({ field, onChange }) =
             <input 
               type="checkbox" 
               className="w-5 h-5 rounded border-border text-primary" 
-              onChange={(e) => onChange(field.id, e.target.checked)} 
+              onChange={(e) => onChange(field.componentId, e.target.checked)} 
             />
             <label className="text-sm text-text-primary ">{field.placeholder || 'Aceptar'}</label>
           </div>
@@ -42,12 +42,12 @@ export const GenericField: React.FC<GenericFieldProps> = ({ field, onChange }) =
               <div key={i} className="flex items-center gap-3">
                 <input 
                   type="radio" 
-                  name={field.id} 
+                  name={field.componentId} 
                   className="w-4 h-4 border-border text-primary" 
-                  onChange={(e) => onChange(field.id, e.target.value)} 
-                  value={opt} 
+                  onChange={(e) => onChange(field.componentId, e.target.value)} 
+                  value={opt.TextValue} 
                 />
-                <span className="text-sm text-text-primary ">{opt}</span>
+                <span className="text-sm text-text-primary ">{opt.TextValue}</span>
               </div>
             ))}
           </div>
@@ -62,7 +62,7 @@ export const GenericField: React.FC<GenericFieldProps> = ({ field, onChange }) =
         );
       
       default:
-        return <Input type={field.type} onChange={(e) => onChange(field.id, e.target.value)} />;
+        return <Input type={field.type} onChange={(e) => onChange(field.componentId, e.target.value)} />;
     }
   };
 

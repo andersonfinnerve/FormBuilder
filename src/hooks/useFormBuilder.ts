@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FormField, FieldType, SharedFieldDefinition } from '../types';
+import { FormField, FieldType, SharedFieldDefinition, FormConfig } from '../types';
 import { useHistory } from './useHistory';
 import {
   findFieldRecursive,
@@ -10,9 +10,13 @@ import {
   insertNode
 } from '../utils/fieldHelpers';
 
-export const useFormBuilder = (initialFields: FormField[], sharedLibrary: SharedFieldDefinition[]) => {
+export const useFormBuilder = (initialFields: FormField[], sharedLibrary: SharedFieldDefinition[], initialConfig?: FormConfig) => {
   const [fields, setFields] = useState<FormField[]>(initialFields);
   const [selectedId, setSelectedId] = useState<string | null>('1');
+  const [formConfig, setFormConfig] = useState<FormConfig>(initialConfig || {
+    title: 'Formulario de Registro',
+    description: 'Complete la información solicitada.'
+  });
   
   const { 
     history, 
@@ -52,10 +56,17 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
     }
   };
 
-  const handleLoadForm = (loadedFields: FormField[]) => {
+  const handleLoadForm = (loadedFields: FormField[], loadedConfig?: FormConfig) => {
     setFields(loadedFields);
+    if (loadedConfig) {
+      setFormConfig(loadedConfig);
+    }
     pushSnapshot(loadedFields, 'Formulario cargado');
     setSelectedId(null);
+  };
+
+  const handleUpdateFormConfig = (key: keyof FormConfig, value: string) => {
+    setFormConfig(prev => ({ ...prev, [key]: value }));
   };
 
   const selectedField = selectedId ? findFieldRecursive(fields, selectedId) : null;
@@ -85,8 +96,10 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
       readOnly: false,
       order: 0,
       width: 'full',
-      options: type === 'select' || type === 'radio' ? ['Opción 1', 'Opción 2'] : undefined,
-      formDataOptions: type === 'select' || type === 'radio' ? null : undefined, // null = opciones nuevas
+      options: type === 'select' || type === 'radio' ? [
+        { DataOptionId: undefined, TextValue: 'Opción 1' },
+        { DataOptionId: undefined, TextValue: 'Opción 2' }
+      ] : undefined,
       formDataId: type === 'grid' || type === 'section' || type === 'spacer' || type === 'divider' ? undefined : null, // null = campo nuevo
       formDataGridId: type === 'grid' ? null : undefined, // null = grid nuevo
       fileStyle: type === 'file' ? 'dropzone' : undefined,
@@ -154,24 +167,23 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
           type: col.type,
           required: col.required,
           formDataGridColumnId: col.id, // Asignar el ID de la columna
-          formDataOptions: col.options?.map((opt: any) => ({
-            value: opt.value,
-            formDataOptionId: opt.id // Asignar el ID de cada opción
+          options: col.options?.map((opt: any) => ({
+            DataOptionId: opt.id,
+            TextValue: opt.value
           }))
         })) || []
       };
     } else if (data.type === 'registry') {
       // Para desplegables del maestro
-      const optionsArray = Array.isArray(data.options) && typeof data.options[0] === 'object'
-        ? data.options.map((opt: any) => opt.value)
-        : data.options;
-      
-      const formDataOptions = Array.isArray(data.options) && typeof data.options[0] === 'object'
+      const options = Array.isArray(data.options) && typeof data.options[0] === 'object'
         ? data.options.map((opt: any) => ({
-            value: opt.value,
-            formDataOptionId: opt.id
+            DataOptionId: opt.id,
+            TextValue: opt.value
           }))
-        : undefined;
+        : data.options.map((opt: any) => ({
+            DataOptionId: undefined,
+            TextValue: opt
+          }));
       
       newField = {
         componentId: Date.now().toString(),
@@ -182,8 +194,7 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
         readOnly: false,
         order: 0,
         width: 'full',
-        options: optionsArray,
-        formDataOptions: formDataOptions, // Guardar opciones con IDs
+        options: options,
         formDataId: data.id, // Usar formDataId para elementos normales
         description: data.description
       };
@@ -253,11 +264,22 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
 
   const handleDuplicateField = (field: FormField, e: React.MouseEvent) => {
     e.stopPropagation();
-    const newField = { 
+    
+    // Función recursiva para clonar children con nuevos IDs
+    const cloneChildren = (children?: FormField[]): FormField[] | undefined => {
+      if (!children || children.length === 0) return undefined;
+      return children.map(child => ({
+        ...child,
+        componentId: `${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+        children: cloneChildren(child.children)
+      }));
+    };
+    
+    const newField: FormField = { 
       ...field, 
-      id: Date.now().toString(), 
+      componentId: `${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
       label: field.label + ' (Copia)',
-      children: field.children ? [] : undefined 
+      children: cloneChildren(field.children)
     };
     
     // Logic to insert after the original field
@@ -312,6 +334,8 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
     selectedField,
     selectedId,
     setSelectedId,
+    formConfig,
+    handleUpdateFormConfig,
     handleAddField,
     handleAddSharedField,
     handleAddMasterData,

@@ -16,7 +16,7 @@ const ResizeHandle: React.FC<ResizeHandleProps> = ({ field, isSelected, isSectio
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     const newWidth = field.width === 'full' ? 'half' : 'full';
-    onUpdateWidth(field.id, newWidth);
+    onUpdateWidth(field.componentId, newWidth);
   };
 
   return (

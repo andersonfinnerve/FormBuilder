@@ -105,7 +105,7 @@ export const FileButtonField: React.FC<FileButtonFieldProps> = ({
       <div>
         <input
           type="file"
-          id={`file-upload-${field.id}`}
+          id={`file-upload-${field.componentId}`}
           className="hidden"
           onChange={handleFileChange}
         />

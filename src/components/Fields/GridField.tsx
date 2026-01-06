@@ -19,7 +19,7 @@ export const GridField: React.FC<GridFieldProps> = ({
   onGridRemoveRow,
   onGridCellChange
 }) => {
-  const rows = formValues[field.id] || [];
+  const rows = formValues[field.componentId] || [];
   const columns = field.columns || [];
 
   return (
@@ -46,12 +46,12 @@ export const GridField: React.FC<GridFieldProps> = ({
                       column={col}
                       value={row[col.label]}
                       sharedLibrary={sharedLibrary}
-                      onChange={(value) => onGridCellChange(field.id, rowIndex, col.label, value)}
+                      onChange={(value) => onGridCellChange(field.componentId, rowIndex, col.label, value)}
                     />
                   </td>
                 ))}
                 <td className="p-2 text-center">
-                  <button type="button" onClick={() => onGridRemoveRow(field.id, rowIndex)} className="text-text-secondary hover:text-red-500">
+                  <button type="button" onClick={() => onGridRemoveRow(field.componentId, rowIndex)} className="text-text-secondary hover:text-red-500">
                     <span className="material-symbols-outlined text-lg">delete</span>
                   </button>
                 </td>
@@ -61,7 +61,7 @@ export const GridField: React.FC<GridFieldProps> = ({
           </tbody>
         </table>
       </div>
-      <button type="button" onClick={() => onGridAddRow(field.id, columns)} className="text-sm font-medium text-primary hover:text-blue-400 flex items-center gap-1 mt-2">
+      <button type="button" onClick={() => onGridAddRow(field.componentId, columns)} className="text-sm font-medium text-primary hover:text-blue-400 flex items-center gap-1 mt-2">
         <span className="material-symbols-outlined text-lg">add_circle</span> Agregar Fila
       </button>
     </div>

@@ -26,9 +26,22 @@ const MasterDataItem: React.FC<MasterDataItemProps> = ({ data, onClick }) => {
         ? `Máx ${data.maxLength} chars` 
         : 'Texto libre';
 
+  const handleDragStart = (e: React.DragEvent) => {
+    // Solo permitir arrastrar datos maestros de tipo texto o registro (no grillas completas)
+    if (data.type !== 'grid') {
+      e.dataTransfer.setData('application/masterDataId', data.id);
+      e.dataTransfer.setData('application/masterDataType', data.type);
+      e.dataTransfer.effectAllowed = 'copy';
+    } else {
+      e.preventDefault();
+    }
+  };
+
   return (
     <div
       onClick={onClick}
+      draggable={data.type !== 'grid'}
+      onDragStart={handleDragStart}
       className="group flex items-start gap-2 p-2 rounded-lg bg-background-dark hover:bg-primary/10 border border-border-dark hover:border-primary/40 cursor-pointer transition-all"
     >
       <div className="flex items-center justify-center w-8 h-8 rounded bg-surface-dark text-text-secondary group-hover:text-primary transition-colors shrink-0 mt-0.5">

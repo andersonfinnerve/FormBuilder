@@ -46,7 +46,7 @@ const OptionsManagement: React.FC<OptionsManagementProps> = ({ field, isShared, 
           <div className="flex justify-between items-center">
             <h4 className="text-text-secondary text-xs font-bold uppercase tracking-wider">Opciones</h4>
             <button 
-              onClick={() => onChange('options', [...(field.options || []), 'Nueva Opción'])}
+              onClick={() => onChange('options', [...(field.options || []), { DataOptionId: undefined, TextValue: 'Nueva Opción' }])}
               className="text-primary text-xs font-bold hover:underline"
             >
               + Agregar
@@ -56,10 +56,10 @@ const OptionsManagement: React.FC<OptionsManagementProps> = ({ field, isShared, 
             {field.options?.map((option, index) => (
               <div key={index} className="flex gap-2">
                 <Input 
-                  value={option}
+                  value={option.TextValue}
                   onChange={(e) => {
                     const newOptions = [...(field.options || [])];
-                    newOptions[index] = e.target.value;
+                    newOptions[index] = { ...newOptions[index], TextValue: e.target.value };
                     onChange('options', newOptions);
                   }}
                 />
