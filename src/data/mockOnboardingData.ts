@@ -16,23 +16,42 @@ export const initialOnboardingFlows: OnboardingFlow[] = [
   {
     id: 'flow_1',
     name: 'Onboarding Inversionista Natural',
-    personType: 'natural',
+    generatePDF: true,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     steps: [
       {
         id: 'step_1',
         order: 1,
-        name: 'Datos Personales',
-        type: 'form',
+        name: 'Ficha de cliente',
+        description: 'Datos personales del inversionista',
+        componentType: 'Registro',
         resourceId: 'form_1'
       },
       {
         id: 'step_2',
         order: 2,
         name: 'Perfilamiento',
-        type: 'questionnaire',
+        description: 'Evaluación del perfil de riesgo',
+        componentType: 'Cuestionario',
         resourceId: 'quest_1'
+      }
+    ]
+  },
+  {
+    id: 'flow_2',
+    name: 'Onboarding Empresa',
+    generatePDF: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    steps: [
+      {
+        id: 'step_1',
+        order: 1,
+        name: 'Datos de la empresa',
+        description: 'Información corporativa',
+        componentType: 'Registro',
+        resourceId: 'form_3'
       }
     ]
   }

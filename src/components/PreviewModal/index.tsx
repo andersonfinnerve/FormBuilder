@@ -20,7 +20,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ fields, formConfig, onClose
 
   const handleGridAddRow = (fieldId: string, columns: GridColumn[]) => {
     const currentRows = formValues[fieldId] || [];
-    const newRow = columns.reduce((acc, col) => ({ ...acc, [col.label]: '' }), {});
+    const newRow = columns.reduce((acc, col) => ({ ...acc, [col.Label]: '' }), {});
     setFormValues(prev => ({ ...prev, [fieldId]: [...currentRows, newRow] }));
   };
 
@@ -38,19 +38,19 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ fields, formConfig, onClose
   };
 
   const isFieldVisible = (field: FormField) => {
-    if (!field.logic || !field.logic.enabled || !field.logic.triggerId) return true;
-    const triggerValue = formValues[field.logic.triggerId];
-    return triggerValue === field.logic.value;
+    if (!field.Logic || !field.Logic.Enabled || !field.Logic.TriggerId) return true;
+    const triggerValue = formValues[field.Logic.TriggerId];
+    return triggerValue === field.Logic.Value;
   };
 
   const collectData = (nodes: FormField[], target: Record<string, any>) => {
     nodes.forEach(field => {
       if (isFieldVisible(field)) {
-        if (field.type !== 'section' && field.type !== 'spacer' && field.type !== 'divider') {
-          target[field.componentId] = formValues[field.componentId];
+        if (field.Type !== 'section' && field.Type !== 'spacer' && field.Type !== 'divider') {
+          target[field.ComponentId] = formValues[field.ComponentId];
         }
-        if (field.children) {
-          collectData(field.children, target);
+        if (field.Children) {
+          collectData(field.Children, target);
         }
       }
     });
@@ -94,9 +94,9 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ fields, formConfig, onClose
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Título y descripción del formulario */}
               <div className="border-b border-border-dark pb-6 mb-6">
-                <h2 className="text-2xl font-bold text-text-primary mb-2">{formConfig.title}</h2>
-                {formConfig.description && (
-                  <p className="text-text-secondary">{formConfig.description}</p>
+                <h2 className="text-2xl font-bold text-text-primary mb-2">{formConfig.Title}</h2>
+                {formConfig.Description && (
+                  <p className="text-text-secondary">{formConfig.Description}</p>
                 )}
               </div>
 
@@ -109,7 +109,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ fields, formConfig, onClose
                 ) : (
                   fields.map((field) => (
                     <PreviewField
-                      key={field.componentId}
+                      key={field.ComponentId}
                       field={field}
                       formValues={formValues}
                       sharedLibrary={sharedLibrary}

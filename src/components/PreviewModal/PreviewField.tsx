@@ -32,7 +32,7 @@ const PreviewField: React.FC<PreviewFieldProps> = ({
   if (!isFieldVisible(field)) return null;
 
   // Handle SECTION
-  if (field.type === 'section') {
+  if (field.Type === 'section') {
     return (
       <SectionField
         field={field}
@@ -48,17 +48,17 @@ const PreviewField: React.FC<PreviewFieldProps> = ({
   }
 
   // Handle SPACER
-  if (field.type === 'spacer') {
+  if (field.Type === 'spacer') {
     return <SpacerField field={field} />;
   }
   
   // Handle DIVIDER
-  if (field.type === 'divider') {
+  if (field.Type === 'divider') {
     return <DividerField />;
   }
   
   // Handle GRID
-  if (field.type === 'grid') {
+  if (field.Type === 'grid') {
     return (
       <GridField
         field={field}
@@ -72,7 +72,7 @@ const PreviewField: React.FC<PreviewFieldProps> = ({
   }
 
   // Handle FILE BUTTON
-  if (field.type === 'file' && field.fileStyle === 'button') {
+  if (field.Type === 'file' && field.FileStyle === 'button') {
     return (
       <FileButtonField
         field={field}

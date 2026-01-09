@@ -3,23 +3,23 @@ import { MasterData } from '../types/masterData';
 // Datos maestros simulados del BackOffice
 export const MASTER_DATA: MasterData[] = [
   {
-    id: 'md_001',
+    FormDataId: 1,
     name: 'Actividad profesional actual',
     type: 'registry',
     options: [
-      { id: 'opt_001_1', value: 'Empleado' },
-      { id: 'opt_001_2', value: 'Autónomo' },
-      { id: 'opt_001_3', value: 'Empresario' },
-      { id: 'opt_001_4', value: 'Jubilado' },
-      { id: 'opt_001_5', value: 'Estudiante' },
-      { id: 'opt_001_6', value: 'Desempleado' },
-      { id: 'opt_001_7', value: 'Otro' }
+      { DataOptionId: 1, value: 'Empleado' },
+      { DataOptionId: 2, value: 'Autónomo' },
+      { DataOptionId: 3, value: 'Empresario' },
+      { DataOptionId: 4, value: 'Jubilado' },
+      { DataOptionId: 5, value: 'Estudiante' },
+      { DataOptionId: 6, value: 'Desempleado' },
+      { DataOptionId: 7, value: 'Otro' }
     ],
     description: 'Situación laboral del contacto',
     lastModified: '2026-01-02'
   },
   {
-    id: 'md_002',
+    FormDataId: 2,
     name: 'Código Postal',
     type: 'text',
     maxLength: 10,
@@ -27,53 +27,53 @@ export const MASTER_DATA: MasterData[] = [
     lastModified: '2026-01-01'
   },
   {
-    id: 'md_003',
+    FormDataId: 3,
     name: 'País de residencia',
     type: 'registry',
     options: [
-      { id: 'opt_003_1', value: 'Argentina' },
-      { id: 'opt_003_2', value: 'Chile' },
-      { id: 'opt_003_3', value: 'Colombia' },
-      { id: 'opt_003_4', value: 'España' },
-      { id: 'opt_003_5', value: 'México' },
-      { id: 'opt_003_6', value: 'Perú' },
-      { id: 'opt_003_7', value: 'Uruguay' },
-      { id: 'opt_003_8', value: 'Venezuela' }
+      { DataOptionId: 8, value: 'Argentina' },
+      { DataOptionId: 9, value: 'Chile' },
+      { DataOptionId: 10, value: 'Colombia' },
+      { DataOptionId: 11, value: 'España' },
+      { DataOptionId: 12, value: 'México' },
+      { DataOptionId: 13, value: 'Perú' },
+      { DataOptionId: 14, value: 'Uruguay' },
+      { DataOptionId: 15, value: 'Venezuela' }
     ],
     description: 'País donde reside el contacto',
     lastModified: '2025-12-28'
   },
   {
-    id: 'md_004',
+    FormDataId: 4,
     name: 'Nivel de estudios',
     type: 'registry',
     options: [
-      { id: 'opt_004_1', value: 'Primaria' },
-      { id: 'opt_004_2', value: 'Secundaria' },
-      { id: 'opt_004_3', value: 'Técnico' },
-      { id: 'opt_004_4', value: 'Universitario' },
-      { id: 'opt_004_5', value: 'Postgrado' },
-      { id: 'opt_004_6', value: 'Doctorado' }
+      { DataOptionId: 16, value: 'Primaria' },
+      { DataOptionId: 17, value: 'Secundaria' },
+      { DataOptionId: 18, value: 'Técnico' },
+      { DataOptionId: 19, value: 'Universitario' },
+      { DataOptionId: 20, value: 'Postgrado' },
+      { DataOptionId: 21, value: 'Doctorado' }
     ],
     description: 'Máximo nivel educativo alcanzado',
     lastModified: '2025-12-20'
   },
   {
-    id: 'md_005',
+    FormDataId: 5,
     name: 'Estado civil',
     type: 'registry',
     options: [
-      { id: 'opt_005_1', value: 'Soltero/a' },
-      { id: 'opt_005_2', value: 'Casado/a' },
-      { id: 'opt_005_3', value: 'Divorciado/a' },
-      { id: 'opt_005_4', value: 'Viudo/a' },
-      { id: 'opt_005_5', value: 'Unión libre' }
+      { DataOptionId: 22, value: 'Soltero/a' },
+      { DataOptionId: 23, value: 'Casado/a' },
+      { DataOptionId: 24, value: 'Divorciado/a' },
+      { DataOptionId: 25, value: 'Viudo/a' },
+      { DataOptionId: 26, value: 'Unión libre' }
     ],
     description: 'Estado civil actual',
     lastModified: '2025-12-15'
   },
   {
-    id: 'md_006',
+    FormDataId: 6,
     name: 'Referencia bancaria',
     type: 'text',
     maxLength: 50,
@@ -81,35 +81,35 @@ export const MASTER_DATA: MasterData[] = [
     lastModified: '2025-12-10'
   },
   {
-    id: 'md_007',
+    FormDataId: 7,
     name: 'Tipo de vivienda',
     type: 'registry',
     options: [
-      { id: 'opt_007_1', value: 'Propia' },
-      { id: 'opt_007_2', value: 'Alquilada' },
-      { id: 'opt_007_3', value: 'Familiar' },
-      { id: 'opt_007_4', value: 'Hipotecada' },
-      { id: 'opt_007_5', value: 'Otra' }
+      { DataOptionId: 27, value: 'Propia' },
+      { DataOptionId: 28, value: 'Alquilada' },
+      { DataOptionId: 29, value: 'Familiar' },
+      { DataOptionId: 30, value: 'Hipotecada' },
+      { DataOptionId: 31, value: 'Otra' }
     ],
     description: 'Situación de la vivienda',
     lastModified: '2025-12-05'
   },
   {
-    id: 'md_008',
+    FormDataId: 8,
     name: 'Ingresos mensuales',
     type: 'registry',
     options: [
-      { id: 'opt_008_1', value: 'Menos de $500' },
-      { id: 'opt_008_2', value: '$500-$1,000' },
-      { id: 'opt_008_3', value: '$1,000-$2,500' },
-      { id: 'opt_008_4', value: '$2,500-$5,000' },
-      { id: 'opt_008_5', value: 'Más de $5,000' }
+      { DataOptionId: 32, value: 'Menos de $500' },
+      { DataOptionId: 33, value: '$500-$1,000' },
+      { DataOptionId: 34, value: '$1,000-$2,500' },
+      { DataOptionId: 35, value: '$2,500-$5,000' },
+      { DataOptionId: 36, value: 'Más de $5,000' }
     ],
     description: 'Rango de ingresos mensuales',
     lastModified: '2025-11-30'
   },
   {
-    id: 'md_009',
+    FormDataId: 9,
     name: 'Nombre de emergencia',
     type: 'text',
     maxLength: 100,
@@ -117,51 +117,51 @@ export const MASTER_DATA: MasterData[] = [
     lastModified: '2025-11-25'
   },
   {
-    id: 'md_010',
+    FormDataId: 10,
     name: 'Parentesco de emergencia',
     type: 'registry',
     options: [
-      { id: 'opt_010_1', value: 'Padre/Madre' },
-      { id: 'opt_010_2', value: 'Hijo/a' },
-      { id: 'opt_010_3', value: 'Hermano/a' },
-      { id: 'opt_010_4', value: 'Cónyuge' },
-      { id: 'opt_010_5', value: 'Amigo/a' },
-      { id: 'opt_010_6', value: 'Otro familiar' }
+      { DataOptionId: 37, value: 'Padre/Madre' },
+      { DataOptionId: 38, value: 'Hijo/a' },
+      { DataOptionId: 39, value: 'Hermano/a' },
+      { DataOptionId: 40, value: 'Cónyuge' },
+      { DataOptionId: 41, value: 'Amigo/a' },
+      { DataOptionId: 42, value: 'Otro familiar' }
     ],
     description: 'Relación con el contacto de emergencia',
     lastModified: '2025-11-20'
   },
   {
-    id: 'md_grid_001',
+    FormDataId: 11,
     name: 'Beneficiarios Finales',
     type: 'grid',
     columns: [
       {
-        id: 'col_001',
+        FormDataGridColumnId: 1,
         label: 'País',
         type: 'select',
         required: true,
         options: [
-          { id: 'opt_col_001_1', value: 'Argentina' },
-          { id: 'opt_col_001_2', value: 'Chile' },
-          { id: 'opt_col_001_3', value: 'Colombia' },
-          { id: 'opt_col_001_4', value: 'España' }
+          { DataOptionId: 43, value: 'Argentina' },
+          { DataOptionId: 44, value: 'Chile' },
+          { DataOptionId: 45, value: 'Colombia' },
+          { DataOptionId: 46, value: 'España' }
         ]
       },
       {
-        id: 'col_002',
+        FormDataGridColumnId: 2,
         label: 'RUT / N° Doc',
         type: 'text',
         required: true
       },
       {
-        id: 'col_003',
+        FormDataGridColumnId: 3,
         label: 'Nombre(s)',
         type: 'text',
         required: true
       },
       {
-        id: 'col_004',
+        FormDataGridColumnId: 4,
         label: 'Porcentaje',
         type: 'text',
         required: true
@@ -171,53 +171,53 @@ export const MASTER_DATA: MasterData[] = [
     lastModified: '2026-01-04'
   },
   {
-    id: 'md_questionnaire_001',
+    FormDataId: 12,
     name: '¿Qué significa para usted una inversión de largo plazo?',
     type: 'registry',
     options: [
-      { id: 'opt_q001_1', value: 'Menor a 1 año' },
-      { id: 'opt_q001_2', value: 'Entre 1 y 3 años' },
-      { id: 'opt_q001_3', value: 'Entre 3 y 5 años' },
-      { id: 'opt_q001_4', value: 'Mayor a 5 años' }
+      { DataOptionId: 47, value: 'Menor a 1 año' },
+      { DataOptionId: 48, value: 'Entre 1 y 3 años' },
+      { DataOptionId: 49, value: 'Entre 3 y 5 años' },
+      { DataOptionId: 50, value: 'Mayor a 5 años' }
     ],
     description: 'Pregunta sobre horizonte temporal de inversión',
     lastModified: '2026-01-05'
   },
   {
-    id: 'md_questionnaire_002',
+    FormDataId: 13,
     name: '¿Cuál es su tolerancia al riesgo?',
     type: 'registry',
     options: [
-      { id: 'opt_q002_1', value: 'Muy conservador' },
-      { id: 'opt_q002_2', value: 'Conservador' },
-      { id: 'opt_q002_3', value: 'Moderado' },
-      { id: 'opt_q002_4', value: 'Agresivo' }
+      { DataOptionId: 51, value: 'Muy conservador' },
+      { DataOptionId: 52, value: 'Conservador' },
+      { DataOptionId: 53, value: 'Moderado' },
+      { DataOptionId: 54, value: 'Agresivo' }
     ],
     description: 'Pregunta sobre perfil de riesgo del inversionista',
     lastModified: '2026-01-05'
   },
   {
-    id: 'md_questionnaire_003',
+    FormDataId: 14,
     name: '¿Cuál es su experiencia invirtiendo?',
     type: 'registry',
     options: [
-      { id: 'opt_q003_1', value: 'Sin experiencia' },
-      { id: 'opt_q003_2', value: 'Principiante (menos de 2 años)' },
-      { id: 'opt_q003_3', value: 'Intermedio (2-5 años)' },
-      { id: 'opt_q003_4', value: 'Avanzado (más de 5 años)' }
+      { DataOptionId: 55, value: 'Sin experiencia' },
+      { DataOptionId: 56, value: 'Principiante (menos de 2 años)' },
+      { DataOptionId: 57, value: 'Intermedio (2-5 años)' },
+      { DataOptionId: 58, value: 'Avanzado (más de 5 años)' }
     ],
     description: 'Pregunta sobre experiencia en inversiones',
     lastModified: '2026-01-05'
   },
   {
-    id: 'md_questionnaire_004',
+    FormDataId: 15,
     name: '¿Qué porcentaje de sus ingresos destina a inversión?',
     type: 'registry',
     options: [
-      { id: 'opt_q004_1', value: 'Menos del 10%' },
-      { id: 'opt_q004_2', value: 'Entre 10% y 25%' },
-      { id: 'opt_q004_3', value: 'Entre 25% y 50%' },
-      { id: 'opt_q004_4', value: 'Más del 50%' }
+      { DataOptionId: 59, value: 'Menos del 10%' },
+      { DataOptionId: 60, value: 'Entre 10% y 25%' },
+      { DataOptionId: 61, value: 'Entre 25% y 50%' },
+      { DataOptionId: 62, value: 'Más del 50%' }
     ],
     description: 'Pregunta sobre capacidad de ahorro e inversión',
     lastModified: '2026-01-05'

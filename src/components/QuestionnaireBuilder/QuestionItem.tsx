@@ -15,7 +15,7 @@ const QuestionItem: React.FC<QuestionItemProps> = ({ question, onUpdate, onDelet
   const questionSuggestions = MASTER_DATA
     .filter(md => md.type === 'registry') // Solo registros con opciones
     .map(md => ({
-      id: md.id,
+      id: md.FormDataId,
       text: md.name,
       description: md.description
     }));

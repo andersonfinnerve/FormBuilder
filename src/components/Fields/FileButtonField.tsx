@@ -42,14 +42,14 @@ export const FileButtonField: React.FC<FileButtonFieldProps> = ({
   };
 
   return (
-    <div className={`${field.width === 'full' ? 'md:col-span-2' : 'md:col-span-1'} space-y-4 pt-2 animate-fadeIn`}>
+    <div className={`${field.Width === 'full' ? 'md:col-span-2' : 'md:col-span-1'} space-y-4 pt-2 animate-fadeIn`}>
       <label className="block text-sm font-bold text-text-secondary uppercase tracking-wider">
-        {field.label} {field.required && <span className="text-red-500">*</span>}
+        {field.Label} {field.Required && <span className="text-red-500">*</span>}
       </label>
-      {(field.description || field.downloadUrl) && (
+      {(field.Description || field.DownloadUrl) && (
         <div className="text-sm text-text-primary  leading-relaxed">
-          {field.description && <div dangerouslySetInnerHTML={parseRichText(field.description)} />}
-          {field.downloadUrl && (
+          {field.Description && <div dangerouslySetInnerHTML={parseRichText(field.Description)} />}
+          {field.DownloadUrl && (
             <div className="mt-2">
               <a href={field.downloadUrl} className="text-primary font-bold inline-flex items-center gap-1">
                 <span className="material-symbols-outlined text-lg">description</span>
@@ -105,12 +105,12 @@ export const FileButtonField: React.FC<FileButtonFieldProps> = ({
       <div>
         <input
           type="file"
-          id={`file-upload-${field.componentId}`}
+          id={`file-upload-${field.ComponentId}`}
           className="hidden"
           onChange={handleFileChange}
         />
         <label 
-          htmlFor={`file-upload-${field.id}`}
+          htmlFor={`file-upload-${field.ComponentId}`}
           className="bg-green-500  px-5 py-2.5 rounded-lg font-bold flex items-center gap-2 shadow cursor-pointer w-fit hover:bg-green-600 transition-colors"
         >
           <span className="material-symbols-outlined">add</span>

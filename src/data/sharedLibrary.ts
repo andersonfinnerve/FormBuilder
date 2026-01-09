@@ -3,10 +3,10 @@ import { SharedFieldDefinition } from '../types';
 // Simulación de base de datos centralizada
 export const sharedFieldsLibrary: SharedFieldDefinition[] = [
   {
-    id: 'lib_nationality',
-    label: 'Nacionalidad',
-    type: 'select',
-    options: [
+    Id: 'lib_nationality',
+    Label: 'Nacionalidad',
+    Type: 'select',
+    Options: [
       { DataOptionId: 'nat_1', TextValue: 'Argentina' },
       { DataOptionId: 'nat_2', TextValue: 'Bolivia' },
       { DataOptionId: 'nat_3', TextValue: 'Brasil' },
@@ -23,10 +23,10 @@ export const sharedFieldsLibrary: SharedFieldDefinition[] = [
     ]
   },
   {
-    id: 'lib_gender',
-    label: 'Género',
-    type: 'radio',
-    options: [
+    Id: 'lib_gender',
+    Label: 'Género',
+    Type: 'radio',
+    Options: [
       { DataOptionId: 'gen_1', TextValue: 'Masculino' },
       { DataOptionId: 'gen_2', TextValue: 'Femenino' },
       { DataOptionId: 'gen_3', TextValue: 'No binario' },
@@ -34,10 +34,10 @@ export const sharedFieldsLibrary: SharedFieldDefinition[] = [
     ]
   },
   {
-    id: 'lib_currency',
-    label: 'Moneda de Pago',
-    type: 'select',
-    options: [
+    Id: 'lib_currency',
+    Label: 'Moneda de Pago',
+    Type: 'select',
+    Options: [
       { DataOptionId: 'cur_1', TextValue: 'USD - Dólar Estadounidense' },
       { DataOptionId: 'cur_2', TextValue: 'EUR - Euro' },
       { DataOptionId: 'cur_3', TextValue: 'MXN - Peso Mexicano' },

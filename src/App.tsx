@@ -50,9 +50,9 @@ const AppContent: React.FC = () => {
     canRedo,
     handleLoadForm
   } = useFormBuilder(
-    initialFields.structureForm, 
+    initialFields.StructureForm, 
     sharedFieldsLibrary,
-    { title: initialFields.name, description: initialFields.description }
+    { Title: initialFields.Name, Description: initialFields.Description }
   );
 
   const handleSave = () => {
@@ -101,8 +101,8 @@ const AppContent: React.FC = () => {
   const handleNewForm = () => {
     if (window.confirm('¿Estás seguro de crear un nuevo formulario? Se perderán los cambios no guardados en el canvas actual.')) {
       handleLoadForm(
-        initialFields.structureForm,
-        { title: initialFields.name, description: initialFields.description }
+        initialFields.StructureForm,
+        { Title: initialFields.Name, Description: initialFields.Description }
       );
       setCurrentFormId(null);
     }

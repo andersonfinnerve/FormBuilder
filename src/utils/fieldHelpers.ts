@@ -3,9 +3,9 @@ import { FormField, DropPosition } from '../types';
 // Buscar un campo recursivamente en el árbol
 export const findFieldRecursive = (fields: FormField[], id: string): FormField | null => {
   for (const field of fields) {
-    if (field.componentId === id) return field;
-    if (field.children) {
-      const found = findFieldRecursive(field.children, id);
+    if (field.ComponentId === id) return field;
+    if (field.Children) {
+      const found = findFieldRecursive(field.Children, id);
       if (found) return found;
     }
   }
@@ -20,11 +20,11 @@ export const updateFieldRecursive = (
   value: any
 ): FormField[] => {
   return fields.map(field => {
-    if (field.componentId === id) {
+    if (field.ComponentId === id) {
       return { ...field, [key]: value };
     }
-    if (field.children) {
-      return { ...field, children: updateFieldRecursive(field.children, id, key, value) };
+    if (field.Children) {
+      return { ...field, Children: updateFieldRecursive(field.Children, id, key, value) };
     }
     return field;
   });
@@ -32,9 +32,9 @@ export const updateFieldRecursive = (
 
 // Eliminar un campo recursivamente
 export const deleteFieldRecursive = (fields: FormField[], id: string): FormField[] => {
-  return fields.filter(field => field.componentId !== id).map(field => {
-    if (field.children) {
-      return { ...field, children: deleteFieldRecursive(field.children, id) };
+  return fields.filter(field => field.ComponentId !== id).map(field => {
+    if (field.Children) {
+      return { ...field, Children: deleteFieldRecursive(field.Children, id) };
     }
     return field;
   });
@@ -47,12 +47,12 @@ export const addFieldToParentRecursive = (
   newField: FormField
 ): FormField[] => {
   return fields.map(field => {
-    if (field.componentId === parentId) {
+    if (field.ComponentId === parentId) {
       // Si este es el padre (sección), agregamos al final de sus hijos
-      return { ...field, children: [...(field.children || []), newField] };
+      return { ...field, Children: [...(field.Children || []), newField] };
     }
-    if (field.children) {
-      return { ...field, children: addFieldToParentRecursive(field.children, parentId, newField) };
+    if (field.Children) {
+      return { ...field, Children: addFieldToParentRecursive(field.Children, parentId, newField) };
     }
     return field;
   });
@@ -62,8 +62,8 @@ export const addFieldToParentRecursive = (
 export const flattenFields = (fields: FormField[]): FormField[] => {
   return fields.reduce((acc, field) => {
     acc.push(field);
-    if (field.children) {
-      acc.push(...flattenFields(field.children));
+    if (field.Children) {
+      acc.push(...flattenFields(field.Children));
     }
     return acc;
   }, [] as FormField[]);
@@ -79,12 +79,12 @@ export const removeNode = (
   const traverse = (items: FormField[]): FormField[] => {
     const result: FormField[] = [];
     for (const item of items) {
-      if (item.componentId === id) {
+      if (item.ComponentId === id) {
         removedNode = item;
         continue; // Skip adding this item to result (remove it)
       }
-      if (item.children) {
-        item.children = traverse(item.children);
+      if (item.Children) {
+        item.Children = traverse(item.Children);
       }
       result.push(item);
     }
@@ -105,11 +105,11 @@ export const insertNode = (
   if (position === 'inside') {
     // Traverse to find the target section and push to its children
     return tree.map(item => {
-      if (item.componentId === targetId) {
-        return { ...item, children: [...(item.children || []), nodeToInsert] };
+      if (item.ComponentId === targetId) {
+        return { ...item, Children: [...(item.Children || []), nodeToInsert] };
       }
-      if (item.children) {
-        return { ...item, children: insertNode(item.children, targetId, nodeToInsert, position) };
+      if (item.Children) {
+        return { ...item, Children: insertNode(item.Children, targetId, nodeToInsert, position) };
       }
       return item;
     });
@@ -119,7 +119,7 @@ export const insertNode = (
   const traverse = (items: FormField[]): FormField[] => {
     const result: FormField[] = [];
     for (const item of items) {
-      if (item.componentId === targetId) {
+      if (item.ComponentId === targetId) {
         if (position === 'before') {
           result.push(nodeToInsert);
           result.push(item);
@@ -128,8 +128,8 @@ export const insertNode = (
           result.push(nodeToInsert);
         }
       } else {
-        if (item.children) {
-          item.children = traverse(item.children);
+        if (item.Children) {
+          item.Children = traverse(item.Children);
         }
         result.push(item);
       }

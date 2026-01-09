@@ -14,10 +14,13 @@ interface GeneralSettingsProps {
 const GeneralSettings: React.FC<GeneralSettingsProps> = ({ field, isShared, onChange, mappedColumns = [] }) => {
   // Filtrar columnas ya mapeadas (excepto la actual del campo)
   const availableColumns = CONTACT_PHYSICAL_COLUMNS.filter(col => 
-    !mappedColumns.includes(col.id) || col.id === field.physicalColumn
+    !mappedColumns.includes(col.id) || col.id === fieldSettings.PhysicalColumn
   );
 
-  const isMasterData = (typeof field.formDataId === 'string') || (typeof field.formDataGridId === 'string');
+  const fieldSettings: FormField = field;
+
+  const isMasterData = fieldSettings.FormDataId != null;
+  console.log('Mapped Columns:', fieldSettings, isMasterData);
 
   return (
     <div className="space-y-4">
@@ -31,7 +34,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ field, isShared, onCh
             </div>
           )}
           {isMasterData && (
-            <div className="flex items-center gap-1 bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded border border-purple-500/20" title={`Proviene del Dato Maestro: ${field.formDataId || field.formDataGridId}`}>
+            <div className="flex items-center gap-1 bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded border border-purple-500/20" title={`Proviene del Dato Maestro: ${fieldSettings.FormDataId || fieldSettings.FormDataGridId}`}>
               <span className="material-symbols-outlined text-xs">database</span>
               <span className="text-[10px] font-bold uppercase">Maestro</span>
             </div>
@@ -42,18 +45,18 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ field, isShared, onCh
       <Input 
         label="Etiqueta del Campo"
         type="text"
-        value={field.label}
-        onChange={(e) => onChange('label', e.target.value)}
+        value={fieldSettings.Label}
+        onChange={(e) => onChange('Label', e.target.value)}
         disabled={isMasterData}
         description={isMasterData ? "El dato maestro no se verá afectado." : isShared ? "Puede renombrar la etiqueta localmente sin afectar la fuente." : undefined}
       />
       
-      {(field.type === 'text' || field.type === 'email' || field.type === 'number' || field.type === 'textarea') && (
+      {(fieldSettings.Type === 'text' || fieldSettings.Type === 'email' || fieldSettings.Type === 'number' || fieldSettings.Type === 'textarea') && (
         <Input 
           label="Placeholder"
           type="text"
-          value={field.placeholder || ''}
-          onChange={(e) => onChange('placeholder', e.target.value)}
+          value={fieldSettings.Placeholder || ''}
+          onChange={(e) => onChange('Placeholder', e.target.value)}
         />
       )}
       
@@ -61,8 +64,8 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ field, isShared, onCh
         label="Descripción / Ayuda"
         helperText={<span className="text-[10px] text-primary cursor-help" title="Use **negrita** para resaltar y [texto](url) para enlaces.">Soporta Markdown</span>}
         rows={4}
-        value={field.description || ''}
-        onChange={(e) => onChange('description', e.target.value)}
+        value={fieldSettings.Description || ''}
+        onChange={(e) => onChange('Description', e.target.value)}
         placeholder="Ej. Ingrese aquí su **información** detallada."
       />
 
@@ -70,7 +73,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ field, isShared, onCh
       <div className="space-y-2">
         <Select
           label="Mapear a Campo Físico (Opcional)"
-          value={field.physicalColumn || ''}
+          value={fieldSettings.PhysicalColumn || ''}
           onChange={(e) => onChange('physicalColumn', e.target.value || undefined)}
         >
           <option value="">-- Sin mapear --</option>
@@ -80,10 +83,10 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ field, isShared, onCh
             </option>
           ))}
         </Select>
-        {field.physicalColumn && (
+        {fieldSettings.PhysicalColumn && (
           <div className="text-xs text-text-secondary bg-background-dark p-2 rounded border border-border-dark">
             <span className="material-symbols-outlined text-sm text-primary align-middle mr-1">info</span>
-            Este campo guardará datos en: <strong className="text-primary">{field.physicalColumn}</strong>
+            Este campo guardará datos en: <strong className="text-primary">{fieldSettings.PhysicalColumn}</strong>
           </div>
         )}
         {mappedColumns.length > 0 && (

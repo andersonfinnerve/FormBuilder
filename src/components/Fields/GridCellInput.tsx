@@ -16,15 +16,15 @@ const GridCellInput: React.FC<GridCellInputProps> = ({
   sharedLibrary,
   onChange
 }) => {
-  let options = column.options;
-  if (column.sharedSource) {
-    const sharedDef = sharedLibrary?.find(s => s.id === column.sharedSource);
+  let options = column.Options;
+  if (column.SharedSource) {
+    const sharedDef = sharedLibrary?.find(s => s.Id === column.SharedSource);
     if (sharedDef) {
-      options = sharedDef.options;
+      options = sharedDef.Options;
     }
   }
 
-  if (column.type === 'select') {
+  if (column.Type === 'select') {
     return (
       <Select 
         value={value || ''} 
@@ -37,7 +37,7 @@ const GridCellInput: React.FC<GridCellInputProps> = ({
     );
   }
 
-  if (column.type === 'file') {
+  if (column.Type === 'file') {
     return (
       <div className="flex items-center gap-2 min-w-[200px]">
         {value instanceof File ? (

@@ -42,17 +42,20 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     );
   }
 
+  // Type narrowing: selectedField es definitivamente FormField aquí
+  const field: FormField = selectedField;
+
   const handleChange = (key: keyof FormField, value: any) => {
-    onUpdateField(selectedField.componentId, key, value);
+    onUpdateField(field.ComponentId, key, value);
   };
 
-  const isLayoutField = selectedField.type === 'spacer' || selectedField.type === 'divider';
-  const isShared = !!selectedField.sharedSource;
+  const isLayoutField = field.Type === 'spacer' || field.Type === 'divider';
+  const isShared = !!field.SharedSource;
   const availableTriggers = allFields.filter(f => 
-    f.componentId !== selectedField.componentId && 
-    f.type !== 'spacer' && 
-    f.type !== 'divider' && 
-    f.type !== 'grid'
+    f.ComponentId !== field.ComponentId && 
+    f.Type !== 'spacer' && 
+    f.Type !== 'divider' && 
+    f.Type !== 'grid'
   );
 
   // Obtener columnas ya mapeadas (para validación)
@@ -60,11 +63,11 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     const mapped: string[] = [];
     const collectMapped = (fields: FormField[]) => {
       fields.forEach(f => {
-        if (f.physicalColumn && f.componentId !== selectedField.componentId) {
-          mapped.push(f.physicalColumn);
+        if (f.PhysicalColumn && f.ComponentId !== field.ComponentId) {
+          mapped.push(f.PhysicalColumn);
         }
-        if (f.children) {
-          collectMapped(f.children);
+        if (f.Children) {
+          collectMapped(f.Children);
         }
       });
     };
@@ -76,14 +79,14 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 
   return (
     <aside className="w-80 bg-surface-dark border-l border-border-dark flex flex-col z-10 shadow-xl shrink-0 hidden md:flex">
-      <PanelHeader selectedField={selectedField} />
+      <PanelHeader selectedField={field} />
 
       <div className="flex-1 overflow-y-auto p-5 space-y-6 custom-scrollbar">
         
         {/* General Settings */}
         {!isLayoutField && (
           <GeneralSettings 
-            field={selectedField}
+            field={field}
             isShared={isShared}
             onChange={handleChange}
             mappedColumns={mappedColumns}
@@ -91,35 +94,35 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         )}
 
         {/* File Configuration */}
-        {selectedField.type === 'file' && (
+        {field.Type === 'file' && (
           <FileConfiguration 
-            field={selectedField}
+            field={field}
             onChange={handleChange}
           />
         )}
 
         {/* Options Management */}
-        {(selectedField.type === 'select' || selectedField.type === 'radio') && (
+        {(field.Type === 'select' || field.Type === 'radio') && (
           <OptionsManagement 
-            field={selectedField}
+            field={field}
             isShared={isShared}
             onChange={handleChange}
           />
         )}
 
         {/* Grid Columns Configuration */}
-        {selectedField.type === 'grid' && (
-          <GridColumnsConfig 
-            field={selectedField}
+        {field.Type === 'grid' && (
+          <GridColumnsConfig
+            field={field}
             sharedLibrary={sharedLibrary}
             onChange={handleChange}
           />
         )}
 
         {/* Validation Rules */}
-        {!isLayoutField && selectedField.type !== 'grid' && (
+        {!isLayoutField && field.Type !== 'grid' && (
           <ValidationRules 
-            field={selectedField}
+            field={field}
             onChange={handleChange}
           />
         )}
@@ -127,16 +130,16 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         {/* Conditional Logic */}
         {!isLayoutField && (
           <ConditionalLogic 
-            field={selectedField}
+            field={field}
             availableTriggers={availableTriggers}
             onChange={handleChange}
           />
         )}
 
         {/* Appearance Settings */}
-        {selectedField.type !== 'divider' && (
+        {field.Type !== 'divider' && (
           <AppearanceSettings 
-            field={selectedField}
+            field={field}
             onChange={handleChange}
           />
         )}
@@ -144,7 +147,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 
       {/* Contextual Help */}
       <ContextualHelp 
-        field={selectedField}
+        field={field}
         isShared={isShared}
       />
     </aside>

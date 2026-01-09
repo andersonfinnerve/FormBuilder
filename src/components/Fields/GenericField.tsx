@@ -11,15 +11,15 @@ interface GenericFieldProps {
 
 export const GenericField: React.FC<GenericFieldProps> = ({ field, onChange }) => {
   const renderInput = () => {
-    switch (field.type) {
+    switch (field.Type) {
       case 'textarea':
-        return <TextArea rows={3} onChange={(e) => onChange(field.componentId, e.target.value)} />;
+        return <TextArea rows={3} onChange={(e) => onChange(field.ComponentId, e.target.value)} />;
       
       case 'select':
         return (
-          <Select onChange={(e) => onChange(field.componentId, e.target.value)}>
+          <Select onChange={(e) => onChange(field.ComponentId, e.target.value)}>
             <option value="">Seleccionar...</option>
-            {field.options?.map((opt, i) => <option key={i} value={opt.TextValue}>{opt.TextValue}</option>)}
+            {field.Options?.map((opt, i) => <option key={i} value={opt.TextValue}>{opt.TextValue}</option>)}
           </Select>
         );
       
@@ -29,22 +29,22 @@ export const GenericField: React.FC<GenericFieldProps> = ({ field, onChange }) =
             <input 
               type="checkbox" 
               className="w-5 h-5 rounded border-border text-primary" 
-              onChange={(e) => onChange(field.componentId, e.target.checked)} 
+              onChange={(e) => onChange(field.ComponentId, e.target.checked)} 
             />
-            <label className="text-sm text-text-primary ">{field.placeholder || 'Aceptar'}</label>
+            <label className="text-sm text-text-primary ">{field.Placeholder || 'Aceptar'}</label>
           </div>
         );
       
       case 'radio':
         return (
           <div className="space-y-2">
-            {field.options?.map((opt, i) => (
+            {field.Options?.map((opt, i) => (
               <div key={i} className="flex items-center gap-3">
                 <input 
                   type="radio" 
-                  name={field.componentId} 
+                  name={field.ComponentId} 
                   className="w-4 h-4 border-border text-primary" 
-                  onChange={(e) => onChange(field.componentId, e.target.value)} 
+                  onChange={(e) => onChange(field.ComponentId, e.target.value)} 
                   value={opt.TextValue} 
                 />
                 <span className="text-sm text-text-primary ">{opt.TextValue}</span>
@@ -62,17 +62,17 @@ export const GenericField: React.FC<GenericFieldProps> = ({ field, onChange }) =
         );
       
       default:
-        return <Input type={field.type} onChange={(e) => onChange(field.componentId, e.target.value)} />;
+        return <Input type={field.Type} onChange={(e) => onChange(field.ComponentId, e.target.value)} />;
     }
   };
 
   return (
-    <div className={`${field.width === 'full' ? 'md:col-span-2' : 'md:col-span-1'} space-y-2 animate-fadeIn`}>
+    <div className={`${field.Width === 'full' ? 'md:col-span-2' : 'md:col-span-1'} space-y-2 animate-fadeIn`}>
       <label className="block text-sm font-bold text-text-primary">
-        {field.label} {field.required && <span className="text-red-500">*</span>}
+        {field.Label} {field.Required && <span className="text-red-500">*</span>}
       </label>
       {renderInput()}
-      {field.description && <div className="text-xs text-text-secondary" dangerouslySetInnerHTML={parseRichText(field.description)} />}
+      {field.Description && <div className="text-xs text-text-secondary" dangerouslySetInnerHTML={parseRichText(field.Description)} />}
     </div>
   );
 };

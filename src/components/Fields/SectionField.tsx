@@ -29,20 +29,20 @@ export const SectionField: React.FC<SectionFieldProps> = ({
   isFieldVisible
 }) => {
   return (
-    <div className={`${field.width === 'full' ? 'md:col-span-2' : 'md:col-span-1'} border border-border rounded-xl p-6 bg-surface space-y-4 animate-fadeIn`}>
+    <div className={`${field.Width === 'full' ? 'md:col-span-2' : 'md:col-span-1'} border border-border rounded-xl p-6 bg-surface space-y-4 animate-fadeIn`}>
       <div className="border-b border-border pb-2">
         {/* <h3 className="text-lg font-bold text-text-primary uppercase tracking-wide">
-          {field.label}
+          {field.Label}
         </h3> */}
-        <Title title={field.label} />
-        {field.description && (
-          <div className="text-sm text-text-secondary mt-1" dangerouslySetInnerHTML={parseRichText(field.description)} />
+        <Title title={field.Label} />
+        {field.Description && (
+          <div className="text-sm text-text-secondary mt-1" dangerouslySetInnerHTML={parseRichText(field.Description)} />
         )}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {field.children?.map(child => (
+        {field.Children?.map(child => (
           <PreviewField 
-            key={child.id}
+            key={child.ComponentId}
             field={child}
             formValues={formValues}
             sharedLibrary={sharedLibrary}

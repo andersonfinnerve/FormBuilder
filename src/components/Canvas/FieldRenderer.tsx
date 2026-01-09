@@ -28,20 +28,22 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
   onMoveField,
   onDropNewField
 }) => {
-  const isSelected = selectedId === field.componentId;
+  const fieldSettings: FormField = field;
+
+  const isSelected = selectedId === fieldSettings.ComponentId;
   const [dragOverPosition, setDragOverPosition] = useState<DragOverPosition>(null);
 
   // Características del campo
-  const isSpacer = field.type === 'spacer';
-  const isDivider = field.type === 'divider';
-  const isSection = field.type === 'section';
-  const isShared = !!field.sharedSource;
-  const hasLogic = field.logic?.enabled && field.logic?.triggerId;
-  const isButtonStyleFile = field.type === 'file' && field.fileStyle === 'button';
+  const isSpacer = fieldSettings.Type === 'spacer';
+  const isDivider = fieldSettings.Type === 'divider';
+  const isSection = fieldSettings.Type === 'section';
+  const isShared = !!fieldSettings.SharedSource;
+  const hasLogic = fieldSettings.Logic?.Enabled && fieldSettings.Logic?.TriggerId;
+  const isButtonStyleFile = fieldSettings.Type === 'file' && fieldSettings.FileStyle === 'button';
 
   // DnD Handlers
   const handleDragStart = (e: React.DragEvent) => {
-    e.dataTransfer.setData("application/fieldId", field.componentId);
+    e.dataTransfer.setData("application/fieldId", fieldSettings.ComponentId);
     e.dataTransfer.effectAllowed = "move"; 
     e.stopPropagation();
   };
@@ -54,7 +56,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
     const clientY = e.clientY;
     const height = rect.height;
     
-    if (field.type === 'section') {
+    if (fieldSettings.Type === 'section') {
       const relativeY = clientY - rect.top;
       if (relativeY < height * 0.25) {
         setDragOverPosition('top');
@@ -91,29 +93,29 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
     const newFieldType = e.dataTransfer.getData("application/newFieldType") as FieldType;
     if (newFieldType) {
       const sharedId = e.dataTransfer.getData("application/sharedId");
-      onDropNewField(newFieldType, field.componentId, position, sharedId || undefined);
+      onDropNewField(newFieldType, fieldSettings.ComponentId, position, sharedId || undefined);
       return;
     }
 
     const dragId = e.dataTransfer.getData("application/fieldId");
-    if (dragId && dragId !== field.componentId) {
-      onMoveField(dragId, field.componentId, position);
+    if (dragId && dragId !== fieldSettings.ComponentId) {
+      onMoveField(dragId, fieldSettings.ComponentId, position);
     }
   };
 
   const handleUpdateWidth = (id: string, width: 'full' | 'half') => {
-    onUpdateField(id, 'width', width);
+    onUpdateField(id, 'Width', width);
   };
 
   // Render del contenido de una sección
   const renderSectionContent = () => {
     return (
       <div className="mt-2 min-h-[50px]">
-        {field.children && field.children.length > 0 ? (
+        {fieldSettings.Children && fieldSettings.Children.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {field.children.map((child) => (
+            {fieldSettings.Children.map((child) => (
               <FieldRenderer 
-                key={child.componentId} 
+                key={child.ComponentId} 
                 field={child}
                 selectedId={selectedId}
                 onSelectField={onSelectField}
@@ -141,10 +143,10 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      onClick={(e) => { e.stopPropagation(); onSelectField(field.componentId); }}
+      onClick={(e) => { e.stopPropagation(); onSelectField(fieldSettings.ComponentId); }}
       className={`
         relative group rounded-lg transition-all cursor-grab active:cursor-grabbing
-        ${field.width === 'full' ? 'md:col-span-2' : 'md:col-span-1'}
+        ${fieldSettings.Width === 'full' ? 'md:col-span-2' : 'md:col-span-1'}
         ${isSelected 
           ? 'ring-2 ring-primary bg-surface-dark shadow-xl z-10' 
           : isSection 
@@ -158,14 +160,14 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
       <DragDropIndicators dragOverPosition={dragOverPosition} isSection={isSection} />
       
       <ResizeHandle 
-        field={field} 
+        field={fieldSettings} 
         isSelected={isSelected} 
         isSection={isSection}
         onUpdateWidth={handleUpdateWidth}
       />
       
       <FieldActions 
-        field={field}
+        field={fieldSettings}
         isSelected={isSelected}
         onDuplicate={onDuplicateField}
         onDelete={onDeleteField}
@@ -188,18 +190,18 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
                 ${isSelected && !isButtonStyleFile && !isSection ? 'text-primary' : (isButtonStyleFile ? '' : 'text-text-primary')}
               `} 
             >
-              {field.label} {field.required && <span className="text-red-500">*</span>}
+              {fieldSettings.Label} {fieldSettings.Required && <span className="text-red-500">*</span>}
             </label>
-            {isSection && field.description && (
-              <div className="text-sm text-text-secondary mb-4" dangerouslySetInnerHTML={parseRichText(field.description)} />
+            {isSection && fieldSettings.Description && (
+              <div className="text-sm text-text-secondary mb-4" dangerouslySetInnerHTML={parseRichText(fieldSettings.Description)} />
             )}
           </div>
         )}
         
-        {isSection ? renderSectionContent() : <FieldInput field={field} />}
+        {isSection ? renderSectionContent() : <FieldInput field={fieldSettings} />}
 
-        {field.description && !isSpacer && !isDivider && !isButtonStyleFile && !isSection && (
-          <div className="text-xs text-text-secondary" dangerouslySetInnerHTML={parseRichText(field.description)} />
+        {fieldSettings.Description && !isSpacer && !isDivider && !isButtonStyleFile && !isSection && (
+          <div className="text-xs text-text-secondary" dangerouslySetInnerHTML={parseRichText(fieldSettings.Description)} />
         )}
       </div>
     </div>

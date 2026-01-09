@@ -9,12 +9,12 @@ interface FieldInputProps {
 
 const FieldInput: React.FC<FieldInputProps> = ({ field }) => {
   const commonClasses = "w-full bg-background-dark border-border-dark rounded-lg px-4 py-2.5 text-text-primary placeholder-text-secondary border focus:border-primary focus:ring-0 pointer-events-none";
-  const isButtonStyleFile = field.type === 'file' && field.fileStyle === 'button';
-  const isTableStyleFile = field.type === 'file' && field.fileStyle === 'table';
+  const fieldSettings: FormField = field;
+  const isButtonStyleFile = fieldSettings.Type === 'file' && fieldSettings.FileStyle === 'button';
 
-  switch (field.type) {
+  switch (field.Type) {
     case 'textarea':
-      return <textarea className={commonClasses} placeholder={field.placeholder} rows={3} readOnly={field.readOnly} />;
+      return <textarea className={commonClasses} placeholder={field.Placeholder} rows={3} readOnly={field.ReadOnly} />;
     
     case 'select':
       return (
@@ -27,14 +27,14 @@ const FieldInput: React.FC<FieldInputProps> = ({ field }) => {
       return (
         <div className="flex items-center gap-3 p-2 border border-border-dark rounded-lg bg-background-dark">
           <input type="checkbox" className="w-5 h-5 rounded border-border-dark text-primary" disabled />
-          <span className="text-text-primary text-sm">{field.placeholder || 'Opción'}</span>
+          <span className="text-text-primary text-sm">{field.Placeholder || 'Opción'}</span>
         </div>
       );
     
     case 'radio':
       return (
         <div className="space-y-2">
-          {field.options?.map((opt, i) => (
+          {field.Options?.map((opt, i) => (
             <div key={i} className="flex items-center gap-3">
               <input type="radio" className="w-4 h-4 border-border-dark text-primary" disabled />
               <span className="text-text-primary text-sm">{opt.TextValue}</span>
@@ -47,13 +47,13 @@ const FieldInput: React.FC<FieldInputProps> = ({ field }) => {
       if (isButtonStyleFile) {
         return (
           <div className="space-y-4 pt-1">
-            {(field.description || field.downloadUrl) && (
+            {(field.Description || field.DownloadUrl) && (
               <div className="text-sm text-text-secondary leading-relaxed">
-                {field.description && <div dangerouslySetInnerHTML={parseRichText(field.description)} />}
-                {field.downloadUrl && (
+                {field.Description && <div dangerouslySetInnerHTML={parseRichText(field.Description)} />}
+                {field.DownloadUrl && (
                   <div className="mt-2 text-primary font-bold inline-flex items-center gap-1">
                     <span className="material-symbols-outlined text-lg">description</span>
-                    {field.downloadText || "Descargar documento adjunto"}
+                    {field.DownloadText || "Descargar documento adjunto"}
                   </div>
                 )}
               </div>
@@ -75,7 +75,7 @@ const FieldInput: React.FC<FieldInputProps> = ({ field }) => {
     case 'spacer':
       return (
         <div className="w-full h-12 border border-dashed border-gray-600 rounded-lg flex items-center justify-center bg-gray-800/20">
-          <span className="text-xs text-text-secondary font-mono">Espacio Vacío ({field.width === 'full' ? '100%' : '50%'})</span>
+          <span className="text-xs text-text-secondary font-mono">Espacio Vacío ({field.Width === 'full' ? '100%' : '50%'})</span>
         </div>
       );
 
@@ -86,12 +86,12 @@ const FieldInput: React.FC<FieldInputProps> = ({ field }) => {
       return (
         <div className="w-full overflow-hidden border border-border-dark rounded-lg">
           <div className="bg-surface-dark border-b border-border-dark px-4 py-2 text-xs text-text-secondary uppercase">Vista Previa Tabla</div>
-          <div className="p-4 text-center text-xs text-text-secondary italic">Tabla configurada con {field.columns?.length || 0} columnas</div>
+          <div className="p-4 text-center text-xs text-text-secondary italic">Tabla configurada con {field.Columns?.length || 0} columnas</div>
         </div>
       );
 
     default: 
-      return <input className={commonClasses} placeholder={field.placeholder} type={field.type} readOnly={field.readOnly} />;
+      return <input className={commonClasses} placeholder={field.Placeholder} type={field.Type} readOnly={field.ReadOnly} />;
   }
 };
 

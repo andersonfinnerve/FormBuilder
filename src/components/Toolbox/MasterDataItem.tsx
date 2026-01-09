@@ -29,7 +29,7 @@ const MasterDataItem: React.FC<MasterDataItemProps> = ({ data, onClick }) => {
   const handleDragStart = (e: React.DragEvent) => {
     // Solo permitir arrastrar datos maestros de tipo texto o registro (no grillas completas)
     if (data.type !== 'grid') {
-      e.dataTransfer.setData('application/masterDataId', data.id);
+      e.dataTransfer.setData('application/masterDataId', data.FormDataId.toString());
       e.dataTransfer.setData('application/masterDataType', data.type);
       e.dataTransfer.effectAllowed = 'copy';
     } else {

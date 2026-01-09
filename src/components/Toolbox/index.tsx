@@ -71,7 +71,7 @@ const Toolbox: React.FC<ToolboxProps> = ({ onAddField, sharedLibrary, onAddShare
               <div className="max-h-[200px] overflow-y-auto custom-scrollbar pr-1 space-y-2">
                 {filteredMasterData.map((data) => (
                   <MasterDataItem
-                    key={data.id}
+                    key={data.FormDataId}
                     data={data}
                     onClick={() => handleAddMasterData(data)}
                   />

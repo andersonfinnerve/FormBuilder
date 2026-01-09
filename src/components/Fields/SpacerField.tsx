@@ -7,6 +7,6 @@ interface SpacerFieldProps {
 
 export const SpacerField: React.FC<SpacerFieldProps> = ({ field }) => {
   return (
-    <div className={`${field.width === 'full' ? 'md:col-span-2' : 'md:col-span-1'} hidden md:block`}></div>
+    <div className={`${field.Width === 'full' ? 'md:col-span-2' : 'md:col-span-1'} hidden md:block`}></div>
   );
 };

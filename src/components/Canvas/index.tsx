@@ -4,7 +4,7 @@ import CanvasToolbar from './CanvasToolbar';
 import FieldRenderer from './FieldRenderer';
 
 interface CanvasProps {
-  fields: FormField[];
+  fieldsSettings: FormField[];
   selectedId: string | null;
   formConfig: FormConfig;
   onSelectField: (id: string) => void;
@@ -27,14 +27,16 @@ const Canvas: React.FC<CanvasProps> = ({
   onDropNewField
 }) => {
   // Root level drop handler
+    const fieldsSettings: FormField[] = fields;
+
   const handleRootDrop = (e: React.DragEvent) => {
     e.preventDefault();
     
     const newFieldType = e.dataTransfer.getData("application/newFieldType") as FieldType;
     if (newFieldType) {
       if (e.target === e.currentTarget) {
-        const lastField = fields[fields.length - 1];
-        const targetId = lastField ? lastField.componentId : 'ROOT_START'; 
+        const lastField = fieldsSettings[fieldsSettings.length - 1];
+        const targetId = lastField ? lastField.ComponentId : 'ROOT_START'; 
         const sharedId = e.dataTransfer.getData("application/sharedId");
         
         onDropNewField(newFieldType, targetId, 'after', sharedId || undefined);
@@ -46,9 +48,9 @@ const Canvas: React.FC<CanvasProps> = ({
     if (!dragId) return;
 
     if (e.target === e.currentTarget) {
-      const lastField = fields[fields.length - 1];
+      const lastField = fieldsSettings[fieldsSettings.length - 1];
       if (lastField) {
-        onMoveField(dragId, lastField.componentId, 'after');
+        onMoveField(dragId, lastField.ComponentId, 'after');
       }
     }
   };
@@ -71,16 +73,16 @@ const Canvas: React.FC<CanvasProps> = ({
           
           <div className="p-6 md:p-10 space-y-8">
             <div className="group relative border-b border-border-dark pb-6 hover:bg-background-dark/30 -mx-4 px-4 rounded-lg transition-colors cursor-pointer">
-              <h1 className="text-3xl font-bold text-text-primary mb-2">{formConfig.title}</h1>
-              {formConfig.description && (
-                <p className="text-text-secondary">{formConfig.description}</p>
+              <h1 className="text-3xl font-bold text-text-primary mb-2">{formConfig.Title}</h1>
+              {formConfig.Description && (
+                <p className="text-text-secondary">{formConfig.Description}</p>
               )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 min-h-[400px] content-start">
-              {fields.map((field) => (
+              {fieldsSettings.map((field) => (
                 <FieldRenderer 
-                  key={field.componentId} 
+                  key={field.ComponentId} 
                   field={field}
                   selectedId={selectedId}
                   onSelectField={onSelectField}
@@ -92,7 +94,7 @@ const Canvas: React.FC<CanvasProps> = ({
                 />
               ))}
 
-              {fields.length === 0 && (
+              {fieldsSettings.length === 0 && (
                 <div className="md:col-span-2 h-48 border-2 border-dashed border-border-dark rounded-lg flex flex-col items-center justify-center text-text-secondary">
                   <span className="material-symbols-outlined text-4xl mb-2">post_add</span>
                   <p>Arrastra elementos aquí para comenzar</p>

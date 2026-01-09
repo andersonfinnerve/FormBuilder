@@ -7,12 +7,13 @@ interface ContextualHelpProps {
 }
 
 const ContextualHelp: React.FC<ContextualHelpProps> = ({ field, isShared }) => {
+  const fieldSettings: FormField = field;
   const getTipMessage = () => {
-    if (field.type === 'spacer') {
+    if (fieldSettings.Type === 'spacer') {
       return 'Usa el espaciador para crear huecos vacíos en filas de múltiples columnas.';
-    } else if (field.type === 'file') {
+    } else if (fieldSettings.Type === 'file') {
       return 'Usa el estilo "Botón de Acción" para secciones de documentación donde necesites proveer instrucciones largas o archivos descargables.';
-    } else if (field.logic?.enabled) {
+    } else if (fieldSettings.Logic?.Enabled) {
       return 'Los campos con lógica condicional solo aparecerán cuando el usuario seleccione la opción correcta en el campo disparador.';
     } else if (isShared) {
       return 'Los campos compartidos aseguran que datos críticos como la Nacionalidad se escriban igual en todos los formularios.';

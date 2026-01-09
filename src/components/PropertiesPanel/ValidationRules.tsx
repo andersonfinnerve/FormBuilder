@@ -9,6 +9,8 @@ interface ValidationRulesProps {
 }
 
 const ValidationRules: React.FC<ValidationRulesProps> = ({ field, onChange }) => {
+  const fieldSettings: FormField = field;
+  
   return (
     <>
       <div className="h-px bg-border-dark w-full"></div>
@@ -19,8 +21,8 @@ const ValidationRules: React.FC<ValidationRulesProps> = ({ field, onChange }) =>
         <ToggleSwitch 
           label="Campo Obligatorio"
           description="Requerido para enviar"
-          checked={field.required}
-          onChange={(checked) => onChange('required', checked)}
+          checked={fieldSettings.Required}
+          onChange={(checked) => onChange('Required', checked)}
         />
       </div>
     </>

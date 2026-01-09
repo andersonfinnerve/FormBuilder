@@ -14,33 +14,37 @@ interface GridColumnsConfigProps {
 const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibrary, onChange }) => {
   const [draggedIndex, setDraggedIndex] = React.useState<number | null>(null);
   const [isDropZoneActive, setIsDropZoneActive] = React.useState(false);
-  const isMasterDataGrid = typeof field.formDataGridId === 'string';
+  const fieldSettings: FormField = field;
+  
+  const isMasterDataGrid = typeof fieldSettings.FormDataGridId != null;
+  console.log('isMasterDataGrid:', fieldSettings, isMasterDataGrid);
+
 
   const handleColumnAdd = () => {
     const newCol: GridColumn = {
-      id: Date.now().toString(),
-      label: `Columna ${(field.columns?.length || 0) + 1}`,
-      type: 'text',
-      required: false,
-      formDataGridColumnId: null // null = columna nueva
+      Id: Date.now().toString(),
+      Label: `Columna ${(fieldSettings.Columns?.length || 0) + 1}`,
+      Type: 'text',
+      Required: false,
+      FormDataGridColumnId: null // null = columna nueva
     };
-    const newColumns = [...(field.columns || []), newCol];
-    onChange('columns', newColumns);
+    const newColumns = [...(fieldSettings.Columns || []), newCol];
+    onChange('Columns', newColumns);
   };
 
-  const handleAddMasterDataColumn = (masterDataId: string, masterDataType: string) => {
+  const handleAddMasterDataColumn = (masterDataId: number, masterDataType: string) => {
     // Buscar el dato maestro en mockMasterData
-    const masterData = MASTER_DATA.find((md: any) => md.id === masterDataId);
+    const masterData = MASTER_DATA.find((md: any) => md.FormDataId === masterDataId);
     
     if (!masterData) return;
 
     const newCol: GridColumn = {
-      id: Date.now().toString(),
-      label: masterData.name,
-      type: masterDataType === 'registry' ? 'select' : 'text',
-      required: false,
-      formDataGridColumnId: masterDataId,
-      options: masterDataType === 'registry' && masterData.options
+      Id: Date.now().toString(),
+      Label: masterData.name,
+      Type: masterDataType === 'registry' ? 'select' : 'text',
+      Required: false,
+      FormDataGridColumnId: masterDataId,
+      Options: masterDataType === 'registry' && masterData.options
         ? masterData.options.map((opt: any) => ({
             DataOptionId: typeof opt === 'object' ? opt.id : undefined,
             TextValue: typeof opt === 'string' ? opt : opt.value
@@ -48,27 +52,27 @@ const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibr
         : undefined
     };
     
-    const newColumns = [...(field.columns || []), newCol];
-    onChange('columns', newColumns);
+    const newColumns = [...(fieldSettings.Columns || []), newCol];
+    onChange('Columns', newColumns);
   };
 
   const handleColumnRemove = (index: number) => {
-    const newColumns = (field.columns || []).filter((_, i) => i !== index);
-    onChange('columns', newColumns);
+    const newColumns = (fieldSettings.Columns || []).filter((_, i) => i !== index);
+    onChange('Columns', newColumns);
   };
 
   const handleColumnUpdate = (index: number, columnField: keyof GridColumn, val: any) => {
-    const newColumns = [...(field.columns || [])];
+    const newColumns = [...(fieldSettings.Columns || [])];
     newColumns[index] = { ...newColumns[index], [columnField]: val };
     
-    if (columnField === 'type' && val === 'select' && !newColumns[index].options && !newColumns[index].sharedSource) {
-      newColumns[index].options = [
+    if (columnField === 'Type' && val === 'select' && !newColumns[index].Options && !newColumns[index].SharedSource) {
+      newColumns[index].Options = [
         { DataOptionId: undefined, TextValue: 'Opción A' },
         { DataOptionId: undefined, TextValue: 'Opción B' }
       ];
     }
     
-    onChange('columns', newColumns);
+    onChange('Columns', newColumns);
   };
 
   const handleColumnOptionsChange = (index: number, val: string) => {
@@ -76,7 +80,7 @@ const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibr
       DataOptionId: undefined,
       TextValue: s.trim()
     }));
-    handleColumnUpdate(index, 'options', optionsArray);
+    handleColumnUpdate(index, 'Options', optionsArray);
   };
 
   const handleDragStart = (e: React.DragEvent, index: number) => {
@@ -97,22 +101,22 @@ const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibr
     e.preventDefault();
     
     // Verificar si es un dato maestro
-    const masterDataId = e.dataTransfer.getData('application/masterDataId');
+    const masterDataIdStr = e.dataTransfer.getData('application/masterDataId');
     const masterDataType = e.dataTransfer.getData('application/masterDataType');
     
-    if (masterDataId && masterDataType) {
-      handleAddMasterDataColumn(masterDataId, masterDataType);
+    if (masterDataIdStr && masterDataType) {
+      handleAddMasterDataColumn(parseInt(masterDataIdStr), masterDataType);
       return;
     }
     
     // Si no, es un reordenamiento de columnas existentes
     if (draggedIndex === null || draggedIndex === targetIndex) return;
 
-    const newColumns = [...(field.columns || [])];
+    const newColumns = [...(fieldSettings.Columns || [])];
     const [draggedItem] = newColumns.splice(draggedIndex, 1);
     newColumns.splice(targetIndex, 0, draggedItem);
     
-    onChange('columns', newColumns);
+    onChange('Columns', newColumns);
     setDraggedIndex(null);
   };
 
@@ -132,11 +136,11 @@ const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibr
     e.preventDefault();
     setIsDropZoneActive(false);
     
-    const masterDataId = e.dataTransfer.getData('application/masterDataId');
+    const masterDataIdStr = e.dataTransfer.getData('application/masterDataId');
     const masterDataType = e.dataTransfer.getData('application/masterDataType');
     
-    if (masterDataId && masterDataType) {
-      handleAddMasterDataColumn(masterDataId, masterDataType);
+    if (masterDataIdStr && masterDataType) {
+      handleAddMasterDataColumn(parseInt(masterDataIdStr), masterDataType);
     }
   };
 
@@ -161,23 +165,23 @@ const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibr
                   Las columnas de esta grilla provienen del dato maestro del BackOffice. No se pueden editar aquí para mantener la integridad de los datos.
                 </p>
                 <div className="space-y-2">
-                  {field.columns?.map((col, index) => (
-                    <div key={col.id || index} className="flex items-center gap-2 bg-surface-dark p-2 rounded border border-border-dark">
+                  {fieldSettings.Columns?.map((col, index) => (
+                    <div key={col.Id || index} className="flex items-center gap-2 bg-surface-dark p-2 rounded border border-border-dark">
                       <span className="material-symbols-outlined text-sm text-text-secondary">
-                        {col.type === 'select' ? 'dns' : col.type === 'file' ? 'cloud_upload' : 'short_text'}
+                        {col.Type === 'select' ? 'dns' : col.Type === 'file' ? 'cloud_upload' : 'short_text'}
                       </span>
                       <div className="flex-1">
-                        <div className="text-xs font-medium text-text-primary">{col.label}</div>
+                        <div className="text-xs font-medium text-text-primary">{col.Label}</div>
                         <div className="text-[10px] text-text-secondary">
-                          {col.type === 'select' && col.formDataOptions ? `${col.formDataOptions.length} opciones` : col.type}
-                          {col.required && ' • Requerido'}
+                          {col.Type === 'select' && col.Options ? `${col.Options.length} opciones` : col.Type}
+                          {col.Required && ' • Requerido'}
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
                 <div className="mt-2 text-xs text-text-primary opacity-60">
-                  {field.columns?.length} columna{field.columns?.length !== 1 ? 's' : ''} cargada{field.columns?.length !== 1 ? 's' : ''} desde el maestro.
+                  {fieldSettings.Columns?.length} columna{fieldSettings.Columns?.length !== 1 ? 's' : ''} cargada{fieldSettings.Columns?.length !== 1 ? 's' : ''} desde el maestro.
                 </div>
               </div>
             </div>
@@ -220,9 +224,9 @@ const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibr
           </div>
         </div>        
         <div className="space-y-3">
-          {field.columns?.map((col, index) => (
+          {fieldSettings.Columns?.map((col, index) => (
             <div 
-              key={col.id || index} 
+              key={col.Id || index} 
               className={`bg-background-dark border border-border-dark rounded-lg p-3 space-y-3 transition-all ${draggedIndex === index ? 'opacity-50 border-dashed border-primary' : ''}`}
               draggable
               onDragStart={(e) => handleDragStart(e, index)}
@@ -235,9 +239,9 @@ const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibr
                 <span className="material-symbols-outlined text-text-secondary cursor-move text-lg hover:text-text-primary" title="Arrastrar para ordenar">drag_indicator</span>
                 <div className="flex-1">
                   <Input 
-                    value={col.label}
+                    value={col.Label}
                     placeholder="Nombre Columna"
-                    onChange={(e) => handleColumnUpdate(index, 'label', e.target.value)}
+                    onChange={(e) => handleColumnUpdate(index, 'Label', e.target.value)}
                   />
                 </div>
                 <button 
@@ -253,8 +257,8 @@ const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibr
               <div className="grid grid-cols-[1fr_auto] gap-3 items-center">
                 <Select 
                   className="w-full bg-surface-dark border-border-dark pl-2 pr-8 py-1 text-xs"
-                  value={col.type}
-                  onChange={(e) => handleColumnUpdate(index, 'type', e.target.value)}
+                  value={col.Type}
+                  onChange={(e) => handleColumnUpdate(index, 'Type', e.target.value)}
                 >
                   <option value="text">Texto</option>
                   <option value="select">Combo (Select)</option>
@@ -265,37 +269,37 @@ const GridColumnsConfig: React.FC<GridColumnsConfigProps> = ({ field, sharedLibr
                   <input 
                     type="checkbox" 
                     className="rounded border-gray-600 bg-transparent text-primary focus:ring-primary w-3.5 h-3.5"
-                    checked={col.required}
-                    onChange={(e) => handleColumnUpdate(index, 'required', e.target.checked)}
+                    checked={col.Required}
+                    onChange={(e) => handleColumnUpdate(index, 'Required', e.target.checked)}
                   />
                   <span className="text-[10px] font-bold text-text-secondary uppercase">Req.</span>
                 </label>
               </div>
 
               {/* Third Row: Options (Only if type is select) */}
-              {col.type === 'select' && (
+              {col.Type === 'select' && (
                 <div className="space-y-2 mt-2 border-t border-border-dark pt-2">
                   <div className="space-y-1">
                     <label className="text-[10px] text-text-secondary uppercase font-bold">Origen de Opciones</label>
                     <Select
                       className="bg-surface-dark border-border-dark pl-2 pr-8 py-1 text-xs"
-                      value={col.sharedSource || 'manual'}
-                      onChange={(e) => handleColumnUpdate(index, 'sharedSource', e.target.value === 'manual' ? undefined : e.target.value)}
+                      value={col.SharedSource || 'manual'}
+                      onChange={(e) => handleColumnUpdate(index, 'SharedSource', e.target.value === 'manual' ? undefined : e.target.value)}
                     >
                       <option value="manual">Manual (Escribir)</option>
                       <optgroup label="Librería Central">
                         {sharedLibrary.map(lib => (
-                          <option key={lib.id} value={lib.id}>{lib.label}</option>
+                          <option key={lib.Id} value={lib.Id}>{lib.Label}</option>
                         ))}
                       </optgroup>
                     </Select>
                   </div>
 
-                  {!col.sharedSource && (
+                  {!col.SharedSource && (
                     <div className="space-y-1">
                       <label className="text-[10px] text-text-secondary uppercase font-bold">Opciones (separar por comas)</label>
                       <Input 
-                        value={col.options?.map(opt => opt.TextValue).join(', ') || ''}
+                        value={col.Options?.map(opt => opt.TextValue).join(', ') || ''}
                         placeholder="Opción 1, Opción 2"
                         onChange={(e) => handleColumnOptionsChange(index, e.target.value)}
                       />

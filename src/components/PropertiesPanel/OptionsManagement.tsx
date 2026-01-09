@@ -9,7 +9,9 @@ interface OptionsManagementProps {
 }
 
 const OptionsManagement: React.FC<OptionsManagementProps> = ({ field, isShared, onChange }) => {
-  const isMasterData = (typeof field.formDataId === 'string') || (typeof field.formDataGridId === 'string');
+    const fieldSettings: FormField = field;
+  
+  const isMasterData = (typeof fieldSettings.FormDataId === 'string') || (typeof fieldSettings.FormDataGridId === 'string');
 
   return (
     <>
@@ -24,7 +26,7 @@ const OptionsManagement: React.FC<OptionsManagementProps> = ({ field, isShared, 
               Las opciones de este campo provienen de una biblioteca compartida. No se pueden editar aquí para mantener la consistencia entre formularios.
             </p>
             <div className="mt-2 text-xs text-text-primary opacity-60">
-              {field.options?.length} opciones cargadas.
+              {fieldSettings.Options?.length} opciones cargadas.
             </div>
           </div>
         </div>
@@ -37,7 +39,7 @@ const OptionsManagement: React.FC<OptionsManagementProps> = ({ field, isShared, 
               Las opciones de este campo provienen del dato maestro del BackOffice. No se pueden editar aquí para mantener la integridad de los datos.
             </p>
             <div className="mt-2 text-xs text-text-primary opacity-60">
-              {field.options?.length} opciones cargadas desde el maestro.
+              {fieldSettings.Options?.length} opciones cargadas desde el maestro.
             </div>
           </div>
         </div>
@@ -46,27 +48,27 @@ const OptionsManagement: React.FC<OptionsManagementProps> = ({ field, isShared, 
           <div className="flex justify-between items-center">
             <h4 className="text-text-secondary text-xs font-bold uppercase tracking-wider">Opciones</h4>
             <button 
-              onClick={() => onChange('options', [...(field.options || []), { DataOptionId: undefined, TextValue: 'Nueva Opción' }])}
+              onClick={() => onChange('Options', [...(fieldSettings.Options || []), { DataOptionId: undefined, TextValue: 'Nueva Opción' }])}
               className="text-primary text-xs font-bold hover:underline"
             >
               + Agregar
             </button>
           </div>
           <div className="space-y-2">
-            {field.options?.map((option, index) => (
+            {fieldSettings.Options?.map((option, index) => (
               <div key={index} className="flex gap-2">
                 <Input 
                   value={option.TextValue}
                   onChange={(e) => {
-                    const newOptions = [...(field.options || [])];
+                    const newOptions = [...(fieldSettings.Options || [])];
                     newOptions[index] = { ...newOptions[index], TextValue: e.target.value };
-                    onChange('options', newOptions);
+                    onChange('Options', newOptions);
                   }}
                 />
                 <button 
                   onClick={() => {
-                    const newOptions = (field.options || []).filter((_, i) => i !== index);
-                    onChange('options', newOptions);
+                    const newOptions = (fieldSettings.Options || []).filter((_, i) => i !== index);
+                    onChange('Options', newOptions);
                   }}
                   className="text-text-secondary hover:text-red-400"
                 >

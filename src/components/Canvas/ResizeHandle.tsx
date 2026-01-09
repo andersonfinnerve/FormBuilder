@@ -9,14 +9,14 @@ interface ResizeHandleProps {
 }
 
 const ResizeHandle: React.FC<ResizeHandleProps> = ({ field, isSelected, isSection, onUpdateWidth }) => {
-  if (!isSelected || field.type === 'divider' || isSection) {
+  if (!isSelected || field.Type === 'divider' || isSection) {
     return null;
   }
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const newWidth = field.width === 'full' ? 'half' : 'full';
-    onUpdateWidth(field.componentId, newWidth);
+    const newWidth = field.Width === 'full' ? 'half' : 'full';
+    onUpdateWidth(field.ComponentId, newWidth);
   };
 
   return (

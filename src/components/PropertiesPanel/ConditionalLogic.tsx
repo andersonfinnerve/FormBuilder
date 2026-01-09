@@ -12,24 +12,25 @@ interface ConditionalLogicProps {
 }
 
 const ConditionalLogic: React.FC<ConditionalLogicProps> = ({ field, availableTriggers, onChange }) => {
+  const fieldSettings: FormField = field;
   const handleLogicUpdate = (key: keyof LogicRule, value: any) => {
-    const currentLogic = field.logic || { triggerId: '', triggerFormDataId: null, value: '', enabled: false };
-    if (key === 'triggerId' && value !== currentLogic.triggerId) {
+    const currentLogic = fieldSettings.Logic || { TriggerId: '', TriggerFormDataId: null, Value: '', Enabled: false };
+    if (key === 'TriggerId' && value !== currentLogic.TriggerId) {
       // Cuando cambia el trigger, buscar su formDataId
-      const triggerField = availableTriggers.find(f => f.componentId === value);
-      const triggerFormDataId = triggerField?.formDataId ?? null;
-      onChange('logic', { ...currentLogic, triggerId: value, triggerFormDataId, value: '' });
+      const triggerField = availableTriggers.find(f => f.ComponentId === value);
+      const triggerFormDataId = triggerField?.FormDataId ?? null;
+      onChange('Logic', { ...currentLogic, TriggerId: value, TriggerFormDataId: triggerFormDataId, Value: '' });
     } else {
-      onChange('logic', { ...currentLogic, [key]: value });
+      onChange('Logic', { ...currentLogic, [key]: value });
     }
   };
 
   const toggleLogic = (enabled: boolean) => {
-    const currentLogic = field.logic || { triggerId: '', triggerFormDataId: null, value: '', enabled: false };
-    onChange('logic', { ...currentLogic, enabled });
+    const currentLogic = fieldSettings.Logic || { TriggerId: '', TriggerFormDataId: null, Value: '', Enabled: false };
+    onChange('Logic', { ...currentLogic, Enabled: enabled });
   };
 
-  const selectedTriggerField = availableTriggers.find(f => f.componentId === field.logic?.triggerId);
+  const selectedTriggerField = availableTriggers.find(f => f.ComponentId === fieldSettings.Logic?.TriggerId);
 
   return (
     <>
@@ -41,36 +42,36 @@ const ConditionalLogic: React.FC<ConditionalLogicProps> = ({ field, availableTri
         <ToggleSwitch 
           label="Visibilidad"
           description="Mostrar/ocultar dinámicamente"
-          checked={!!field.logic?.enabled}
+          checked={!!fieldSettings.Logic?.Enabled}
           onChange={toggleLogic}
         />
 
-        {field.logic?.enabled && (
+        {fieldSettings.Logic?.Enabled && (
           <div className="bg-background-dark/50 border border-border-dark rounded-lg p-3 space-y-3 animate-fadeIn">
             <div className="space-y-1">
               <label className="text-xs text-text-primary font-medium">Mostrar este campo cuando:</label>
               <Select 
                 className="bg-surface-dark border-border-dark px-2 py-1.5 text-xs"
-                value={field.logic.triggerId || ''}
-                onChange={(e) => handleLogicUpdate('triggerId', e.target.value)}
+                value={fieldSettings.Logic.TriggerId || ''}
+                onChange={(e) => handleLogicUpdate('TriggerId', e.target.value)}
               >
                 <option value="">-- Seleccionar Campo --</option>
                 {availableTriggers.map(f => (
-                  <option key={f.componentId} value={f.componentId}>{f.label}</option>
+                  <option key={f.ComponentId} value={f.ComponentId}>{f.Label}</option>
                 ))}
               </Select>
             </div>
 
             <div className="space-y-1">
               <label className="text-xs text-text-primary font-medium">Es igual a:</label>
-              {selectedTriggerField && (selectedTriggerField.type === 'select' || selectedTriggerField.type === 'radio') && selectedTriggerField.options ? (
+              {selectedTriggerField && (selectedTriggerField.Type === 'select' || selectedTriggerField.Type === 'radio') && selectedTriggerField.Options ? (
                 <Select 
                   className="bg-surface-dark border-border-dark px-2 py-1.5 text-xs"
-                  value={field.logic.value || ''}
-                  onChange={(e) => handleLogicUpdate('value', e.target.value)}
+                  value={fieldSettings.Logic.Value || ''}
+                  onChange={(e) => handleLogicUpdate('Value', e.target.value)}
                 >
                   <option value="">-- Seleccionar Valor --</option>
-                  {selectedTriggerField.options.map((opt, idx) => (
+                  {selectedTriggerField.Options.map((opt, idx) => (
                     <option key={idx} value={opt.TextValue}>{opt.TextValue}</option>
                   ))}
                 </Select>
@@ -79,13 +80,13 @@ const ConditionalLogic: React.FC<ConditionalLogicProps> = ({ field, availableTri
                   type="text"
                   className="bg-surface-dark border-border-dark px-2 py-1.5 text-xs"
                   placeholder="Valor esperado"
-                  value={field.logic.value || ''}
-                  onChange={(e) => handleLogicUpdate('value', e.target.value)}
+                  value={fieldSettings.Logic.Value || ''}
+                  onChange={(e) => handleLogicUpdate('Value', e.target.value)}
                 />
               )}
             </div>
             
-            {(!field.logic.triggerId) && (
+            {(!fieldSettings.Logic.TriggerId) && (
               <p className="text-[10px] text-yellow-500 flex items-center gap-1">
                 <span className="material-symbols-outlined text-xs">warning</span>
                 Seleccione un campo disparador.

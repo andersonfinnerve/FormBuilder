@@ -2,12 +2,12 @@
 export type MasterDataType = 'text' | 'registry' | 'grid';
 
 export interface MasterDataOption {
-  id: string; // formDataOptionId
+  DataOptionId: number; // formDataOptionId
   value: string;
 }
 
 export interface MasterDataGridColumn {
-  id: string; // formDataGridColumnId
+  FormDataGridColumnId: number; // formDataGridColumnId
   label: string;
   type: 'text' | 'select' | 'file';
   required: boolean;
@@ -15,7 +15,7 @@ export interface MasterDataGridColumn {
 }
 
 export interface MasterData {
-  id: string; // formDataId o formDataGridId según el tipo
+  FormDataId: number; // formDataId o formDataGridId según el tipo
   name: string;
   type: MasterDataType;
   maxLength?: number; // Para tipo texto
