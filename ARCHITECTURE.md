@@ -3,58 +3,145 @@
 ## 📁 Estructura del Proyecto
 
 ```
-src/
-├── components/          # Componentes de UI organizados por feature
-│   ├── Canvas/         # Componentes del área de trabajo
-│   │   ├── index.tsx           # Componente principal Canvas
-│   │   ├── FieldRenderer.tsx   # Renderizador recursivo de campos
-│   │   ├── FieldInput.tsx      # Inputs específicos por tipo
-│   │   ├── FieldActions.tsx    # Botones de acción (duplicar, eliminar)
-│   │   ├── FieldIndicators.tsx # Indicadores visuales (compartido, lógica)
-│   │   ├── ResizeHandle.tsx    # Control de redimensionamiento
-│   │   ├── DragDropIndicators.tsx # Indicadores de zona de drop
-│   │   └── CanvasToolbar.tsx   # Barra de herramientas superior
+FormBuilder/
+├── src/
+│   ├── app/                    # Aplicación principal
+│   │   ├── App.tsx            # Componente raíz
+│   │   ├── index.tsx          # Entry point
+│   │   └── layouts/           # Layouts de la aplicación
 │   │
-│   ├── PropertiesPanel/  # Panel de propiedades lateral derecho
-│   │   ├── index.tsx              # Componente principal
-│   │   ├── EmptyState.tsx         # Estado cuando no hay selección
-│   │   ├── PanelHeader.tsx        # Encabezado del panel
-│   │   ├── GeneralSettings.tsx    # Configuración general
-│   │   ├── FileConfiguration.tsx  # Config específica de archivos
-│   │   ├── OptionsManagement.tsx  # Gestión de opciones (select/radio)
-│   │   ├── GridColumnsConfig.tsx  # Configuración de columnas de grilla
-│   │   ├── ValidationRules.tsx    # Reglas de validación
-│   │   ├── ConditionalLogic.tsx   # Lógica condicional
-│   │   ├── AppearanceSettings.tsx # Configuración de apariencia
-│   │   └── ContextualHelp.tsx     # Tips contextuales
+│   ├── config/                # Configuraciones
+│   │   └── routes.ts         # Definición de rutas
 │   │
-│   ├── PreviewModal/     # Modal de vista previa
-│   │   ├── index.tsx         # Componente principal
-│   │   └── PreviewField.tsx  # Renderizador de campos en preview
+│   ├── core/                  # Núcleo de la aplicación
+│   │   ├── contexts/         # Context API de React
+│   │   │   ├── FormRepositoryContext.tsx  # Contexto del repositorio de formularios
+│   │   │   └── ThemeContext.tsx           # Contexto de temas
+│   │   └── services/         # Servicios del core
+│   │       ├── formService.ts          # Servicio de formularios
+│   │       ├── mockMasterData.ts       # Datos maestros simulados
+│   │       └── api/                    # APIs y clientes HTTP
 │   │
-│   ├── Toolbox/          # Caja de herramientas lateral izquierda
-│   │   ├── index.tsx         # Componente principal
-│   │   └── ToolboxItem.tsx   # Item individual arrastrable
+│   ├── data/                  # Datos, seeds y configuraciones
+│   │   ├── mock/             # Datos mock para desarrollo
+│   │   │   ├── mockOnboardingData.ts  # Datos de onboarding
+│   │   │   └── physicalColumns.ts     # Columnas físicas de BD
+│   │   ├── seeds/            # Datos iniciales (seeds)
+│   │   │   ├── initialFields.ts       # Campos de ejemplo iniciales
+│   │   │   ├── initialQuestionnaire.ts # Cuestionarios iniciales
+│   │   │   └── sharedLibrary.ts       # Biblioteca compartida
+│   │   └── themes/           # Configuraciones de temas
+│   │       └── themes.ts     # Definición de temas
 │   │
-│   └── Header/           # Encabezado de la aplicación
-│       └── index.tsx
+│   ├── features/              # Características/módulos principales
+│   │   ├── form-builder/     # Constructor de formularios
+│   │   │   ├── components/
+│   │   │   │   ├── Canvas/           # Área de trabajo principal
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   ├── CanvasToolbar.tsx
+│   │   │   │   │   ├── DragDropIndicators.tsx
+│   │   │   │   │   ├── FieldActions.tsx
+│   │   │   │   │   ├── FieldIndicators.tsx
+│   │   │   │   │   ├── FieldInput.tsx
+│   │   │   │   │   ├── FieldRenderer.tsx
+│   │   │   │   │   └── ResizeHandle.tsx
+│   │   │   │   ├── PropertiesPanel/  # Panel de propiedades
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   ├── AppearanceSettings.tsx
+│   │   │   │   │   ├── ConditionalLogic.tsx
+│   │   │   │   │   ├── ContextualHelp.tsx
+│   │   │   │   │   ├── EmptyState.tsx
+│   │   │   │   │   ├── FileConfiguration.tsx
+│   │   │   │   │   ├── GeneralFormSettings.tsx
+│   │   │   │   │   ├── GeneralSettings.tsx
+│   │   │   │   │   └── ...
+│   │   │   │   └── Toolbox/          # Caja de herramientas
+│   │   │   │       ├── index.tsx
+│   │   │   │       └── ...
+│   │   │   ├── hooks/
+│   │   │   │   └── useFormBuilder.ts  # Hook principal del constructor
+│   │   │   └── types/
+│   │   │       └── masterData.ts     # Tipos de datos maestros
+│   │   │
+│   │   ├── form-explorer/    # Explorador de formularios
+│   │   │   ├── components/
+│   │   │   │   └── FormExplorer/
+│   │   │   └── hooks/
+│   │   │
+│   │   ├── onboarding-builder/  # Constructor de onboarding
+│   │   │   └── components/
+│   │   │       ├── OnboardingBuilder/
+│   │   │       ├── OnboardingConfig/
+│   │   │       ├── OnboardingList/
+│   │   │       └── StepCard/
+│   │   │
+│   │   ├── preview/          # Vista previa de formularios
+│   │   │   ├── component/
+│   │   │   │   └── PreviewModal/
+│   │   │   └── hooks/
+│   │   │
+│   │   └── questionnaire-builder/  # Constructor de cuestionarios
+│   │       └── components/
+│   │           ├── QuestionItem/
+│   │           ├── QuestionnaireBuilder/
+│   │           └── ResultConfig/
+│   │
+│   ├── hooks/                 # Hooks globales reutilizables
+│   │   └── useHistory.ts     # Hook para gestión de historial
+│   │
+│   ├── services/              # Servicios globales
+│   │
+│   ├── shared/                # Componentes y utilidades compartidas
+│   │   ├── components/
+│   │   │   ├── fields/       # Campos reutilizables
+│   │   │   │   ├── DividerField.tsx
+│   │   │   │   ├── FileButtonField.tsx
+│   │   │   │   ├── GenericField.tsx
+│   │   │   │   ├── GridCellInput.tsx
+│   │   │   │   ├── GridField.tsx
+│   │   │   │   ├── SectionField.tsx
+│   │   │   │   └── SpacerField.tsx
+│   │   │   ├── layouts/      # Layouts compartidos
+│   │   │   │   └── Header/
+│   │   │   ├── modals/       # Modales compartidos
+│   │   │   │   └── ThemeConfig/
+│   │   │   └── ui/           # Componentes UI básicos
+│   │   │       ├── AutocompleteInput.tsx
+│   │   │       ├── Button.tsx
+│   │   │       ├── Input.tsx
+│   │   │       ├── Select.tsx
+│   │   │       ├── SubTitle.tsx
+│   │   │       ├── Title.tsx
+│   │   │       └── ToggleSwitch.tsx
+│   │   ├── hooks/            # Hooks compartidos
+│   │   └── utils/            # Utilidades compartidas
+│   │       ├── fieldHelpers.ts  # Helpers para campos
+│   │       └── richText.ts      # Parser de texto enriquecido
+│   │
+│   ├── styles/                # Estilos globales
+│   │   ├── index.css
+│   │   └── tailwind/
+│   │       └── tailwind.config.js
+│   │
+│   └── types/                 # Tipos TypeScript globales
+│       ├── index.ts          # Tipos principales
+│       ├── onboarding.ts     # Tipos de onboarding
+│       ├── questionnaire.ts  # Tipos de cuestionarios
+│       ├── repository.ts     # Tipos del repositorio
+│       └── theme.ts          # Tipos de temas
 │
-├── hooks/              # Custom hooks reutilizables
-│   └── useFormBuilder.ts  # Hook principal con toda la lógica de negocio
-│
-├── types/              # Definiciones de tipos TypeScript
-│   └── index.ts          # Tipos: FormField, FieldType, LogicRule, etc.
-│
-├── utils/              # Funciones utilitarias
-│   ├── fieldHelpers.ts   # Helpers para manipular árbol de campos
-│   └── richText.ts       # Parser de texto enriquecido (Markdown)
-│
-├── data/               # Datos iniciales y configuraciones
-│   ├── initialFields.ts    # Campos de ejemplo iniciales
-│   └── sharedLibrary.ts    # Biblioteca de campos compartidos
-│
-├── App.tsx             # Componente raíz de la aplicación
-└── index.tsx           # Entry point
+├── ARCHITECTURE.md            # Arquitectura del proyecto
+├── DOCUMENTO_FUNCIONAL_FORMULARIOS.md
+├── FORMULARIOS.md
+├── THEME_SYSTEM.md
+├── README.md
+├── index.html
+├── metadata.json
+├── package.json
+├── postcss.config.js
+├── tsconfig.json
+├── vite-env.d.ts
+└── vite.config.ts
 
 ```
 
