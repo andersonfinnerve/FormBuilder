@@ -45,17 +45,17 @@ export interface FormField {
   SharedSource?: string; // ID del recurso compartido si proviene de la biblioteca central
   Logic?: LogicRule; // Lógica condicional
   PhysicalColumn?: string; // Mapeo a columna física de la entidad (ej. Contact.FirstName)
-  
+
   // IDs del Dato Maestro del BackOffice según tipo de elemento
   // null = campo nuevo sin crear en el maestro, string = campo del maestro
   DataId?: number | null; // ID para elementos normales (text, select, etc)
   DataGridId?: number | null; // ID para elementos tipo 'grid'
   FormDataId?: number | null; // ID para elementos normales (text, select, etc)
   FormDataGridId?: number | null; // ID para elementos tipo 'grid'
-  
+
   // Propiedades recursivas para secciones
   Children?: FormField[];
-  
+
   // Propiedades específicas para 'file'
   FileStyle?: 'dropzone' | 'button'; // Estilo visual de carga
   DownloadUrl?: string; // URL para descargar documento plantilla (ej. W-9)
@@ -81,3 +81,37 @@ export type DropPosition = 'before' | 'after' | 'inside';
 
 // Posición visual de drag over
 export type DragOverPosition = 'top' | 'bottom' | 'inside' | null;
+
+export interface MasterData {
+  FormDataId: number; // formDataId o formDataGridId según el tipo
+  name: string;
+  type: MasterDataType;
+  maxLength?: number; // Para tipo texto
+  options?: string[] | MasterDataOption[]; // Para tipo registro (puede ser array simple o con IDs)
+  columns?: MasterDataGridColumn[]; // Para tipo grid
+  description?: string;
+  lastModified?: string;
+}
+// Tipos de datos maestros del BackOffice
+export type MasterDataType = 'text' | 'registry' | 'grid';
+
+export interface MasterDataOption {
+  DataOptionId: number; // formDataOptionId
+  value: string;
+}
+
+export interface MasterDataGridColumn {
+  FormDataGridColumnId: number; // formDataGridColumnId
+  label: string;
+  type: 'text' | 'select' | 'file';
+  required: boolean;
+  options?: MasterDataOption[]; // Para columnas tipo select
+}
+
+
+export interface InitialFormStructure {
+  FormId: number | null;
+  Name: string;
+  Description: string;
+  StructureForm: FormField[];
+}
