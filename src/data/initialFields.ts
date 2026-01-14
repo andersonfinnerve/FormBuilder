@@ -1,14 +1,14 @@
 import { FormField } from '../types';
 
 export interface InitialFormStructure {
-  FormId: string;
+  FormId: number | null;
   Name: string;
   Description: string;
   StructureForm: FormField[];
 }
 
 export const initialFields: InitialFormStructure = {
-  FormId: 'form_beneficiarios_001',
+  FormId: null,
   Name: 'DECLARACIÓN DE BENEFICIARIOS FINALES',
   Description: 'Formulario para declaración de beneficiarios finales',
   StructureForm: [

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Toolbox from './components/Toolbox';
 import Canvas from './components/Canvas';
@@ -14,6 +14,7 @@ import { flattenFields } from './utils/fieldHelpers';
 import QuestionnaireBuilder from './components/QuestionnaireBuilder';
 import OnboardingBuilder from './components/OnboardingBuilder';
 import FormExplorer from './components/FormExplorer';
+import { getFormStructure } from './services/formService';
 
 const AppContent: React.FC = () => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -22,8 +23,15 @@ const AppContent: React.FC = () => {
   const [isExplorerOpen, setIsExplorerOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'form' | 'questionnaire' | 'onboarding'>('form');
   const [currentFormId, setCurrentFormId] = useState<string | null>(null);
+  const [isLoadingForm, setIsLoadingForm] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const { theme, mode } = useTheme();
   const { saveForm, loadForm } = useFormRepository();
+
+  // Determinar si se debe empezar con un formulario vacío o con datos iniciales
+  const urlParams = new URLSearchParams(window.location.search);
+  const formIdFromUrl = urlParams.get('formId');
+  const shouldStartEmpty = !formIdFromUrl; // Si no hay formId, empezar vacío
   
   const {
     fields,
@@ -50,43 +58,155 @@ const AppContent: React.FC = () => {
     canRedo,
     handleLoadForm
   } = useFormBuilder(
-    initialFields.StructureForm, 
+    shouldStartEmpty ? [] : initialFields.StructureForm, 
     sharedFieldsLibrary,
-    { Title: initialFields.Name, Description: initialFields.Description }
+    shouldStartEmpty ? { Title: '', Description: '' } : { Title: initialFields.Name, Description: initialFields.Description }
   );
 
-  const handleSave = () => {
-    let id = currentFormId;
-    let name = "Formulario Sin Título";
-    let createdAt = new Date().toISOString();
-    let version = 1;
+  // Cargar formulario desde el servicio al montar el componente
+  useEffect(() => {
+    const loadFormFromService = async () => {
+      const USE_API = true; // Cambiar a false para deshabilitar API
+      
+      if (!USE_API) return;
+      
+      // Obtener el formId de la URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const formIdFromUrl = urlParams.get('formId');
+      
+      // Si no hay formId en URL, empezar desde cero con initialFields
+      if (!formIdFromUrl) {
+        console.log('No hay formId en URL. Empezando formulario nuevo desde cero.');
+        setCurrentFormId(null);
+        return;
+      }
+      
+      // Si hay formId, cargar desde el servicio
+      setIsLoadingForm(true);
+      setLoadError(null);
+      
+      try {
+        console.log('Cargando formulario con ID:', formIdFromUrl);
+        const formStructure = await getFormStructure(formIdFromUrl);
+        
+        // Cargar el formulario obtenido
+        handleLoadForm(formStructure.StructureForm, {
+          Title: formStructure.Name,
+          Description: formStructure.Description
+        });
+        
+        if (formStructure.FormId) {
+          setCurrentFormId(formStructure.FormId.toString());
+        }
+        
+        console.log('Formulario cargado desde el servicio:', formStructure);
+      } catch (error) {
+        console.error('Error al cargar formulario desde el servicio:', error);
+        setLoadError(error instanceof Error ? error.message : 'Error desconocido');
+        // En caso de error, continuar con initialFields
+      } finally {
+        setIsLoadingForm(false);
+      }
+    };
+    
+    loadFormFromService();
+  }, []); // Solo ejecutar al montar
 
-    if (id) {
-      const existing = loadForm(id);
+  const handleSave = async () => {
+    const USE_API = true; // Cambiar a false para solo guardar localmente
+    
+    try {
+      setIsLoadingForm(true);
+      setLoadError(null);
+      
+      // Preparar datos para enviar al servicio
+      const formDataToSave: any = {
+        Name: formConfig.Title,
+        Description: formConfig.Description || '',
+        StructureForm: fields
+      };
+
+      // Solo incluir FormId si existe (para actualización)
+      if (currentFormId) {
+        formDataToSave.FormId = parseInt(currentFormId);
+      }
+
+      let savedFormId = currentFormId;
+
+      if (USE_API) {
+        const { saveFormStructure, updateFormStructure, getFormStructure } = await import('./services/formService');
+        
+        if (formDataToSave.FormId) {
+          // Actualizar formulario existente
+          console.log('Actualizando formulario con ID:', formDataToSave.FormId);
+          const response = await updateFormStructure(formDataToSave.FormId, formDataToSave);
+          
+          if (response.success) {
+            console.log('Formulario actualizado exitosamente');
+            savedFormId = formDataToSave.FormId.toString();
+          }
+        } else {
+          // Crear nuevo formulario
+          console.log('Creando nuevo formulario');
+          const response = await saveFormStructure(formDataToSave);
+          
+          if (response.success && response.formId) {
+            console.log('Formulario creado con ID:', response.formId);
+            savedFormId = response.formId.toString();
+            setCurrentFormId(savedFormId);
+          }
+        }
+        
+        // Recargar el formulario desde el servicio para confirmar
+        if (savedFormId) {
+          const reloadedForm = await getFormStructure(savedFormId);
+          
+          handleLoadForm(reloadedForm.StructureForm, {
+            Title: reloadedForm.Name,
+            Description: reloadedForm.Description
+          });
+          
+          console.log('Formulario recargado desde el servicio:', reloadedForm);
+        }
+        
+        alert(`Formulario ${formDataToSave.FormId ? 'actualizado' : 'guardado'} exitosamente.`);
+      }
+      
+      // Guardar también localmente en localStorage
+      let localId = savedFormId || Date.now().toString();
+      let name = formConfig.Title || "Formulario Sin Título";
+      let createdAt = new Date().toISOString();
+      let version = 1;
+
+      const existing = loadForm(localId);
       if (existing) {
-        name = existing.name;
         createdAt = existing.createdAt;
         version = existing.version + 1;
       }
-    } else {
-      id = Date.now().toString();
-      const inputName = prompt("Nombre del formulario:", `Formulario ${new Date().toLocaleString()}`);
-      if (!inputName) return; // Cancelar si no hay nombre
-      name = inputName;
-      setCurrentFormId(id);
-    }
 
-    saveForm({
-      id: id!,
-      name: name,
-      description: "Formulario guardado",
-      fields: fields,
-      config: formConfig,
-      createdAt: createdAt,
-      updatedAt: new Date().toISOString(),
-      version: version
-    });
-    alert("Formulario guardado exitosamente.");
+      saveForm({
+        id: localId,
+        name: name,
+        description: formConfig.Description || "Formulario guardado",
+        fields: fields,
+        config: formConfig,
+        createdAt: createdAt,
+        updatedAt: new Date().toISOString(),
+        version: version
+      });
+      
+      if (!USE_API) {
+        alert("Formulario guardado localmente.");
+      }
+      
+    } catch (error) {
+      console.error('Error al guardar formulario:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+      setLoadError(errorMessage);
+      alert(`Error al guardar formulario: ${errorMessage}`);
+    } finally {
+      setIsLoadingForm(false);
+    }
   };
 
   const handleLoadFromExplorer = (id: string) => {
@@ -110,6 +230,35 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen overflow-hidden font-display">
+      {/* Indicador de carga */}
+      {isLoadingForm && (
+        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-surface-dark border border-border-dark rounded-lg p-6 shadow-xl">
+            <div className="flex items-center gap-3">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+              <span className="text-text-primary font-medium">Cargando formulario...</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Indicador de error */}
+      {loadError && (
+        <div className="absolute top-4 right-4 bg-red-500/10 border border-red-500/30 rounded-lg p-4 shadow-xl z-50 max-w-md">
+          <div className="flex items-start gap-3">
+            <span className="material-symbols-outlined text-red-400">error</span>
+            <div>
+              <h4 className="text-sm font-bold text-red-400 mb-1">Error al cargar formulario</h4>
+              <p className="text-xs text-text-secondary">{loadError}</p>
+              <p className="text-xs text-text-secondary mt-1">Usando datos estáticos por defecto.</p>
+            </div>
+            <button onClick={() => setLoadError(null)} className="text-text-secondary hover:text-text-primary">
+              <span className="material-symbols-outlined text-sm">close</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       <Header 
         onPreview={() => setIsPreviewOpen(true)} 
         onThemeConfig={() => setIsThemeConfigOpen(true)}

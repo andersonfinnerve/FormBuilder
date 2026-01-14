@@ -5,7 +5,7 @@ import SubTitle from '../Toolbox/SubTitle';
 
 interface GeneralFormSettingsProps {
   formConfig: FormConfig;
-  onUpdateFormConfig: (key: keyof FormConfig, value: string) => void;
+  onUpdateFormConfig: <K extends keyof FormConfig>(key: K, value: FormConfig[K]) => void;
 }
 
 const GeneralFormSettings: React.FC<GeneralFormSettingsProps> = ({ formConfig, onUpdateFormConfig }) => {
@@ -28,8 +28,8 @@ const GeneralFormSettings: React.FC<GeneralFormSettingsProps> = ({ formConfig, o
           </label>
           <input
             type="text"
-            value={formConfig.title}
-            onChange={(e) => onUpdateFormConfig('title', e.target.value)}
+            value={formConfig.Title}
+            onChange={(e) => onUpdateFormConfig('Title', e.target.value)}
             className="w-full px-3 py-2.5 bg-background-dark border border-border-dark rounded-lg text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all text-sm"
             placeholder="Ej. Formulario de Registro de Cliente"
           />
@@ -43,8 +43,8 @@ const GeneralFormSettings: React.FC<GeneralFormSettingsProps> = ({ formConfig, o
             Descripción
           </label>
           <textarea
-            value={formConfig.description || ''}
-            onChange={(e) => onUpdateFormConfig('description', e.target.value)}
+            value={formConfig.Description || ''}
+            onChange={(e) => onUpdateFormConfig('Description', e.target.value)}
             className="w-full px-3 py-2.5 bg-background-dark border border-border-dark rounded-lg text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all text-sm resize-none"
             placeholder="Ej. Por favor complete todos los campos requeridos..."
             rows={3}
