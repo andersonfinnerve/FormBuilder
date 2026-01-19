@@ -1,7 +1,6 @@
 import React from 'react';
-import { FormField } from '../../../../types';
-import ToggleSwitch from '../../../../shared/components/ui/ToggleSwitch';
-import SubTitle from '../../../../shared/components/ui/SubTitle';
+import { FormField } from '@/types';
+import { ToggleSwitch, SubTitle } from '@/shared/components/ui';
 
 interface ValidationRulesProps {
   field: FormField;

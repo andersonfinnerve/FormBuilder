@@ -1,7 +1,6 @@
 import React from 'react';
-import { ScoreRange } from '../../../../types/questionnaire';
-import { Input } from '../../../../shared/components/ui/Input';
-import Button from '../../../../shared/components/ui/Button';
+import { ScoreRange } from '@/types/questionnaire';
+import { Input, Button } from '@/shared/components/ui';
 
 interface ResultConfigProps {
   results: ScoreRange[];

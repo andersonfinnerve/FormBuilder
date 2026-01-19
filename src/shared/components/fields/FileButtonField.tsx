@@ -1,7 +1,7 @@
 import React from 'react';
-import { FormField } from '../../../types';
-import { parseRichText } from '../../utils/richText';
-import { Input } from '../../../shared/components/ui/Input';
+import { FormField } from '@/types';
+import { parseRichText } from '@/shared/utils';
+import { Input } from '@/shared/components/ui';
 
 interface FileButtonFieldProps {
   field: FormField;

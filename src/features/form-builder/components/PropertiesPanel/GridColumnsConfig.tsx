@@ -1,9 +1,7 @@
 import React from 'react';
-import { Input } from '../../../../shared/components/ui/Input';
-import { Select } from '../../../../shared/components/ui/Select';
-import { FormField, GridColumn, SharedFieldDefinition } from '../../../../types';
-import SubTitle from '../../../../shared/components/ui/SubTitle';
-import { MASTER_DATA } from '../../../../core/services/mockMasterData';
+import { Input, Select, SubTitle } from '@/shared/components/ui';
+import { FormField, GridColumn, SharedFieldDefinition } from '@/types';
+import { MASTER_DATA } from '@/core/services';
 
 interface GridColumnsConfigProps {
   field: FormField;

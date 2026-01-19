@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { OnboardingFlow, OnboardingStep, FormComponentType } from '../../../../types/onboarding';
-import { Input } from '../../../../shared/components/ui/Input';
-import { Select } from '../../../../shared/components/ui/Select';
-import ToggleSwitch from '../../../../shared/components/ui/ToggleSwitch';
+import { OnboardingFlow, OnboardingStep, FormComponentType } from '@/types/onboarding';
+import { Input, Select, ToggleSwitch } from '@/shared/components/ui';
 
 interface OnboardingConfigProps {
   initialFlow?: OnboardingFlow | null;

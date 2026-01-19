@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormField, GridColumn, SharedFieldDefinition } from '../../types';
+import { FormField, GridColumn, SharedFieldDefinition } from '@/types';
 import GridCellInput from './GridCellInput';
 
 interface GridFieldProps {

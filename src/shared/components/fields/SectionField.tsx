@@ -1,9 +1,8 @@
 import React from 'react';
-import { FormField, GridColumn, SharedFieldDefinition } from '../../../types';
-import { parseRichText } from '../../utils/richText';
-import PreviewField from '../../../features/preview/component/PreviewModal/PreviewField';
-import SubTitle from '../ui/SubTitle';
-import Title from '../ui/Title';
+import { FormField, GridColumn, SharedFieldDefinition } from '@/types';
+import { parseRichText } from '@/shared/utils';
+import PreviewField from '@/features/preview/component/PreviewModal/PreviewField';
+import { SubTitle, Title } from '@/shared/components/ui';
 
 interface SectionFieldProps {
   field: FormField;

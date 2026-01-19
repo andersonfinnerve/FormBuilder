@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { QuestionnaireConfig, Question } from '../../../../types/questionnaire';
+import { QuestionnaireConfig, Question } from '@/types/questionnaire';
 import QuestionItem from '../QuestionItem/QuestionItem';
 import ResultConfig from '../ResultConfig/ResultConfig';
-import { Input } from '../../../../shared/components/ui/Input';
-import Button from '../../../../shared/components/ui/Button';
-import { initialQuestionnaire } from '../../../../data/seeds/initialQuestionnaire.ts';
+import { Input, Button } from '@/shared/components/ui';
+import { initialQuestionnaire } from '@/data/seeds';
 
 const QuestionnaireBuilder: React.FC = () => {
   const [config, setConfig] = useState<QuestionnaireConfig>(initialQuestionnaire.structureQuestionnaire);

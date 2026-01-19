@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { FieldType, SharedFieldDefinition } from '../../../../types';
-import { Input } from '../../../../shared/components/ui/Input';
+import { FieldType, SharedFieldDefinition, MasterData } from '@/types';
+import { Input, SubTitle } from '@/shared/components/ui';
 import ToolboxItem from './ToolboxItem';
 import ToolboxCategory from './ToolboxCategory';
-import SubTitle from '../../../../shared/components/ui/SubTitle';
 import MasterDataItem from './MasterDataItem';
-import { MASTER_DATA } from '../../../../core/services/mockMasterData';
-import { MasterData } from '../../../../types';
+import { MASTER_DATA } from '@/core/services';
 
 interface ToolboxProps {
   onAddField: (type: FieldType, label: string) => void;

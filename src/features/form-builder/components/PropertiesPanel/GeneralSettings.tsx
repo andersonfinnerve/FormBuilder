@@ -1,8 +1,8 @@
 import React from 'react';
-import { FormField } from '../../../../types';
-import { Input, TextArea } from '../../../../shared/components/ui/Input';
-import { Select } from '../../../../shared/components/ui/Select';
-import { CONTACT_PHYSICAL_COLUMNS } from '../../../../data/mock/physicalColumns';
+import { FormField } from '@/types';
+import { Input, TextArea } from '@/shared/components/ui';
+import { Select } from '@/shared/components/ui';
+import { CONTACT_PHYSICAL_COLUMNS } from '@/data/mock';
 
 interface GeneralSettingsProps {
   field: FormField;

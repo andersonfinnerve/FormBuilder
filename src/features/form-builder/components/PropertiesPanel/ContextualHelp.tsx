@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormField } from '../../types';
+import { FormField } from '@/types';
 
 interface ContextualHelpProps {
   field: FormField;

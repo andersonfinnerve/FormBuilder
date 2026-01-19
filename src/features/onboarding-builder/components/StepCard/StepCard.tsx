@@ -1,8 +1,7 @@
 import React from 'react';
-import { OnboardingStep, OnboardingStepType } from '../../types/onboarding';
-import { Input } from '../../shared/components/ui/Input';
-import { Select } from '../../shared/components/ui/Select';
-import { mockForms, mockQuestionnaires } from '../../data/mockOnboardingData';
+import { OnboardingStep, OnboardingStepType } from '@/types/onboarding';
+import { Input, Select } from '@/shared/components/ui';
+import { mockForms, mockQuestionnaires } from '@/data/mock';
 
 interface StepCardProps {
   step: OnboardingStep;

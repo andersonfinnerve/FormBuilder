@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { FormField, GridColumn, SharedFieldDefinition, FormConfig } from '../../../../types';
+import { FormField, GridColumn, SharedFieldDefinition, FormConfig } from '@/types';
 import PreviewField from './PreviewField';
-import Title from '../../../../shared/components/ui/Title';
+import { Title } from '@/shared/components/ui';
 
 interface PreviewModalProps {
   fields: FormField[];

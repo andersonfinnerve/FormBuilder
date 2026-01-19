@@ -1,5 +1,5 @@
 import React from 'react';
-import { OnboardingFlow } from '../../../../types/onboarding';
+import { OnboardingFlow } from '@/types/onboarding';
 
 interface OnboardingListProps {
   flows: OnboardingFlow[];

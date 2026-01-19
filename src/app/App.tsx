@@ -1,21 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../shared/components/layouts/Header';
-import Toolbox from '../features/form-builder/components/Toolbox';
-import Canvas from '../features/form-builder/components/Canvas';
-import PropertiesPanel from '../features/form-builder/components/PropertiesPanel';
-import PreviewModal from '../features/preview/component/PreviewModal';
-import { ThemeConfigModal } from '../shared/components/modals/ThemeConfig';
-import { useFormBuilder } from '../features/form-builder/hooks/useFormBuilder';
-import { useTheme } from '../core/contexts/ThemeContext';
-import { FormRepositoryProvider, useFormRepository } from '../core/contexts/FormRepositoryContext';
-import { sharedFieldsLibrary } from '../data/seeds/sharedLibrary';
-import { initialFields } from '../data/seeds/initialFields';
-import { flattenFields } from '../shared/utils/fieldHelpers';
-import QuestionnaireBuilder from '../features/questionnaire-builder/components/QuestionnaireBuilder';
-import OnboardingBuilder from '../features/onboarding-builder/components/OnboardingBuilder';
-import FormExplorer from '../features/form-explorer/components/FormExplorer';
-import { getFormStructure, updateFormStructure, saveFormStructure } from '../core/services/formService';
-        // const { saveFormStructure, updateFormStructure, getFormStructure } = await import('../core/services/formService');
+
+// Shared Components
+import { Header } from '@/shared/components/layouts';
+import { ThemeConfigModal } from '@/shared/components/modals';
+
+// Form Builder Feature
+import { Canvas, PropertiesPanel, Toolbox, useFormBuilder } from '@/features/form-builder';
+
+// Other Features
+import { PreviewModal } from '@/features/preview';
+import { QuestionnaireBuilder } from '@/features/questionnaire-builder';
+import { OnboardingBuilder } from '@/features/onboarding-builder';
+import { FormExplorer } from '@/features/form-explorer';
+
+// Core (Contexts & Services)
+import { useTheme, FormRepositoryProvider, useFormRepository } from '@/core/contexts';
+import { getFormStructure, updateFormStructure, saveFormStructure } from '@/core/services';
+
+// Data
+import { sharedFieldsLibrary, initialFields } from '@/data/seeds';
+
+// Utils
+import { flattenFields } from '@/shared/utils';
 
 
 const AppContent: React.FC = () => {
@@ -70,10 +76,6 @@ const AppContent: React.FC = () => {
   // Cargar formulario desde el servicio al montar el componente
   useEffect(() => {
     const loadFormFromService = async () => {
-      const USE_API = true; // Cambiar a false para deshabilitar API
-
-      if (!USE_API) return;
-
       // Obtener el formId de la URL
       const urlParams = new URLSearchParams(window.location.search);
       const formIdFromUrl = urlParams.get('formId');

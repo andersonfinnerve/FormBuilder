@@ -1,7 +1,7 @@
 import React from 'react';
-import { FormField } from '../../../../types';
-import SubTitle from '../../../../shared/components/ui/SubTitle';
-import { DividerField } from '../../../../shared/components/fields/DividerField';
+import { FormField } from '@/types';
+import { SubTitle } from '@/shared/components/ui';
+import { DividerField } from '@/shared/components/fields';
 
 
 interface PanelHeaderProps {

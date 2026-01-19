@@ -1,8 +1,8 @@
 import React from 'react';
-import { FormField } from '../../../types';
-import { parseRichText } from '../../utils/richText';
-import { Input, TextArea } from '../../../shared/components/ui/Input';
-import { Select } from '../../../shared/components/ui/Select';
+import { FormField } from '@/types';
+import { parseRichText } from '@/shared/utils';
+import { Input, TextArea } from '@/shared/components/ui';
+import { Select } from '@/shared/components/ui';
 
 interface GenericFieldProps {
   field: FormField;

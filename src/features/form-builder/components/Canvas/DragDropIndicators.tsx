@@ -1,5 +1,5 @@
 import React from 'react';
-import { DragOverPosition } from '../../../../types';
+import { DragOverPosition } from '@/types';
 
 interface DragDropIndicatorsProps {
   dragOverPosition: DragOverPosition;

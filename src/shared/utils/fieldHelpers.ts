@@ -1,4 +1,4 @@
-import { FormField, DropPosition } from '../../types';
+import { FormField, DropPosition } from '@/types';
 
 // Buscar un campo recursivamente en el árbol
 export const findFieldRecursive = (fields: FormField[], id: string): FormField | null => {

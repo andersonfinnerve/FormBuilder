@@ -1,6 +1,6 @@
 import React from 'react';
-import { useFormRepository } from '../../../../core/contexts/FormRepositoryContext';
-import { FormMetadata } from '../../../../types/repository';
+import { useFormRepository } from '@/core/contexts';
+import { FormMetadata } from '@/types/repository';
 
 interface FormExplorerProps {
   onLoad: (id: string) => void;

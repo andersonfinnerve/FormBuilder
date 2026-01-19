@@ -1,6 +1,6 @@
 import React from 'react';
-import { FormField } from '../../../../types';
-import { Input } from '../../../../shared/components/ui/Input';
+import { FormField } from '@/types';
+import { Input } from '@/shared/components/ui';
 
 interface OptionsManagementProps {
   field: FormField;

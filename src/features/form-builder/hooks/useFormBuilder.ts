@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { FormField, FieldType, SharedFieldDefinition, FormConfig } from '../../../types';
-import { useHistory } from '../../../hooks/useHistory';
+import { useState } from 'react';
+import { FormField, FieldType, SharedFieldDefinition, FormConfig } from '@/types';
+import { useHistory } from '@/hooks';
 import {
   findFieldRecursive,
   updateFieldRecursive,
@@ -8,17 +8,216 @@ import {
   addFieldToParentRecursive,
   removeNode,
   insertNode
-} from '../../../shared/utils/fieldHelpers';
+} from '@/shared/utils';
 
-export const useFormBuilder = (initialFields: FormField[], sharedLibrary: SharedFieldDefinition[], initialConfig?: FormConfig) => {
+// ==========================================
+// CONSTANTS
+// ==========================================
+
+const DEFAULT_FORM_CONFIG: FormConfig = {
+  Title: 'Formulario de Registro',
+  Description: 'Complete la información solicitada.'
+};
+
+const FIELD_LABELS: Record<FieldType, string> = {
+  text: 'Texto Corto',
+  textarea: 'Párrafo',
+  number: 'Número',
+  email: 'Correo Electrónico',
+  checkbox: 'Casilla',
+  radio: 'Opción Única',
+  select: 'Lista Desplegable',
+  date: 'Fecha',
+  file: 'Archivo',
+  grid: 'Grilla de Datos',
+  section: 'Nueva Sección',
+  spacer: 'Espaciador',
+  divider: 'Separador'
+};
+
+const DEFAULT_GRID_COLUMNS = [
+  { Id: 'c1', Label: 'Item', Type: 'text' as const, Required: true, FormDataGridColumnId: null },
+  { Id: 'c2', Label: 'Cantidad', Type: 'text' as const, Required: true, FormDataGridColumnId: null }
+];
+
+// ==========================================
+// HELPER FUNCTIONS
+// ==========================================
+
+/**
+ * Genera un ID único para componentes
+ */
+const generateComponentId = (): string => {
+  return `${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+};
+
+/**
+ * Determina si un tipo de campo requiere opciones
+ */
+const requiresOptions = (type: FieldType): boolean => {
+  return type === 'select' || type === 'radio';
+};
+
+/**
+ * Determina si un tipo de campo NO debe tener FormDataId
+ */
+const shouldSkipFormDataId = (type: FieldType): boolean => {
+  return type === 'grid' || type === 'section' || type === 'spacer' || type === 'divider';
+};
+
+// ==========================================
+// FIELD CREATORS
+// ==========================================
+
+/**
+ * Crea un campo desde una definición compartida
+ */
+const createSharedField = (sharedDef: SharedFieldDefinition): FormField => ({
+  ComponentId: generateComponentId(),
+  Type: sharedDef.Type,
+  Label: sharedDef.Label,
+  Placeholder: 'Seleccione una opción...',
+  Required: false,
+  ReadOnly: false,
+  Order: 0,
+  Width: 'full',
+  Options: [...sharedDef.Options],
+  SharedSource: sharedDef.Id
+});
+
+/**
+ * Crea un campo base con configuración por defecto
+ */
+const createBaseField = (type: FieldType, label: string): FormField => {
+  const baseField: FormField = {
+    ComponentId: generateComponentId(),
+    Type: type,
+    Label: label,
+    Placeholder: '',
+    Required: false,
+    ReadOnly: false,
+    Order: 0,
+    Width: 'full',
+    Options: requiresOptions(type) ? [
+      { DataOptionId: undefined, TextValue: 'Opción 1' },
+      { DataOptionId: undefined, TextValue: 'Opción 2' }
+    ] : undefined,
+    FormDataId: shouldSkipFormDataId(type) ? undefined : null,
+    FormDataGridId: type === 'grid' ? null : undefined,
+    FileStyle: type === 'file' ? 'dropzone' : undefined,
+    Children: type === 'section' ? [] : undefined,
+    Columns: type === 'grid' ? DEFAULT_GRID_COLUMNS : undefined
+  };
+
+  // Configuración especial para spacer
+  if (type === 'spacer') {
+    baseField.Width = 'half';
+    baseField.Label = 'Espaciador';
+  }
+
+  return baseField;
+};
+
+/**
+ * Crea un campo de tipo grid desde datos maestros
+ */
+const createMasterGridField = (data: any): FormField => ({
+  ComponentId: generateComponentId(),
+  Type: 'grid',
+  Label: data.name,
+  Required: false,
+  ReadOnly: false,
+  Order: 0,
+  Width: 'full',
+  FormDataGridId: data.FormDataId,
+  Description: data.description,
+  Columns: data.columns?.map((col: any) => ({
+    Id: col.FormDataGridColumnId.toString(),
+    Label: col.label,
+    Type: col.type,
+    Required: col.required,
+    FormDataGridColumnId: col.FormDataGridColumnId,
+    Options: col.options?.map((opt: any) => ({
+      DataOptionId: opt.DataOptionId,
+      TextValue: opt.value
+    }))
+  })) || []
+});
+
+/**
+ * Crea un campo de tipo select desde datos maestros
+ */
+const createMasterSelectField = (data: any): FormField => {
+  const options = Array.isArray(data.options) && typeof data.options[0] === 'object'
+    ? data.options.map((opt: any) => ({
+        DataOptionId: opt.DataOptionId,
+        TextValue: opt.value
+      }))
+    : data.options.map((opt: any) => ({
+        DataOptionId: undefined,
+        TextValue: opt
+      }));
+
+  return {
+    ComponentId: generateComponentId(),
+    Type: 'select',
+    Label: data.name,
+    Placeholder: 'Seleccione una opción...',
+    Required: false,
+    ReadOnly: false,
+    Order: 0,
+    Width: 'full',
+    Options: options,
+    FormDataId: data.FormDataId,
+    Description: data.description
+  };
+};
+
+/**
+ * Crea un campo de texto desde datos maestros
+ */
+const createMasterTextField = (data: any): FormField => ({
+  ComponentId: generateComponentId(),
+  Type: 'text',
+  Label: data.name,
+  Placeholder: '',
+  Required: false,
+  ReadOnly: false,
+  Order: 0,
+  Width: 'full',
+  FormDataId: data.FormDataId,
+  Description: data.description
+});
+
+/**
+ * Clona recursivamente los children de un campo con nuevos IDs
+ */
+const cloneChildrenRecursive = (children?: FormField[]): FormField[] | undefined => {
+  if (!children || children.length === 0) return undefined;
+  
+  return children.map(child => ({
+    ...child,
+    ComponentId: generateComponentId(),
+    Children: cloneChildrenRecursive(child.Children)
+  }));
+};
+
+// ==========================================
+// MAIN HOOK
+// ==========================================
+
+export const useFormBuilder = (
+  initialFields: FormField[], 
+  sharedLibrary: SharedFieldDefinition[], 
+  initialConfig?: FormConfig
+) => {
+  // ==========================================
+  // STATE
+  // ==========================================
+  
   const [fields, setFields] = useState<FormField[]>(initialFields);
   const [selectedId, setSelectedId] = useState<string | null>('1');
-  const [formConfig, setFormConfig] = useState<FormConfig>(initialConfig || {
-    Title: 'Formulario de Registro',
-    Description: 'Complete la información solicitada.'
-  });
-
-  console.warn('useFormBuilder INIT', Math.random());
+  const [formConfig, setFormConfig] = useState<FormConfig>(initialConfig || DEFAULT_FORM_CONFIG);
 
   const {
     history,
@@ -31,119 +230,99 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
     canRedo
   } = useHistory(initialFields);
 
-  // Helper to update fields and push to history
+  // ==========================================
+  // COMPUTED VALUES
+  // ==========================================
+
+  const selectedField: FormField | null = selectedId 
+    ? findFieldRecursive(fields, selectedId) 
+    : null;
+
+  // ==========================================
+  // UTILITIES
+  // ==========================================
+
+  /**
+   * Actualiza los campos y guarda en el historial
+   */
   const updateFieldsWithHistory = (newFields: FormField[], description: string) => {
     setFields(newFields);
     pushSnapshot(newFields, description);
   };
 
+  /**
+   * Añade un campo a la posición correcta (root o section seleccionada)
+   */
+  const addFieldToCorrectPosition = (newField: FormField): FormField[] => {
+    if (selectedField && selectedField.Type === 'section') {
+      return addFieldToParentRecursive(fields, selectedField.ComponentId, newField);
+    }
+    return [...fields, newField];
+  };
+
+  /**
+   * Crea un objeto de campo basado en el tipo y definiciones
+   */
+  const createFieldObject = (
+    type: FieldType, 
+    label: string, 
+    sharedDef?: SharedFieldDefinition
+  ): FormField => {
+    return sharedDef 
+      ? createSharedField(sharedDef) 
+      : createBaseField(type, label);
+  };
+
+  // ==========================================
+  // HISTORY HANDLERS
+  // ==========================================
+
   const handleUndo = () => {
     const previousFields = undo();
-    if (previousFields) {
-      setFields(previousFields);
-    }
+    if (previousFields) setFields(previousFields);
   };
 
   const handleRedo = () => {
     const nextFields = redo();
-    if (nextFields) {
-      setFields(nextFields);
-    }
+    if (nextFields) setFields(nextFields);
   };
 
   const handleJumpToVersion = (index: number) => {
     const versionFields = jumpToVersion(index);
-    if (versionFields) {
-      setFields(versionFields);
-    }
+    if (versionFields) setFields(versionFields);
   };
 
-  const handleLoadForm = (loadedFields: FormField[], loadedConfig?: FormConfig) => {
-    setFields(loadedFields);
-    if (loadedConfig) {
-      setFormConfig(loadedConfig);
-    }
-    pushSnapshot(loadedFields, 'Formulario cargado');
-    setSelectedId(null);
-  };
+  // ==========================================
+  // FORM CONFIG HANDLERS
+  // ==========================================
 
   const handleUpdateFormConfig = (key: keyof FormConfig, value: string) => {
     setFormConfig(prev => ({ ...prev, [key]: value }));
   };
 
-  const selectedField: FormField | null = selectedId ? findFieldRecursive(fields, selectedId) : null;
-
-  const createFieldObject = (type: FieldType, label: string, sharedDef?: SharedFieldDefinition): FormField => {
-    if (sharedDef) {
-      return {
-        ComponentId: Date.now().toString(),
-        Type: sharedDef.Type,
-        Label: sharedDef.Label,
-        Placeholder: 'Seleccione una opción...',
-        Required: false,
-        ReadOnly: false,
-        Order: 0,
-        Width: 'full',
-        Options: [...sharedDef.Options],
-        SharedSource: sharedDef.Id
-      };
-    }
-
-    const newField: FormField = {
-      ComponentId: Date.now().toString(),
-      Type: type,
-      Label: label,
-      Placeholder: '',
-      Required: false,
-      ReadOnly: false,
-      Order: 0,
-      Width: 'full',
-      Options: type === 'select' || type === 'radio' ? [
-        { DataOptionId: undefined, TextValue: 'Opción 1' },
-        { DataOptionId: undefined, TextValue: 'Opción 2' }
-      ] : undefined,
-      FormDataId: type === 'grid' || type === 'section' || type === 'spacer' || type === 'divider' ? undefined : null, // null = campo nuevo
-      FormDataGridId: type === 'grid' ? null : undefined, // null = grid nuevo
-      FileStyle: type === 'file' ? 'dropzone' : undefined,
-      Children: type === 'section' ? [] : undefined,
-      Columns: type === 'grid' ? [
-        { Id: 'c1', Label: 'Item', Type: 'text', Required: true, FormDataGridColumnId: null },
-        { Id: 'c2', Label: 'Cantidad', Type: 'text', Required: true, FormDataGridColumnId: null },
-      ] : undefined
-    };
-
-    if (type === 'spacer') {
-      newField.Width = 'half';
-      newField.Label = 'Espaciador';
-    }
-
-    return newField;
+  const handleLoadForm = (loadedFields: FormField[], loadedConfig?: FormConfig) => {
+    setFields(loadedFields);
+    if (loadedConfig) setFormConfig(loadedConfig);
+    pushSnapshot(loadedFields, 'Formulario cargado');
+    setSelectedId(null);
   };
+
+  // ==========================================
+  // FIELD ADDITION HANDLERS
+  // ==========================================
 
   const handleAddField = (type: FieldType, label: string) => {
     const newField = createFieldObject(type, label);
-    let newFields;
-
-    if (selectedField && selectedField.Type === 'section') {
-      newFields = addFieldToParentRecursive(fields, selectedField.ComponentId, newField);
-    } else {
-      newFields = [...fields, newField];
-    }
-
+    const newFields = addFieldToCorrectPosition(newField);
+    
     updateFieldsWithHistory(newFields, `Agregar campo: ${label}`);
     setSelectedId(newField.ComponentId);
   };
 
   const handleAddSharedField = (sharedDef: SharedFieldDefinition) => {
     const newField = createFieldObject(sharedDef.Type, sharedDef.Label, sharedDef);
-    let newFields;
-
-    if (selectedField && selectedField.Type === 'section') {
-      newFields = addFieldToParentRecursive(fields, selectedField.ComponentId, newField);
-    } else {
-      newFields = [...fields, newField];
-    }
-
+    const newFields = addFieldToCorrectPosition(newField);
+    
     updateFieldsWithHistory(newFields, `Agregar campo compartido: ${sharedDef.Label}`);
     setSelectedId(newField.ComponentId);
   };
@@ -152,178 +331,29 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
     let newField: FormField;
 
     if (data.type === 'grid') {
-      // Para grids del maestro
-      newField = {
-        ComponentId: Date.now().toString(),
-        Type: 'grid',
-        Label: data.name,
-        Required: false,
-        ReadOnly: false,
-        Order: 0,
-        Width: 'full',
-        FormDataGridId: data.FormDataId, // Usar FormDataId del maestro
-        Description: data.description,
-        Columns: data.columns?.map((col: any) => ({
-          Id: col.FormDataGridColumnId.toString(),
-          Label: col.label,
-          Type: col.type,
-          Required: col.required,
-          FormDataGridColumnId: col.FormDataGridColumnId, // Asignar el ID de la columna
-          Options: col.options?.map((opt: any) => ({
-            DataOptionId: opt.DataOptionId,
-            TextValue: opt.value
-          }))
-        })) || []
-      };
+      newField = createMasterGridField(data);
     } else if (data.type === 'registry') {
-      // Para desplegables del maestro
-      const options = Array.isArray(data.options) && typeof data.options[0] === 'object'
-        ? data.options.map((opt: any) => ({
-            DataOptionId: opt.DataOptionId,
-            TextValue: opt.value
-          }))
-        : data.options.map((opt: any) => ({
-            DataOptionId: undefined,
-            TextValue: opt
-          }));
-
-      newField = {
-        ComponentId: Date.now().toString(),
-        Type: 'select',
-        Label: data.name,
-        Placeholder: 'Seleccione una opción...',
-        Required: false,
-        ReadOnly: false,
-        Order: 0,
-        Width: 'full',
-        Options: options,
-        FormDataId: data.FormDataId, // Usar FormDataId del maestro
-        Description: data.description
-      };
+      newField = createMasterSelectField(data);
     } else {
-      // Para campos de texto del maestro
-      newField = {
-        ComponentId: Date.now().toString(),
-        Type: 'text',
-        Label: data.name,
-        Placeholder: '',
-        Required: false,
-        ReadOnly: false,
-        Order: 0,
-        Width: 'full',
-        FormDataId: data.FormDataId, // Usar FormDataId del maestro
-        Description: data.description
-      };
+      newField = createMasterTextField(data);
     }
 
-    let newFields;
-    if (selectedField && selectedField.Type === 'section') {
-      newFields = addFieldToParentRecursive(fields, selectedField.ComponentId, newField);
-    } else {
-      newFields = [...fields, newField];
-    }
-
+    const newFields = addFieldToCorrectPosition(newField);
     updateFieldsWithHistory(newFields, `Agregar dato maestro: ${data.name}`);
     setSelectedId(newField.ComponentId);
   };
 
-  const handleUpdateField = (id: string, key: keyof FormField, value: any) => {
-    const newFields = updateFieldRecursive(fields, id, key, value);
-    // For simple updates, we might want to debounce history or just push it
-    // For now, pushing every update. In production, debounce text inputs.
-    if (key !== 'Label' && key !== 'Placeholder' && key !== 'Description') {
-       updateFieldsWithHistory(newFields, `Actualizar campo: ${key}`);
-    } else {
-       // Just update state for text typing, maybe push history on blur (not implemented here)
-       // For simplicity, we update state but maybe not history for every keystroke?
-       // Let's push history for now to be safe, or maybe skip history for minor edits if desired.
-       // User asked for "significant changes".
-       // Let's update state directly for now, and maybe the user triggers a save manually?
-       // No, the requirement says "Every time the user makes a significant change".
-       // Let's assume property changes are significant enough or we accept the noise.
-       // To avoid noise on every keystroke, we'd need a more complex mechanism.
-       // I will update state but NOT push history for text fields to avoid lag/spam,
-       // BUT this means "Undo" won't undo the last character typed.
-       // A compromise: Push history.
-       setFields(newFields);
-    }
-  };
-
-  // Special handler for "committing" a change (e.g. onBlur)
-  const handleCommitUpdate = (id: string, key: keyof FormField, value: any) => {
-      const newFields = updateFieldRecursive(fields, id, key, value);
-      updateFieldsWithHistory(newFields, `Actualizar ${key}`);
-  };
-
-  const handleDeleteField = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    const newFields = deleteFieldRecursive(fields, id);
-    updateFieldsWithHistory(newFields, 'Eliminar campo');
-    if (selectedId === id) {
-      setSelectedId(null);
-    }
-  };
-
-  const handleDuplicateField = (field: FormField, e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    // Función recursiva para clonar children con nuevos IDs
-    const cloneChildren = (children?: FormField[]): FormField[] | undefined => {
-      if (!children || children.length === 0) return undefined;
-      return children.map(child => ({
-        ...child,
-        ComponentId: `${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-        Children: cloneChildren(child.Children)
-      }));
-    };
-
-    const newField: FormField = {
-      ...field,
-      ComponentId: `${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-      Label: field.Label + ' (Copia)',
-      Children: cloneChildren(field.Children)
-    };
-
-    // Logic to insert after the original field
-    // For simplicity, appending to end or parent
-    // Ideally we find the parent and insert after.
-    // Reusing add logic for now as duplicate usually means "add another one like this"
-    let newFields;
-    if (selectedField && selectedField.Type === 'section') {
-         // This logic in original code was a bit ambiguous, assuming append to root or current section
-         newFields = [...fields, newField];
-    } else {
-         newFields = [...fields, newField];
-    }
-
-    updateFieldsWithHistory(newFields, `Duplicar campo: ${field.Label}`);
-  };
-
-  const handleMoveField = (dragId: string, targetId: string, position: 'before' | 'after' | 'inside') => {
-    if (dragId === targetId) return;
-    const { node, newTree } = removeNode(fields, dragId);
-    if (!node) return;
-    const updatedTree = insertNode(newTree, targetId, node, position);
-    updateFieldsWithHistory(updatedTree, 'Mover campo');
-  };
-
-  const handleDropNewField = (type: FieldType, targetId: string, position: 'before' | 'after' | 'inside', sharedId?: string) => {
-    let sharedDef: SharedFieldDefinition | undefined;
-    let label = type === 'section' ? 'Nueva Sección' : 'Nuevo Campo';
-
-    if (sharedId) {
-      sharedDef = sharedLibrary.find(s => s.Id === sharedId);
-      if (sharedDef) label = sharedDef.Label;
-    } else {
-      const labels: Record<string, string> = {
-        text: 'Texto Corto', textarea: 'Párrafo', number: 'Número', email: 'Correo Electrónico',
-        checkbox: 'Casilla', radio: 'Opción Única', select: 'Lista Desplegable',
-        date: 'Fecha', file: 'Archivo', grid: 'Grilla de Datos',
-        section: 'Nueva Sección', spacer: 'Espaciador', divider: 'Separador'
-      };
-      if (labels[type]) label = labels[type];
-    }
-
+  const handleDropNewField = (
+    type: FieldType, 
+    targetId: string, 
+    position: 'before' | 'after' | 'inside', 
+    sharedId?: string
+  ) => {
+    const sharedDef = sharedId 
+      ? sharedLibrary.find(s => s.Id === sharedId) 
+      : undefined;
+    
+    const label = sharedDef?.Label || FIELD_LABELS[type] || 'Nuevo Campo';
     const newField = createFieldObject(type, label, sharedDef);
     const updatedTree = insertNode(fields, targetId, newField, position);
 
@@ -331,13 +361,88 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
     setSelectedId(newField.ComponentId);
   };
 
+  // ==========================================
+  // FIELD UPDATE HANDLERS
+  // ==========================================
+
+  const handleUpdateField = (id: string, key: keyof FormField, value: any) => {
+    const newFields = updateFieldRecursive(fields, id, key, value);
+    
+    // Solo actualizar historial para cambios significativos (no texto en tiempo real)
+    const isTextInput = key === 'Label' || key === 'Placeholder' || key === 'Description';
+    
+    if (isTextInput) {
+      // Para inputs de texto, solo actualizar el estado (historial se guarda en onBlur)
+      setFields(newFields);
+    } else {
+      // Para otros cambios, guardar en historial inmediatamente
+      updateFieldsWithHistory(newFields, `Actualizar campo: ${String(key)}`);
+    }
+  };
+
+  const handleCommitUpdate = (id: string, key: keyof FormField, value: any) => {
+    const newFields = updateFieldRecursive(fields, id, key, value);
+    updateFieldsWithHistory(newFields, `Actualizar ${String(key)}`);
+  };
+
+  // ==========================================
+  // FIELD MANIPULATION HANDLERS
+  // ==========================================
+
+  const handleDeleteField = (id: string, e: MouseEvent) => {
+    e.stopPropagation();
+    
+    const newFields = deleteFieldRecursive(fields, id);
+    updateFieldsWithHistory(newFields, 'Eliminar campo');
+    
+    if (selectedId === id) setSelectedId(null);
+  };
+
+  const handleDuplicateField = (field: FormField, e: MouseEvent) => {
+    e.stopPropagation();
+
+    const duplicatedField: FormField = {
+      ...field,
+      ComponentId: generateComponentId(),
+      Label: field.Label + ' (Copia)',
+      Children: cloneChildrenRecursive(field.Children)
+    };
+
+    const newFields = [...fields, duplicatedField];
+    updateFieldsWithHistory(newFields, `Duplicar campo: ${field.Label}`);
+  };
+
+  const handleMoveField = (
+    dragId: string, 
+    targetId: string, 
+    position: 'before' | 'after' | 'inside'
+  ) => {
+    if (dragId === targetId) return;
+    
+    const { node, newTree } = removeNode(fields, dragId);
+    if (!node) return;
+    
+    const updatedTree = insertNode(newTree, targetId, node, position);
+    updateFieldsWithHistory(updatedTree, 'Mover campo');
+  };
+
+  // ==========================================
+  // RETURN API
+  // ==========================================
+
   return {
+    // State
     fields,
     selectedField,
     selectedId,
     setSelectedId,
     formConfig,
+    
+    // Form Config
     handleUpdateFormConfig,
+    handleLoadForm,
+    
+    // Field Operations
     handleAddField,
     handleAddSharedField,
     handleAddMasterData,
@@ -347,6 +452,7 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
     handleDuplicateField,
     handleMoveField,
     handleDropNewField,
+    
     // History
     history,
     currentIndex,
@@ -354,7 +460,6 @@ export const useFormBuilder = (initialFields: FormField[], sharedLibrary: Shared
     handleRedo,
     handleJumpToVersion,
     canUndo,
-    canRedo,
-    handleLoadForm
+    canRedo
   };
 };

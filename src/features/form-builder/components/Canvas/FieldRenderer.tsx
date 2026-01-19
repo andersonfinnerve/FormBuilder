@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { FormField, FieldType, DropPosition, DragOverPosition } from '../../../../types';
-import { parseRichText } from '../../../../shared/utils/richText';
+import { FormField, FieldType, DropPosition, DragOverPosition } from '@/types';
+import { parseRichText } from '@/shared/utils';
 import DragDropIndicators from './DragDropIndicators';
 import FieldActions from './FieldActions';
 import FieldIndicators from './FieldIndicators';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FieldType } from '../../../../types';
+import { FieldType } from '@/types';
 
 interface ToolboxItemProps {
   icon: string;

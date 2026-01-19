@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormField, FieldType, DropPosition, FormConfig } from '../../../../types';
+import { FormField, FieldType, DropPosition, FormConfig } from '@/types';
 import CanvasToolbar from './CanvasToolbar';
 import FieldRenderer from './FieldRenderer';
 

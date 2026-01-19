@@ -1,7 +1,7 @@
 import React from 'react';
-import { GridColumn, SharedFieldDefinition } from '../../../types';
-import { Input } from '../../../shared/components/ui/Input';
-import { Select } from '../../../shared/components/ui/Select';
+import { GridColumn, SharedFieldDefinition } from '@/types';
+import { Input } from '@/shared/components/ui';
+import { Select } from '@/shared/components/ui';
 
 interface GridCellInputProps {
   column: GridColumn;

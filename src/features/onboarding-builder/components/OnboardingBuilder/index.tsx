@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import OnboardingList from '../OnboardingList/OnboardingList';
 import OnboardingConfig from '../OnboardingConfig/OnboardingConfig';
-import { OnboardingFlow } from '../../../../types/onboarding';
-import { initialOnboardingFlows } from '../../../../data/mock/mockOnboardingData';
+import { OnboardingFlow } from '@/types/onboarding';
+import { initialOnboardingFlows } from '@/data/mock';
 
 const OnboardingBuilder: React.FC = () => {
   const [view, setView] = useState<'list' | 'config'>('list');

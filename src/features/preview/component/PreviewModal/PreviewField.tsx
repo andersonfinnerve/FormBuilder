@@ -1,12 +1,12 @@
 import React from 'react';
-import { FormField, GridColumn, SharedFieldDefinition } from '../../../../types';
-import { parseRichText } from '../../../../shared/utils/richText';
-import { SectionField } from '../../../../shared/components/fields/SectionField.tsx';
-import { SpacerField } from '../../../../shared/components/fields/SpacerField.tsx';
-import { DividerField } from '../../../../shared/components/fields/DividerField';
-import { GridField } from '../../../../shared/components/fields/GridField';
-import { FileButtonField } from '../../../../shared/components/fields/FileButtonField';
-import { GenericField } from '../../../../shared/components/fields/GenericField';
+import { FormField, GridColumn, SharedFieldDefinition } from '@/types';
+import { parseRichText } from '@/shared/utils';
+import { SectionField } from '@/shared/components/fields';
+import { SpacerField } from '@/shared/components/fields';
+import { DividerField } from '@/shared/components/fields';
+import { GridField } from '@/shared/components/fields';
+import { FileButtonField } from '@/shared/components/fields';
+import { GenericField } from '@/shared/components/fields';
 
 interface PreviewFieldProps {
   field: FormField;

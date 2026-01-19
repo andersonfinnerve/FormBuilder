@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useTheme } from '../../../../core/contexts/ThemeContext';
-import { availableThemes } from '../../../../data/themes/themes';
+import { useTheme } from '@/core/contexts';
+import { availableThemes } from '@/data/themes';
 
 interface ThemeConfigModalProps {
   isOpen: boolean;

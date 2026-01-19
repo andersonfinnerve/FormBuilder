@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-import { FormField } from '../types';
-import { HistoryEntry } from '../types/repository';
+import { FormField } from '@/types';
+import { HistoryEntry } from '@/types/repository';
 
 export const useHistory = (initialFields: FormField[]) => {
   const [history, setHistory] = useState<HistoryEntry[]>([

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormField, SharedFieldDefinition, FormConfig } from '../../types';
+import { FormField, SharedFieldDefinition, FormConfig } from '@/types';
 import EmptyState from './EmptyState';
 import PanelHeader from './PanelHeader';
 import GeneralSettings from './GeneralSettings';

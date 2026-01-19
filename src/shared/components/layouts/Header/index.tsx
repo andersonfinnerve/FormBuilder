@@ -1,6 +1,6 @@
 import React from 'react';
-import { useTheme } from '../../../../core/contexts/ThemeContext';
-import Button from '../../ui/Button';
+import { useTheme } from '@/core/contexts';
+import { Button } from '@/shared/components/ui';
 
 interface HeaderProps {
   onPreview: () => void;

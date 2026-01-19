@@ -1,7 +1,6 @@
 import React from 'react';
-import { FormConfig } from '../../../../types';
-import SubTitle from '../../../../shared/components/ui/SubTitle';
-import { Input } from '../../../../shared/components/ui/Input';
+import { FormConfig } from '@/types';
+import { SubTitle, Input } from '@/shared/components/ui';
 
 interface GeneralFormSettingsProps {
   formConfig: FormConfig;

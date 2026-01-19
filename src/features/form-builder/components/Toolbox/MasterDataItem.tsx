@@ -1,5 +1,5 @@
 import React from 'react';
-import { MasterData } from '../../../../types';
+import { MasterData } from '@/types';
 
 interface MasterDataItemProps {
   data: MasterData;

@@ -1,9 +1,8 @@
 
 import React from 'react';
-import { Question, AnswerOption } from '../../../../types/questionnaire';
-import { Input, TextArea } from '../../../../shared/components/ui/Input';
-import AutocompleteInput from '../../../../shared/components/ui/AutocompleteInput';
-import { MASTER_DATA } from '../../../../core/services/mockMasterData';
+import { Question, AnswerOption } from '@/types/questionnaire';
+import { Input, TextArea, AutocompleteInput } from '@/shared/components/ui';
+import { MASTER_DATA } from '@/core/services';
 
 interface QuestionItemProps {
   question: Question;
