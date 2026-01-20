@@ -1,4 +1,5 @@
-import { InitialFormStructure } from '../../data/initialFields';
+// import { InitialFormStructure } from '../../data/initialFields';
+import { FormField, InitialFormStructure } from '@/types';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://localhost:7225';
 

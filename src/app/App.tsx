@@ -8,7 +8,7 @@ import { ThemeConfigModal } from '@/shared/components/modals';
 import { Canvas, PropertiesPanel, Toolbox, useFormBuilder } from '@/features/form-builder';
 
 // Other Features
-import { PreviewModal } from '@/features/preview';
+import { PreviewModal, SubmissionsViewer } from '@/features/preview';
 import { QuestionnaireBuilder } from '@/features/questionnaire-builder';
 import { OnboardingBuilder } from '@/features/onboarding-builder';
 import { FormExplorer } from '@/features/form-explorer';
@@ -29,6 +29,7 @@ const AppContent: React.FC = () => {
   const [isThemeConfigOpen, setIsThemeConfigOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isExplorerOpen, setIsExplorerOpen] = useState(false);
+  const [isSubmissionsViewerOpen, setIsSubmissionsViewerOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'form' | 'questionnaire' | 'onboarding'>('form');
   const [currentFormId, setCurrentFormId] = useState<string | null>(null);
   const [isLoadingForm, setIsLoadingForm] = useState(false);
@@ -270,6 +271,7 @@ const AppContent: React.FC = () => {
         onSave={handleSave}
         onHistory={() => setIsHistoryOpen(!isHistoryOpen)}
         onOpenExplorer={() => setIsExplorerOpen(true)}
+        onViewSubmissions={() => setIsSubmissionsViewerOpen(true)}
         onNewForm={handleNewForm}
         viewMode={viewMode}
         onViewModeChange={setViewMode}
@@ -325,6 +327,11 @@ const AppContent: React.FC = () => {
           formConfig={formConfig || { Title: '', Description: '' }}
           onClose={() => setIsPreviewOpen(false)}
           sharedLibrary={sharedFieldsLibrary}
+          formId={currentFormId || undefined}
+          onViewSubmissions={() => {
+            setIsPreviewOpen(false);
+            setIsSubmissionsViewerOpen(true);
+          }}
         />
       )}
 
@@ -339,6 +346,13 @@ const AppContent: React.FC = () => {
         <FormExplorer
           onLoad={handleLoadFromExplorer}
           onClose={() => setIsExplorerOpen(false)}
+        />
+      )}
+
+      {isSubmissionsViewerOpen && (
+        <SubmissionsViewer
+          onClose={() => setIsSubmissionsViewerOpen(false)}
+          formId={currentFormId || undefined}
         />
       )}
     </div>

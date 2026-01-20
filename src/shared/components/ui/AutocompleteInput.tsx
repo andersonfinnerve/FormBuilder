@@ -9,6 +9,7 @@ interface AutocompleteOption {
 interface AutocompleteInputProps {
   value: string;
   onChange: (value: string) => void;
+  onSelect?: (value: string) => void;
   suggestions: AutocompleteOption[];
   placeholder?: string;
   className?: string;
@@ -17,6 +18,7 @@ interface AutocompleteInputProps {
 const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   value,
   onChange,
+  onSelect,
   suggestions,
   placeholder,
   className = ''
@@ -61,7 +63,11 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   }, []);
 
   const handleSelectSuggestion = (suggestion: AutocompleteOption) => {
-    onChange(suggestion.text);
+    if (onSelect) {
+      onSelect(suggestion.text);
+    } else {
+      onChange(suggestion.text);
+    }
     setIsOpen(false);
     setHighlightedIndex(-1);
   };
@@ -121,13 +127,17 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
         <div
           ref={dropdownRef}
           className="absolute z-50 w-full mt-1 bg-surface border border-border rounded-lg shadow-xl max-h-60 overflow-y-auto custom-scrollbar"
+          onClick={(e) => e.stopPropagation()}
         >
           <div className="py-1">
             {filteredSuggestions.map((suggestion, index) => (
               <button
                 key={suggestion.id}
                 type="button"
-                onClick={() => handleSelectSuggestion(suggestion)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSelectSuggestion(suggestion);
+                }}
                 className={`w-full text-left px-3 py-2 transition-colors ${
                   index === highlightedIndex
                     ? 'bg-primary/20 text-text-primary'

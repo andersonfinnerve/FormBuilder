@@ -9,6 +9,7 @@ interface HeaderProps {
   onHistory: () => void;
   onOpenExplorer: () => void;
   onNewForm: () => void;
+  onViewSubmissions?: () => void;
   viewMode: 'form' | 'questionnaire' | 'onboarding';
   onViewModeChange: (mode: 'form' | 'questionnaire' | 'onboarding') => void;
   canUndo?: boolean;
@@ -24,6 +25,7 @@ const Header: React.FC<HeaderProps> = ({
   onHistory,
   onOpenExplorer,
   onNewForm,
+  onViewSubmissions,
   viewMode, 
   onViewModeChange,
   canUndo,
@@ -113,12 +115,23 @@ const Header: React.FC<HeaderProps> = ({
             icon="folder_open"
             title="Mis Formularios"
           />
-          <Button 
-            onClick={onPreview}
-            icon="visibility"
-            label="Vista Previa"
-            className="px-4"
-          />
+          {/* Vista de envíos solo en modo formulario */}
+          {viewMode === 'form' && onViewSubmissions && (
+            <Button 
+              onClick={onViewSubmissions}
+              icon="inbox"
+              title="Ver Envíos"
+            />
+          )}
+          {/* Vista Previa solo se muestra en modo formulario, los otros modos tienen su propia vista previa */}
+          {viewMode === 'form' && (
+            <Button 
+              onClick={onPreview}
+              icon="visibility"
+              label="Vista Previa"
+              className="px-4"
+            />
+          )}
           <Button 
             onClick={onSave}
             icon="save"

@@ -66,10 +66,10 @@ const Toolbox: React.FC<ToolboxProps> = ({ onAddField, sharedLibrary, onAddShare
 
           {filteredMasterData.length > 0 ? (
             <>
-              <div className="max-h-[200px] overflow-y-auto custom-scrollbar pr-1 space-y-2">
+              <div className="max-h-[600px] overflow-y-auto custom-scrollbar pr-1 space-y-2">
                 {filteredMasterData.map((data) => (
                   <MasterDataItem
-                    key={data.FormDataId}
+                    key={data.DataId}
                     data={data}
                     onClick={() => handleAddMasterData(data)}
                   />
@@ -123,7 +123,7 @@ const Toolbox: React.FC<ToolboxProps> = ({ onAddField, sharedLibrary, onAddShare
 
         <div className="h-px bg-border-dark w-full"></div>
 
-        <ToolboxCategory title="Básicos" icon="check_box_outline_blank">
+        {/* <ToolboxCategory title="Básicos" icon="check_box_outline_blank">
           <ToolboxItem type="text" icon="short_text" label="Texto Corto" onClick={() => onAddField('text', 'Texto Corto')} />
           <ToolboxItem type="textarea" icon="notes" label="Párrafo Largo" onClick={() => onAddField('textarea', 'Párrafo')} />
           <ToolboxItem type="number" icon="123" label="Número" onClick={() => onAddField('number', 'Número')} />
@@ -146,7 +146,7 @@ const Toolbox: React.FC<ToolboxProps> = ({ onAddField, sharedLibrary, onAddShare
           <ToolboxItem type="section" icon="ad_group" label="Sección / Grupo" onClick={() => onAddField('section', 'Nueva Sección')} />
           <ToolboxItem type="spacer" icon="space_bar" label="Espaciador" onClick={() => onAddField('spacer', 'Espaciador')} />
           <ToolboxItem type="divider" icon="horizontal_rule" label="Separador" onClick={() => onAddField('divider', 'Separador')} />
-        </ToolboxCategory>
+        </ToolboxCategory> */}
       </div>
     </aside>
   );

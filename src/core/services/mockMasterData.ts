@@ -1,9 +1,9 @@
-import { MasterData } from '../features/form-builder/components/masterData';
+import { MasterData } from '@/types/index';
 
 // Datos maestros simulados del BackOffice
 export const MASTER_DATA: MasterData[] = [
   {
-    FormDataId: 1,
+    DataId: 1,
     name: 'Actividad profesional actual',
     type: 'registry',
     options: [
@@ -19,7 +19,7 @@ export const MASTER_DATA: MasterData[] = [
     lastModified: '2026-01-02'
   },
   {
-    FormDataId: 2,
+    DataId: 2,
     name: 'Código Postal',
     type: 'text',
     maxLength: 10,
@@ -27,7 +27,7 @@ export const MASTER_DATA: MasterData[] = [
     lastModified: '2026-01-01'
   },
   {
-    FormDataId: 3,
+    DataId: 3,
     name: 'País de residencia',
     type: 'registry',
     options: [
@@ -44,7 +44,7 @@ export const MASTER_DATA: MasterData[] = [
     lastModified: '2025-12-28'
   },
   {
-    FormDataId: 4,
+    DataId: 4,
     name: 'Nivel de estudios',
     type: 'registry',
     options: [
@@ -59,7 +59,7 @@ export const MASTER_DATA: MasterData[] = [
     lastModified: '2025-12-20'
   },
   {
-    FormDataId: 5,
+    DataId: 5,
     name: 'Estado civil',
     type: 'registry',
     options: [
@@ -73,7 +73,7 @@ export const MASTER_DATA: MasterData[] = [
     lastModified: '2025-12-15'
   },
   {
-    FormDataId: 6,
+    DataId: 6,
     name: 'Referencia bancaria',
     type: 'text',
     maxLength: 50,
@@ -81,7 +81,7 @@ export const MASTER_DATA: MasterData[] = [
     lastModified: '2025-12-10'
   },
   {
-    FormDataId: 7,
+    DataId: 7,
     name: 'Tipo de vivienda',
     type: 'registry',
     options: [
@@ -95,7 +95,7 @@ export const MASTER_DATA: MasterData[] = [
     lastModified: '2025-12-05'
   },
   {
-    FormDataId: 8,
+    DataId: 8,
     name: 'Ingresos mensuales',
     type: 'registry',
     options: [
@@ -109,7 +109,7 @@ export const MASTER_DATA: MasterData[] = [
     lastModified: '2025-11-30'
   },
   {
-    FormDataId: 9,
+    DataId: 9,
     name: 'Nombre de emergencia',
     type: 'text',
     maxLength: 100,
@@ -117,7 +117,7 @@ export const MASTER_DATA: MasterData[] = [
     lastModified: '2025-11-25'
   },
   {
-    FormDataId: 10,
+    DataId: 10,
     name: 'Parentesco de emergencia',
     type: 'registry',
     options: [
@@ -132,12 +132,14 @@ export const MASTER_DATA: MasterData[] = [
     lastModified: '2025-11-20'
   },
   {
-    FormDataId: 11,
+    DataId: null,
+    DataGridId: 1,
     name: 'Beneficiarios Finales',
     type: 'grid',
     columns: [
       {
-        FormDataGridColumnId: 1,
+        DataGridColumnId: 1,
+        DataId: 1,
         label: 'País',
         type: 'select',
         required: true,
@@ -149,19 +151,22 @@ export const MASTER_DATA: MasterData[] = [
         ]
       },
       {
-        FormDataGridColumnId: 2,
+        DataGridColumnId: 2,
+        DataId: 2,
         label: 'RUT / N° Doc',
         type: 'text',
         required: true
       },
       {
-        FormDataGridColumnId: 3,
+        DataGridColumnId: 3,
+        DataId: 3,
         label: 'Nombre(s)',
         type: 'text',
         required: true
       },
       {
-        FormDataGridColumnId: 4,
+        DataGridColumnId: 4,
+        DataId: 4,
         label: 'Porcentaje',
         type: 'text',
         required: true
@@ -171,7 +176,7 @@ export const MASTER_DATA: MasterData[] = [
     lastModified: '2026-01-04'
   },
   {
-    FormDataId: 12,
+    DataId: 12,
     name: '¿Qué significa para usted una inversión de largo plazo?',
     type: 'registry',
     options: [
@@ -184,7 +189,7 @@ export const MASTER_DATA: MasterData[] = [
     lastModified: '2026-01-05'
   },
   {
-    FormDataId: 13,
+    DataId: 13,
     name: '¿Cuál es su tolerancia al riesgo?',
     type: 'registry',
     options: [
@@ -197,7 +202,7 @@ export const MASTER_DATA: MasterData[] = [
     lastModified: '2026-01-05'
   },
   {
-    FormDataId: 14,
+    DataId: 14,
     name: '¿Cuál es su experiencia invirtiendo?',
     type: 'registry',
     options: [
@@ -210,7 +215,7 @@ export const MASTER_DATA: MasterData[] = [
     lastModified: '2026-01-05'
   },
   {
-    FormDataId: 15,
+    DataId: 15,
     name: '¿Qué porcentaje de sus ingresos destina a inversión?',
     type: 'registry',
     options: [

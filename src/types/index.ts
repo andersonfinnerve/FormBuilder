@@ -29,6 +29,26 @@ export interface LogicRule {
   Enabled: boolean;     // Si la regla está activa
 }
 
+// Value structure for form data fields
+export interface FormDataValue {
+  TextValue: string;
+  DataOptionId: number | null;
+}
+
+// Grid cell structure for saving form data
+export interface ContactFormDataGridCell {
+  ContactFormDataGridCellId: number | null;
+  FormDataGridColumnId: number | null;
+  TextValue: string;
+  DataOptionId: number | null;
+}
+
+// Grid row structure for saving form data
+export interface ContactFormDataGridRow {
+  ContactFormDataGridRow: number | null;
+  ContactFormDataGridCell: ContactFormDataGridCell[];
+}
+
 // Campo de formulario
 export interface FormField {
   ComponentId: string;
@@ -60,6 +80,10 @@ export interface FormField {
   FileStyle?: 'dropzone' | 'button'; // Estilo visual de carga
   DownloadUrl?: string; // URL para descargar documento plantilla (ej. W-9)
   DownloadText?: string; // Texto del enlace de descarga
+
+  // Value fields for storing user data in submissions
+  Value?: FormDataValue; // For normal fields (text, select, etc.) - structure with TextValue and DataOptionId
+  Values?: ContactFormDataGridRow[]; // For grid fields - array of rows with cells
 }
 
 // Definición de campo compartido de la librería
@@ -83,7 +107,8 @@ export type DropPosition = 'before' | 'after' | 'inside';
 export type DragOverPosition = 'top' | 'bottom' | 'inside' | null;
 
 export interface MasterData {
-  FormDataId: number; // formDataId o formDataGridId según el tipo
+  DataGridId?: number | null; // ID del dato maestro de tipo grid (null = nuevo, number = existente)
+  DataId: number; // formDataId o formDataGridId según el tipo
   name: string;
   type: MasterDataType;
   maxLength?: number; // Para tipo texto
@@ -101,7 +126,8 @@ export interface MasterDataOption {
 }
 
 export interface MasterDataGridColumn {
-  FormDataGridColumnId: number; // formDataGridColumnId
+  DataGridColumnId: number; // formDataGridColumnId
+  DataId?: number | null; // ID del dato maestro de la columna (null = columna nueva, string = columna existente en dbo.Data)
   label: string;
   type: 'text' | 'select' | 'file';
   required: boolean;
@@ -115,3 +141,6 @@ export interface InitialFormStructure {
   Description: string;
   StructureForm: FormField[];
 }
+
+// Export form data types
+export * from './formData';
